@@ -1,0 +1,72 @@
+SOURCES
+-------
+
+yacite read *datadir*
+	reads everything from *datadir*, outputs YAML
+
+ris2yaml
+	reads RIS, outputs YAML
+
+bib2yaml
+	reads BibTeX, outputs YAML
+
+SINKS
+-----
+
+yacite merge *datadir*
+	reads YAML from stdin, merges into *datadir*
+	merge means this:
+		- oldlist = bibliography items [bibitems] from datadir
+		- newlist = bibitems from stdin
+		- for each pair (newitem in newlist,olditem in oldlist):
+			-determine whether they are "very similar", that means:
+				at least 3 of the following, at least 1 string based
+				- same year
+				- same title (3 char prefix of each word, ignore case ...)
+				- same journal name (ignore case, [abbreviations?] ...) 
+				- same volume
+				- same startpage
+				- same endpage
+				- same authors (surnames, ignore case)
+				if yes, merge the olditem key = value into newitem;
+				list based values are extended by those in newitem
+				(cites,tags,grants), repetitions are removed
+				scalar values (numbers,strings) are overwritten
+
+			- if there is no matching olditem for a newitem,
+			  a new item is created
+			- more than two matchings are ignored, with a written
+			  warning
+
+yacite replace *datadir* 
+	like merge, but the matching olditem is overwritten by the newitem
+	if no newitem matches a given olditem, the olditem is ignored with a
+	warning
+
+yacite render *template*
+	reads YAML from stdin, renders using the jinja2 *template*
+
+
+FILTERS
+-------
+
+yacite filter *python expression*
+	reads YAML from stdin
+	outputs YAML, only the bibitems that are evaluated as TRUE.
+	options: only myown, only not myown, import modules
+
+yacite map *python code*
+	reads YAML from stdin
+	executes python code for every bibitem
+	outputs YAML
+
+yacite append *name* *string*
+	reads YAML from stdin
+	it is assumed that every *name* points to a "list of strings",
+	the new string is appended to the list,
+	outputs YAML
+
+yacite unappend *name* *string*
+	inverse of append
+
+

@@ -1,0 +1,69 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+import yaml
+import sys
+from pybtex.database.input import bibtex
+from yacite.utils.titlecase import titlecase 
+import re
+import tempfile
+import unicodedata
+
+def readpubs(f):
+
+    parser = bibtex.Parser()
+    bib_data = parser.parse_stream(f)
+    ret=[]
+    for entry in bib_data.entries.itervalues():
+        try:
+            pub={}
+            
+            pub["tags"]=[]
+            pub["cites"]=[]
+            pub["type"]=entry.type
+            pub["authors"]=map(unicode,entry.persons['author'])
+            pub["authors"]=map(lambda(x):x.encode('utf-8'),pub["authors"])
+            for fname,value in entry.fields.iteritems():
+                pub[fname]=value.strip('{}')
+                if fname in ("journal","title","series","booktitle") and pub[fname].isupper():
+                    pub[fname]=titlecase(pub[fname].lower())
+            if "pages" in pub:
+                pub["startpage"],pub["endpage"]=[x for x in pub["pages"].split("-",1)]
+                pub["startpage"]=pub["startpage"]
+                pub["endpage"]=pub["endpage"]
+                del pub["pages"]
+            for fname in pub:
+                try:
+                    if type(pub[fname]) in (str,unicode):
+                        pub[fname]=int(pub[fname])
+                except ValueError:
+                    if not all(ord(c) < 128 for c in pub[fname]):
+                        pub[fname]=pub[fname].decode('utf-8')
+            if "abstract" in pub:
+                del pub["abstract"]
+            ret.append(pub)
+        except:
+            print "error in",entry
+            raise
+    return ret
+
+f=tempfile.TemporaryFile()
+for line in sys.stdin:
+    line=line.decode("utf-8")
+    line = unicodedata.normalize('NFKD', line)
+    zline=[]
+    for c in line:
+        if not unicodedata.combining(c):
+            zline.append(c)
+    line="".join(zline).encode("utf-8")
+    if re.match("^ *author *=.*$",line):
+        key,val=line.split("=",1)
+        val=re.sub(r", *(\w\w)",r" and \1",val)
+        f.write("%s=%s" % (key,val))
+    else:
+        f.write(line)
+f.seek(0)
+pubs=readpubs(f)
+sys.stdout.write(yaml.dump(pubs,allow_unicode=True))
+
+
+

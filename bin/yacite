@@ -1,0 +1,12 @@
+#!/usr/bin/python
+
+import sys
+import argparse
+
+parse=argparse.ArgumentParser()
+parse.add_argument("command")
+ns=parse.parse_args()
+print ns.command
+
+
+

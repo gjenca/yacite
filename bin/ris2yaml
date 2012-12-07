@@ -1,0 +1,56 @@
+#!/usr/bin/python
+
+import sys
+import yaml
+
+_map={
+    "T1":"title",
+    "JF":"journal",
+    "PY":"year",
+    "SP":"startpage",
+    "EP":"endpage",
+    "VL":"volume",
+    "IS":"issue"
+    }
+
+
+def readpub(f):
+
+    pub={}
+    pub["tags"]=[]
+    pub["authors"]=[]
+    while True:
+        l=f.readline()
+        if not l:
+            return None
+        if "-" in l:
+            break
+    while "-" in l:
+        fname,fvalue = l.split("-",1)
+        fname=fname.strip()
+        fvalue=fvalue.strip()
+        try:
+            fvalue=int(fvalue)
+        except ValueError:
+            if not all(ord(c) < 128 for c in fvalue):
+                fvalue=fvalue.decode('utf-8')
+        if fname in ("AU","A1","A2"):
+            pub["authors"].append(fvalue)
+        else:
+            if fname == "PY" and "/" in fvalue:
+                fvalue=fvalue.split("/")[0]
+            if fname in _map:
+                pub[_map[fname]]=fvalue
+        l=f.readline()
+    return pub
+
+pubs=[]
+while True:
+    pub=readpub(sys.stdin)
+    if not pub:
+        break
+    pubs.append(pub)
+sys.stdout.write(yaml.safe_dump(pubs,allow_unicode=True))
+
+
+
