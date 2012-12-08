@@ -3,10 +3,25 @@
 import sys
 import argparse
 
+import yacite.command.dummy
+import yacite.command.read
+
+c_map={
+    "dummy":yacite.command.dummy.Dummy,
+    "read":yacite.command.read.Read,
+}
+
 parse=argparse.ArgumentParser()
-parse.add_argument("command")
+subparsers=parse.add_subparsers(dest="command",help="The yacite subcommand you want to run")
+for cmd in c_map:
+    cmd_class=c_map[cmd]
+    subpar=subparsers.add_parser(cmd,help=cmd_class.help)
+    cmd_class.add_arguments(subpar)
 ns=parse.parse_args()
-print ns.command
+command=c_map[ns.command](ns)
+command.execute()
+
+
 
 
 
