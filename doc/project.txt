@@ -13,26 +13,18 @@ bib2yaml
 SINKS
 -----
 
-yacite merge *datadir*
+yacite merge *datadir* field1 field2 ...
 	reads YAML from stdin, merges into *datadir*
 	merge means this:
 		- oldlist = bibliography items [bibitems] from datadir
 		- newlist = bibitems from stdin
 		- for each pair (newitem in newlist,olditem in oldlist):
-			-determine whether they are "very similar", that means:
-				at least 3 of the following, at least 1 string based
-				- same year
-				- same title (3 char prefix of each word, ignore case ...)
-				- same journal name (ignore case, [abbreviations?] ...) 
-				- same volume
-				- same startpage
-				- same endpage
-				- same authors (surnames, ignore case)
-				if yes, merge the olditem key = value into newitem;
-				list based values are extended by those in newitem
-				(cites,tags,grants), repetitions are removed
-				scalar values (numbers,strings) are overwritten
-
+			- determine whether they are "very similar", that means
+			  one of the following:
+				- same year,title,authors
+				- same journal name,volume,startpage 
+				- same article-id
+				if yes, merge the named fields into newitem
 			- if there is no matching olditem for a newitem,
 			  a new item is created
 			- more than two matchings are ignored, with a written
