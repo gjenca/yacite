@@ -55,7 +55,7 @@ yacite filter *python expression*
 	outputs YAML, only the bibitems that are evaluated as TRUE.
 	options: only myown, only not myown, import modules
 
-yacite map *python code*
+yacite exec *python code*
 	reads YAML from stdin
 	executes python code for every bibitem
 	outputs YAML
@@ -64,6 +64,7 @@ yacite append *name* *string*
 	reads YAML from stdin
 	it is assumed that every *name* points to a "list of strings",
 	the new string is appended to the list,
+	if there is no name, a singleton list is created
 	outputs YAML
 
 yacite unappend *name* *string*

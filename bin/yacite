@@ -7,12 +7,14 @@ import yacite.command.dummy
 import yacite.command.read
 import yacite.command.merge
 import yacite.command.filter
+import yacite.command.execc
 
 c_map={
     "dummy":yacite.command.dummy.Dummy,
     "read":yacite.command.read.Read,
     "merge":yacite.command.merge.Merge,
     "filter":yacite.command.filter.Filter,
+    "exec":yacite.command.execc.Exec,
 }
 
 parse=argparse.ArgumentParser()
