@@ -43,7 +43,7 @@ def makekey(bi,datadir):
     else:
         key=keyprefix
     zkey=[]
-    for c in key:
+    for c in unicodedata.normalize('NFKD',key):
         if not unicodedata.combining(c):
             zkey.append(c)
     key=u"".join(zkey)
