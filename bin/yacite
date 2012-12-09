@@ -6,11 +6,13 @@ import argparse
 import yacite.command.dummy
 import yacite.command.read
 import yacite.command.merge
+import yacite.command.filter
 
 c_map={
     "dummy":yacite.command.dummy.Dummy,
     "read":yacite.command.read.Read,
     "merge":yacite.command.merge.Merge,
+    "filter":yacite.command.filter.Filter,
 }
 
 parse=argparse.ArgumentParser()

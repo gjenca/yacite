@@ -1,19 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import yaml
 
 from yacite.types import Datadir
 from yacite.exception import *
 from yacite.types import BibObject
+from yacite.utils.docstream import docstream
 
-def construct_yaml_str(self, node):
-    return self.construct_scalar(node)
-
-# Override the default string handling function 
-# to always return unicode objects
-yaml.Loader.add_constructor(u'tag:yaml.org,2002:str', construct_yaml_str)
-yaml.SafeLoader.add_constructor(u'tag:yaml.org,2002:str', construct_yaml_str)
 
 class Merge(object):
 
@@ -30,7 +23,7 @@ class Merge(object):
 
     def execute(self):
 
-        for i,d in enumerate(yaml.load_all(sys.stdin)):
+        for i,d in enumerate(docstream(sys.stdin)):
             if type(d) is not dict:
                 raise DataError("merge: Expecting dict as item %d in stream, got %s instead" % (i,type(d)))
             matches=self.datadir.list_matching(d)
