@@ -27,9 +27,11 @@ def readpubs(f):
                 if fname in ("journal","title","series","booktitle") and pub[fname].isupper():
                     pub[fname]=titlecase(pub[fname].lower())
             if "pages" in pub:
-                pub["startpage"],pub["endpage"]=[x for x in pub["pages"].split("-",1)]
-                pub["startpage"]=pub["startpage"]
-                pub["endpage"]=pub["endpage"]
+                if "-" in  pub["pages"]:
+                    pub["startpage"],pub["endpage"]=[x for x in pub["pages"].split("-",1)]
+                else:
+                    pub["startpage"]=pub["pages"]
+                    pub["endpage"]=pub["pages"]
                 del pub["pages"]
             for fname in pub:
                 try:
@@ -39,6 +41,9 @@ def readpubs(f):
                     pass
             if "abstract" in pub:
                 del pub["abstract"]
+            if "art_number" in pub:
+                pub["article-number"]=pub["art_number"]
+                del pub["art_number"]
             ret.append(pub)
         except:
             print "error in",entry
