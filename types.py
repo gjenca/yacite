@@ -2,6 +2,8 @@
 import os,sys,errno,re
 import yaml
 import unicodedata
+import tempfile
+import shutil
 
 from yacite.exception import *
 
@@ -110,9 +112,10 @@ class BibObject(dict):
                 pathdir="%s/%s/" % (self.datadir.dirname,year)
             mkdir_p(pathdir)
             self.path=pathdir+("%s.yaml" % self["key"].encode("ascii"))
-        f=file(self.path,"w")
+        f=tempfile.NamedTemporaryFile(delete=False)
         f.write(yaml.dump(dict(self),encoding="utf-8",allow_unicode=True))
         f.close()
+        shutil.move(f.name,self.path)
 
     def match(self,other):
         
