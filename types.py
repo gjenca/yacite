@@ -6,14 +6,7 @@ import tempfile
 import shutil
 
 from yacite.exception import *
-
-
-def unicode_representer(dumper, uni):
-    node = yaml.ScalarNode(tag=u'tag:yaml.org,2002:str', value=uni)
-    return node
-
-# This is necessary to dump ASCII string normally
-yaml.add_representer(unicode, unicode_representer)
+from yacite.utils.sane_yaml import yaml_dump_encoded, yaml_load_as_unicode
 
 w_pattern = re.compile('[\W_]+')
 
@@ -113,7 +106,7 @@ class BibObject(dict):
             mkdir_p(pathdir)
             self.path=pathdir+("%s.yaml" % self["key"].encode("ascii"))
         f=tempfile.NamedTemporaryFile(delete=False)
-        f.write(yaml.dump(dict(self),encoding="utf-8",allow_unicode=True))
+        f.write(yaml_dump_encoded(dict(self)))
         f.close()
         shutil.move(f.name,self.path)
 
@@ -149,7 +142,7 @@ class Datadir(object):
                 for name in files:
                     if name.endswith(".yaml"):
                         path=os.path.join(root,name)
-                        data=yaml.load(file(path))
+                        data=yaml_load_as_unicode(file(path))
                         if type(data) is not dict:
                             raise DataError("File %s does not contain a dictionary" % path)
                         self.append(BibObject(data,path=path))

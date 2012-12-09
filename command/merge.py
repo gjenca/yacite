@@ -5,7 +5,7 @@ import sys
 from yacite.types import Datadir
 from yacite.exception import *
 from yacite.types import BibObject
-from yacite.utils.docstream import docstream
+from yacite.utils.sane_yaml import docstream
 
 
 class Merge(object):

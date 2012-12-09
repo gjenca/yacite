@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import os,sys
-import yaml
 
 from yacite.exception import *
+from yacite.utils.sane_yaml import yaml_load_as_unicode,yaml_dump_encoded
 
 class Read(object):
 
@@ -23,14 +23,14 @@ class Read(object):
                 for name in files:
                     if name.endswith(".yaml"):
                         path=os.path.join(root,name)
-                        data=yaml.load(file(path))
+                        data=yaml_load_as_unicode(file(path))
                         if type(data) is list:
                             for d in data:
                                 print "---"
-                                sys.stdout.write(yaml.dump(d,allow_unicode=True))
+                                sys.stdout.write(yaml_dump_encoded(d))
                         else:
                             print "---"
-                            sys.stdout.write(yaml.dump(data,allow_unicode=True))
+                            sys.stdout.write(yaml_dump_encoded(data))
         else:
             raise NotDirectoryError("%s is not a directory" % ns.datadir) 
         
