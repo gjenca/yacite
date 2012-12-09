@@ -20,9 +20,6 @@ def readpubs(f):
     for entry in bib_data.entries.itervalues():
         try:
             pub={}
-            
-            pub["tags"]=[]
-            pub["cites"]=[]
             pub["type"]=entry.type
             pub["authors"]=map(unicode,entry.persons['author'])
             for fname,value in entry.fields.iteritems():
