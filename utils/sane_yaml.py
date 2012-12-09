@@ -17,7 +17,14 @@ def unicode_representer(dumper, uni):
 yaml.add_representer(unicode, unicode_representer)
 
 def docstream(f):
-    return yaml.load_all(f)
+    for d in yaml.load_all(f):
+        for key in d:
+            if type(d[key]) is unicode:
+                try:
+                    d[key]=int(d[key])
+                except ValueError:
+                    pass
+        yield d
 
 def yaml_dump_encoded(obj):
     return yaml.dump(obj,encoding="utf-8",allow_unicode=True)
