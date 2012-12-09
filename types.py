@@ -116,12 +116,20 @@ class BibObject(dict):
             "key" in other and\
             self["key"]==other["key"]:
             return True
+
+        for k1 in ("article-number","art_number"):
+            for k2 in ("article-number","art_number"):
+                if k1 in self and k2 in other and self[k1]==other[k2]:
+                    return True
+
         if all(exists_and_is_almost_same(self,other,key) \
             for key in ("title","year","authors")):
                 return True
+
         if all(exists_and_is_almost_same(self,other,key) \
             for key in ("journal","volume","startpage")):
                 return True
+
         return False
 
 class Datadir(object):
