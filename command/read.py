@@ -1,12 +1,9 @@
+# -*- coding: utf-8 -*-
 
 import os,sys
 import yaml
 
-
-class NotDirectoryError(Exception):
-
-    pass
-
+from yacite.exception import *
 
 class Read(object):
 

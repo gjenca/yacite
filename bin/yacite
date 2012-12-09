@@ -5,10 +5,12 @@ import argparse
 
 import yacite.command.dummy
 import yacite.command.read
+import yacite.command.merge
 
 c_map={
     "dummy":yacite.command.dummy.Dummy,
     "read":yacite.command.read.Read,
+    "merge":yacite.command.merge.Merge,
 }
 
 parse=argparse.ArgumentParser()
