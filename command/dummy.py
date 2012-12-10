@@ -8,16 +8,15 @@ class Dummy(object):
 
     @staticmethod
     def add_arguments(subparser):
-        subparser.add_argument("-f","--foo",help="print the FOO twice",default="booo")
-        subparser.add_argument("param",nargs="+")
+        subparser.add_argument("arg")
+        subparser.add_argument("--option",action="store_true")
+        subparser.add_argument("-m","--module",dest="module",action="append",help="module",default=[])
 
     def __init__(self,ns):
         self.ns=ns
 
     def execute(self):
         print self.ns
-        for i in [1,2]:
-            print self.ns.foo
 
         
         

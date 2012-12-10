@@ -16,11 +16,12 @@ class Merge(object):
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("datadir")
-        subparser.add_argument("--union",nargs="+",help="take union of lists - original and new",
-            dest="uname",default=[])
-        subparser.add_argument("--set",nargs="+",help="replace orginal values by new value",
-            dest="sname",default=[])
-        subparser.add_argument("--delete-fields",nargs="+",help="delete fields",dest="dname",default=[])
+        subparser.add_argument("-u","--union",help="take union of lists - original and new",
+            dest="uname",action="append",default=[])
+        subparser.add_argument("-s","--set",help="replace orginal values by new value",
+            dest="sname",action="append",default=[])
+        subparser.add_argument("-d","--delete-names",help="delete fields",dest="dname",action="append",
+            default=[])
 
     def __init__(self,ns):
         self.datadir_name=ns.datadir
