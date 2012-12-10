@@ -7,7 +7,7 @@ from jinja2 import Template,FileSystemLoader,Environment
 class Render(object):
 
 
-    help="render input stream using a jinja2 template"
+    help="renders records using a jinja2 template"
 
     @staticmethod
     def add_arguments(subparser):

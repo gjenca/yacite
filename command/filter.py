@@ -6,16 +6,16 @@ from yacite.utils.sane_yaml import docstream,yaml_dump_encoded
 class Filter(object):
 
 
-    help="filter input stream according to expression"
+    help="evaluates a python expression in the context of the each record, outputs records for which expression returns True"
 
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("--myown",
             action='store_true',
-            help="filter applies only is myown == True, otherwise item passes through")
+            help="filter applies only is myown == True, otherwise the record passes through")
         subparser.add_argument("--notmyown",
             action='store_true',
-            help="filter applies only is myown == False or undefined, otherwise item passes through")
+            help="filter applies only is myown == False or undefined, otherwise the record passes through")
         subparser.add_argument("expr",help="python expression")
 
     def __init__(self,ns):

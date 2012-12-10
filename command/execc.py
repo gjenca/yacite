@@ -6,7 +6,7 @@ from yacite.utils.sane_yaml import docstream,yaml_dump_encoded
 class Exec(object):
 
 
-    help="execute a python statement on every item in input stream"
+    help="execute a python statement on every record"
 
     @staticmethod
     def add_arguments(subparser):

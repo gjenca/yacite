@@ -7,12 +7,12 @@ from yacite.exception import *
 class Unappend(object):
 
 
-    help="delete a *string* to a list of strings, stored under *name*; for removing a tag"
+    help="deletes each string in the list from the value of a variable"
 
     @staticmethod
     def add_arguments(subparser):
-        subparser.add_argument("name",help="name to remove the string from")
-        subparser.add_argument("string",nargs="+",help="strings to remove")
+        subparser.add_argument("variable",help="variable. Value of variable must be 'list of strings'.")
+        subparser.add_argument("string",nargs="+",help="these strings are removed from the value")
 
     def __init__(self,ns):
         self.ns=ns
@@ -20,11 +20,11 @@ class Unappend(object):
     def execute(self):
         ustrings=set(s.decode('utf-8') for s in self.ns.string)
         for i,d in enumerate(docstream(sys.stdin)):
-            if self.ns.name in d:
-                if type(d[self.ns.name]) is not list:
-                    raise DataError("unappend: expecting list under name %s in item %d, got %s instead" %
-                        (self.ns.name,i,type(d[self.ns.name])))
-                d[self.ns.name]=list(set(d[self.ns.name])-ustrings)
+            if self.ns.variable in d:
+                if type(d[self.ns.variable]) is not list:
+                    raise DataError("unappend: expecting list under variable %s in item %d, got %s instead" %
+                        (self.ns.variable,i,type(d[self.ns.variable])))
+                d[self.ns.variable]=list(set(d[self.ns.variable])-ustrings)
             print "---"
             sys.stdout.write(yaml_dump_encoded(d))
 

@@ -8,12 +8,12 @@ import re
 class Rewrite(object):
 
 
-    help="rewrite values of *variable* using *rewrite_file*"
+    help="rewrites values of a given variable using a file with rewrite rules"
 
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("variable",help="variable")
-        subparser.add_argument("rewrite_file",help="file with rewrite rules")
+        subparser.add_argument("rewrite_file",help="file with rewrite rules - see the docs for format")
 
     def __init__(self,ns):
         self.ns=ns

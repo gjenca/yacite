@@ -11,7 +11,7 @@ from yacite.utils.sane_yaml import docstream
 class Merge(object):
 
 
-    help="merge docstream from stdin with datadir"
+    help="merge records with datadir - see the docs for merge rules"
 
     @staticmethod
     def add_arguments(subparser):

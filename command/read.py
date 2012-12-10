@@ -8,7 +8,7 @@ from yacite.utils.sane_yaml import yaml_load_as_unicode,yaml_dump_encoded
 class Read(object):
 
 
-    help="read datadir"
+    help="reads records from datadir"
 
     @staticmethod
     def add_arguments(subparser):
