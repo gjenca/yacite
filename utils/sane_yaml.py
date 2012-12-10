@@ -26,6 +26,8 @@ def docstream(f):
                     pass
         yield d
 
+yaml_load=yaml.load
+
 def yaml_dump_encoded(obj):
     return yaml.dump(obj,encoding="utf-8",allow_unicode=True)
 
