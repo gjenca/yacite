@@ -153,7 +153,7 @@ class Datadir(object):
                         data=yaml_load_as_unicode(file(path))
                         if type(data) is not dict:
                             raise DataError("File %s does not contain a dictionary" % path)
-                        self.append(BibObject(data,path=path))
+                        self.append(BibObject(data,path=path,datadir=self))
         else:
             raise NotDirectoryError("%s is not a directory" % dirname) 
 

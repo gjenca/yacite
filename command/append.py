@@ -12,7 +12,7 @@ class Append(object):
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("name",help="name to add to")
-        subparser.add_argument("string",help="string to append")
+        subparser.add_argument("string",nargs="+",help="strings to append")
 
     def __init__(self,ns):
         self.ns=ns
@@ -24,10 +24,10 @@ class Append(object):
                 if type(value) is not list:
                     raise DataError("append: expecting list under name %s in item %d, got %s instead" %
                         (self.ns.name,i,type(value)))
-                if self.ns.string not in value:
-                    value.append(self.ns.string.decode('utf-8'))
+                value.extend(self.ns.string)
+                value=list(set(value))
             else:
-                d[self.ns.name]=[self.ns.string.decode('utf-8')]
+                d[self.ns.name]=[s.decode('utf-8') for s in self.ns.string]
             print "---"
             sys.stdout.write(yaml_dump_encoded(d))
 

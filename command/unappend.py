@@ -12,21 +12,19 @@ class Unappend(object):
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("name",help="name to remove the string from")
-        subparser.add_argument("string",help="string to remove")
+        subparser.add_argument("string",nargs="+",help="strings to remove")
 
     def __init__(self,ns):
         self.ns=ns
 
     def execute(self):
-        ustring=self.ns.string.encode('utf-8')
+        ustrings=set(s.decode('utf-8') for s in self.ns.string)
         for i,d in enumerate(docstream(sys.stdin)):
             if self.ns.name in d:
-                value=d[self.ns.name]
-                if type(value) is not list:
+                if type(d[self.ns.name]) is not list:
                     raise DataError("unappend: expecting list under name %s in item %d, got %s instead" %
-                        (self.ns.name,i,type(value)))
-                if ustring in value:
-                    value.remove(ustring)
+                        (self.ns.name,i,type(d[self.ns.name])))
+                d[self.ns.name]=list(set(d[self.ns.name])-ustrings)
             print "---"
             sys.stdout.write(yaml_dump_encoded(d))
 
