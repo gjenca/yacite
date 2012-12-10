@@ -21,6 +21,7 @@ yacite merge *datadir* field1 field2 ...
 		- for each pair (newitem in newlist,olditem in oldlist):
 			- determine whether they are "very similar", that means
 			  one of the following:
+			  	- same key
 				- same year,title,authors
 				- same journal name,volume,startpage 
 				- same article-id
