@@ -11,7 +11,6 @@ import yacite.command.execc
 import yacite.command.render
 import yacite.command.append
 import yacite.command.unappend
-import yacite.command.replace
 
 c_map={
     "dummy":yacite.command.dummy.Dummy,
@@ -22,7 +21,6 @@ c_map={
     "render":yacite.command.render.Render,
     "append":yacite.command.append.Append,
     "unappend":yacite.command.unappend.Unappend,
-    "replace":yacite.command.replace.Replace,
 }
 
 parse=argparse.ArgumentParser()
