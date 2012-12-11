@@ -3,6 +3,13 @@
 import sys
 from yacite.utils.sane_yaml import docstream
 from jinja2 import Template,FileSystemLoader,Environment
+import pybtex.bibtex.names
+
+
+def authors_format(authors,bst_format):
+
+    return [pybtex.bibtex.names.format(auth,bst_format) for auth in authors]
+
 
 class Render(object):
 
@@ -40,6 +47,7 @@ class Render(object):
                 cited["citedby"].append(bi)
         env=Environment(loader=FileSystemLoader('templates'),
             line_statement_prefix="#")
+        env.filters['authorsformat']=authors_format
         t=env.get_template(self.ns.template)
         sys.stdout.write(t.render(bibitems=bibitems).encode('utf-8'))
 
