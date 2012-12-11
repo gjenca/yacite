@@ -3,6 +3,7 @@
 import os,sys
 
 from yacite.exception import *
+from yacite.types import Datadir
 from yacite.utils.sane_yaml import yaml_load_as_unicode,yaml_dump_encoded
 
 class Read(object):
@@ -18,19 +19,8 @@ class Read(object):
         self.ns=ns
 
     def execute(self):
-        if os.path.isdir(self.ns.datadir):
-            for root,dirs,files in os.walk(self.ns.datadir):
-                for name in files:
-                    if name.endswith(".yaml"):
-                        path=os.path.join(root,name)
-                        data=yaml_load_as_unicode(file(path))
-                        if type(data) is list:
-                            for d in data:
-                                print "---"
-                                sys.stdout.write(yaml_dump_encoded(d))
-                        else:
-                            print "---"
-                            sys.stdout.write(yaml_dump_encoded(data))
-        else:
-            raise NotDirectoryError("%s is not a directory" % ns.datadir) 
+        dd=Datadir(self.ns.datadir)
+        for d in dd:
+            print "---"
+            sys.stdout.write(yaml_dump_encoded(dict(d)))
         
