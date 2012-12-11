@@ -50,19 +50,24 @@ def readpubs(f):
             raise
     return ret
 
-f=tempfile.TemporaryFile()
-for line in sys.stdin:
-    if re.match("^ *author *=.*$",line):
-        key,val=line.split("=",1)
-        val=re.sub(r", *(\w\w)",r" and \1",val)
-        f.write("%s=%s" % (key,val))
-    else:
-        f.write(line)
-f.seek(0)
-pubs=readpubs(f)
-for pub in pubs:
-    print "---"
-    sys.stdout.write(yaml_dump_encoded(pub))
+def patch_and_convert(fin):
+    f=tempfile.TemporaryFile()
+    for line in fin:
+        if re.match("^ *author *=.*$",line):
+            key,val=line.split("=",1)
+            val=re.sub(r", *(\w\w)",r" and \1",val)
+            f.write("%s=%s" % (key,val))
+        else:
+            f.write(line)
+    f.seek(0)
+    pubs=readpubs(f)
+    for pub in pubs:
+        print "---"
+        sys.stdout.write(yaml_dump_encoded(pub))
 
-
+if len(sys.argv)==1:
+    patch_and_convert(sys.stdin)
+else:
+    for fnm in sys.argv[1:]:
+        patch_and_convert(file(fnm))
 
