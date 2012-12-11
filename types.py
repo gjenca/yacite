@@ -132,17 +132,17 @@ class BibObject(dict):
 
         return False
 
-class Datadir(object):
+class Datadir(list):
 
     def append(self,bi):
 
-        self.bibobjects.append(bi)
+        list.append(self,bi)
         if "key" in bi:
             self.keys.append(bi["key"])
 
     def __init__(self,dirname):
 
-        self.bibobjects=[]
+        list.__init__(self)
         self.dirname=dirname
         self.keys=[]
         if os.path.isdir(dirname):
@@ -157,12 +157,6 @@ class Datadir(object):
         else:
             raise NotDirectoryError("%s is not a directory" % dirname) 
 
-
-
-    def __iter__(self):
-
-        return iter(self.bibobjects)
-        
 
     def list_matching(self,pattern):
         
