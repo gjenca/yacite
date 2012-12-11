@@ -18,15 +18,15 @@ class Render(object):
 
     @staticmethod
     def add_arguments(subparser):
-        subparser.add_argument("-e","--extra-yaml-map",help="additional yaml map to pass to template")
+        subparser.add_argument("-e","--extra-yaml",help="additional yaml to pass to template")
         subparser.add_argument("template",help="template file")
 
     def __init__(self,ns):
         self.ns=ns
-        if ns.extra_yaml_map:
-            self.extra_d=yaml_load(ns.extra_yaml_map)
+        if ns.extra_yaml:
+            self.extra=yaml_load(ns.extra_yaml)
         else:
-            self.extra_d={}
+            self.extra=None
 
     def execute(self):
         bibitems=list(docstream(sys.stdin))
@@ -54,9 +54,7 @@ class Render(object):
             line_statement_prefix="#")
         env.filters['authorsformat']=authors_format
         t=env.get_template(self.ns.template)
-        d={"bibitems":bibitems}
-        d.update(self.extra_d)
-        sys.stdout.write(t.render(d).encode('utf-8'))
+        sys.stdout.write(t.render(bibitems=bibitems,extra=self.extra).encode('utf-8'))
 
                 
         
