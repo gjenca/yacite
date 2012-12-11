@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+class ParameterError(Exception):
+
+    pass
 class NotDirectoryError(Exception):
 
     pass
