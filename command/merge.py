@@ -29,6 +29,9 @@ class Merge(object):
         self.union_names=ns.uname
         self.set_names=ns.sname
         self.delete_names=ns.dname
+        if "ALL" in self.set_names and \
+            (self.union_names,self.set_names,self.delete_names) != ([],["ALL"],[]):
+            raise ParameterError("merge: --set ALL must be the only option")
 
     def execute(self):
 
