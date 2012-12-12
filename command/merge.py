@@ -67,9 +67,11 @@ class Merge(object):
                         bounced=False
                         match.dirty=True
                 if bounced:
-                    bounces=bounces+1
-                    if self.verbose:
-                        print >>sys.stderr,"%s matches uniquely file '%s', but no change requested" % (describe_item(i,d),match.path)
+                    diff=[key for key in set(d)&set(match) if d[key]!=match[key]]
+                    if diff:
+                        bounces=bounces+1
+                    if self.verbose and diff:
+                        print >>sys.stderr,"%s matches uniquely file '%s', but no change requested; field(s) %s differ" % (describe_item(i,d),match.path,",".join(diff))
                 match.save()
             else:
                 newitem=BibObject(d,datadir=self.datadir)
