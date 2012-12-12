@@ -26,6 +26,7 @@ class Append(object):
                         (self.ns.variable,i,type(value)))
                 value.extend(self.ns.string)
                 value=list(set(value))
+                d[self.ns.variable]=value
             else:
                 d[self.ns.variable]=[s.decode('utf-8') for s in self.ns.string]
             print "---"
