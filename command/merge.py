@@ -38,46 +38,47 @@ class Merge(object):
     def execute(self):
 
         bounces=0
-        for i,d in enumerate(record_stream(sys.stdin)):
-            if type(d) is not dict:
-                raise DataError("merge: expecting dict as %s in stream, got %s instead" % (describe_item(i,d),type(d)))
-            matches=self.datadir.list_matching(d)
+        for i,rec in enumerate(record_stream(sys.stdin)):
+            if type(rec) is not dict:
+                raise DataError("merge: expecting dict as %s in stream, got %s instead" % (describe_item(i,rec),type(rec)))
+            matches=self.datadir.list_matching(rec)
             if len(matches)>1:
-                raise DataError("merge: %s in stream matches multiple items in datadir" %  describe_item(i,d))
+                raise DataError("merge: %s in stream matches multiple items in datadir" %  describe_item(i,rec))
             elif len(matches)==1:
                 match=matches[0]
                 bounced=True
-                for key in d:
-                    if (key in self.set_names) or (key not in match):
-                        match[key]=d[key]
+                for field_name in rec:
+                    if (field_name in self.set_names) or (field_name not in match):
+                        match[field_name]=rec[field_name]
                         bounced=False
                         continue
-                    elif (key in self.union_names) and (key in match):
-                        if type(d[key]) is list and type(match[key]) is list:
-                            match[key].extend(d[key])
-                            match[key]=list(set(match[key]))
+                    elif (field_name in self.union_names) and (field_name in match):
+                        if type(rec[field_name]) is list and type(match[field_name]) is list:
+                            match[field_name].extend(rec[field_name])
+                            match[field_name]=list(set(match[field_name]))
                             bounced=False
                             continue
                         else:
                             raise DataError(
                              "merge: union of non-lists requested: %s in stream, file='%s', name='%s"
-                                % (describe_item(i,d),match.path,key))
-                    elif key in self.delete_names and key in match:
-                        del match[key]
+                                % (describe_item(i,rec),match.path,field_name))
+                    elif field_name in self.delete_names and field_name in match:
+                        del match[field_name]
                         bounced=False
                         match.dirty=True
                 if bounced:
-                    diff=[key for key in set(d)&set(match) if d[key]!=match[key]]
+                    diff=[field_name for field_name in set(rec)&set(match) 
+                        if rec[field_name]!=match[field_name]]
                     if diff:
                         bounces=bounces+1
                     if self.verbose and diff:
-                        print >>sys.stderr,"%s matches uniquely file '%s', but no change requested; field(s) %s differ" % (describe_item(i,d),match.path,",".join(diff))
+                        print >>sys.stderr,"%s matches uniquely file '%s', differs from it, but no change was requested; field(s) %s differ" % (describe_item(i,rec),match.path,",".join(diff))
                 match.save()
             else:
-                newitem=BibObject(d,datadir=self.datadir)
+                newitem=BibObject(rec,datadir=self.datadir)
                 newitem.dirty=True
                 newitem.save()
                 self.datadir.append(newitem)
         if bounces and not self.quiet:
-            print >>sys.stderr,"merge: %d items matched uniquely, but no change in them was requested." % bounces
+            print >>sys.stderr,"merge: %d records matched uniquely, but no change in them was requested." % bounces
             print >>sys.stderr,"merge: Use -v to see identify these items, use -q to supress this message."      
