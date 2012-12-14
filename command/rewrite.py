@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from yacite.utils.sane_yaml import docstream,yaml_dump_encoded,yaml_load
+from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded,yaml_load
 from yacite.exception import *
 import re
 
@@ -31,7 +31,7 @@ class Rewrite(object):
             self.rules.append((re.compile(head),tail))
 
     def execute(self):
-        for i,d in enumerate(docstream(sys.stdin)):
+        for i,d in enumerate(record_stream(sys.stdin)):
             if self.ns.variable in d:
                 if type(d[self.ns.variable]) in (str,unicode):
                     for pat,repl_with in self.rules: 

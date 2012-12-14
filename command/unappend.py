@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from yacite.utils.sane_yaml import docstream,yaml_dump_encoded
+from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded
 from yacite.exception import *
 
 class Unappend(object):
@@ -19,7 +19,7 @@ class Unappend(object):
 
     def execute(self):
         ustrings=set(s.decode('utf-8') for s in self.ns.string)
-        for i,d in enumerate(docstream(sys.stdin)):
+        for i,d in enumerate(record_stream(sys.stdin)):
             if self.ns.variable in d:
                 if type(d[self.ns.variable]) is not list:
                     raise DataError("unappend: expecting list under variable %s in item %d, got %s instead" %

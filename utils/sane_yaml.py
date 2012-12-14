@@ -16,7 +16,7 @@ def unicode_representer(dumper, uni):
 # This is necessary to dump ASCII string normally
 yaml.add_representer(unicode, unicode_representer)
 
-def docstream(f):
+def record_stream(f):
     for d in yaml.load_all(f):
         for key in d:
             if type(d[key]) is unicode:

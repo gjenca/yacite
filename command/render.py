@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from yacite.utils.sane_yaml import docstream,yaml_load
+from yacite.utils.sane_yaml import record_stream,yaml_load
 from jinja2 import Template,FileSystemLoader,Environment
 import pybtex.bibtex.names
 
@@ -29,7 +29,7 @@ class Render(object):
             self.extra=None
 
     def execute(self):
-        bibitems=list(docstream(sys.stdin))
+        bibitems=list(record_stream(sys.stdin))
         keybi={}
         for bi in bibitems:
             if "key" in bi:

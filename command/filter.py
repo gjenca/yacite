@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from yacite.utils.sane_yaml import docstream,yaml_dump_encoded
+from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded
 from yacite.utils.misc import describe_item 
 
 class Filter(object):
@@ -26,7 +26,7 @@ class Filter(object):
 
     def execute(self):
         exceptions=0
-        for i,d in enumerate(docstream(sys.stdin)):
+        for i,d in enumerate(record_stream(sys.stdin)):
             if self.ns.myown:
                 if (not u"myown" in d) or d[u"myown"]==False:
                     print "---"

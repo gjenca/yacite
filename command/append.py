@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from yacite.utils.sane_yaml import docstream,yaml_dump_encoded
+from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded
 from yacite.exception import *
 
 class Append(object):
@@ -18,7 +18,7 @@ class Append(object):
         self.ns=ns
 
     def execute(self):
-        for i,d in enumerate(docstream(sys.stdin)):
+        for i,d in enumerate(record_stream(sys.stdin)):
             if self.ns.variable in d:
                 value=d[self.ns.variable]
                 if type(value) is not list:
