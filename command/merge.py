@@ -49,6 +49,8 @@ class Merge(object):
                 bounced=True
                 for field_name in rec:
                     if (field_name in self.set_names) or (field_name not in match):
+                        if not self.quiet:
+                            print >>sys.stderr,"merge: SET %s[%s] to %s" %(match["key"],field_name,rec[field_name])
                         match[field_name]=rec[field_name]
                         bounced=False
                         continue
@@ -56,6 +58,8 @@ class Merge(object):
                         if type(rec[field_name]) is list and type(match[field_name]) is list:
                             match[field_name].extend(rec[field_name])
                             match[field_name]=list(set(match[field_name]))
+                            if not self.quiet:
+                                print >>sys.stderr,"merge: SET %s[%s] to %s (union)" %(match["key"],field_name,match[field_name])
                             bounced=False
                             continue
                         else:
@@ -64,6 +68,8 @@ class Merge(object):
                                 % (describe_record(i,rec),match.path,field_name))
                     elif field_name in self.delete_names and field_name in match:
                         del match[field_name]
+                        if not self.quiet:
+                            print >>sys.stderr,"merge: DELETE %s[%s]" %(match["key"],field_name)
                         bounced=False
                         match.dirty=True
                 if bounced:
