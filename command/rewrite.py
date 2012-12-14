@@ -3,7 +3,7 @@
 import sys
 from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded,yaml_load
 from yacite.exception import *
-from yacite.utils import describe_record
+from yacite.utils.misc import describe_record
 import re
 
 class Rewrite(object):
