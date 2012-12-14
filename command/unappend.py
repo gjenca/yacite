@@ -7,7 +7,7 @@ from yacite.exception import *
 class Unappend(object):
 
 
-    help="deletes each string in the list from the value of a variable"
+    help="deletes each string in the list from the value of a field"
 
     @staticmethod
     def add_arguments(subparser):

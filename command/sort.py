@@ -11,25 +11,25 @@ class Sort(object):
 
     @staticmethod
     def add_arguments(subparser):
-        subparser.add_argument("-k","--key",action="append",help="either fieldname of ~fieldname")
+        subparser.add_argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname")
 
     def __init__(self,ns):
 
         self.ns=ns
-        if not self.ns.key:
+        if not self.ns.sort_key:
             raise ParameterError("sort: no keys given")
 
-        sgn_names=[]
-        for k in self.ns.key:
+        sgn_fieldnames=[]
+        for k in self.ns.sort_key:
             if k[0]=="~":
-                sgn_names.append((-1,k[1:]))
+                sgn_fieldnames.append((-1,k[1:]))
             else:
-                sgn_names.append((1,k))
+                sgn_fieldnames.append((1,k))
         
         def cmp_keys(d1,d2):
             
-            for sgn,name in sgn_names:
-                c=cmp(d1[name],d2[name])*sgn
+            for sgn,fieldname in sgn_fieldnames:
+                c=cmp(d1[fieldname],d2[fieldname])*sgn
                 if c:
                     return c
             return 0
