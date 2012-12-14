@@ -11,7 +11,7 @@ class Unappend(object):
 
     @staticmethod
     def add_arguments(subparser):
-        subparser.add_argument("variable",help="variable. Value of variable must be 'list of strings'.")
+        subparser.add_argument("fieldname",help="Value of the field must be 'list of strings'.")
         subparser.add_argument("string",nargs="+",help="these strings are removed from the value")
 
     def __init__(self,ns):
@@ -19,14 +19,14 @@ class Unappend(object):
 
     def execute(self):
         ustrings=set(s.decode('utf-8') for s in self.ns.string)
-        for i,d in enumerate(record_stream(sys.stdin)):
-            if self.ns.variable in d:
-                if type(d[self.ns.variable]) is not list:
-                    raise DataError("unappend: expecting list under variable %s in item %d, got %s instead" %
-                        (self.ns.variable,i,type(d[self.ns.variable])))
-                d[self.ns.variable]=list(set(d[self.ns.variable])-ustrings)
+        for i,rec in enumerate(record_stream(sys.stdin)):
+            if self.ns.fieldname in rec:
+                if type(rec[self.ns.fieldname]) is not list:
+                    raise DataError("unappend: expecting list under fieldname %s in item %d, got %s instead" %
+                        (self.ns.fieldname,i,type(rec[self.ns.fieldname])))
+                rec[self.ns.fieldname]=list(set(rec[self.ns.fieldname])-ustrings)
             print "---"
-            sys.stdout.write(yaml_dump_encoded(d))
+            sys.stdout.write(yaml_dump_encoded(rec))
 
                 
         
