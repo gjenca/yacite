@@ -40,7 +40,7 @@ class Merge(object):
         bounces=0
         for i,d in enumerate(record_stream(sys.stdin)):
             if type(d) is not dict:
-                raise DataError("merge: expecting dict as item %s in stream, got %s instead" % (describe_item(i,d),type(d)))
+                raise DataError("merge: expecting dict as %s in stream, got %s instead" % (describe_item(i,d),type(d)))
             matches=self.datadir.list_matching(d)
             if len(matches)>1:
                 raise DataError("merge: %s in stream matches multiple items in datadir" %  describe_item(i,d))
@@ -80,5 +80,4 @@ class Merge(object):
                 self.datadir.append(newitem)
         if bounces and not self.quiet:
             print >>sys.stderr,"merge: %d items matched uniquely, but no change in them was requested." % bounces
-            print >>sys.stderr,"merge: Use -v to see identify these items, use -q to supress this message." 
-        
+            print >>sys.stderr,"merge: Use -v to see identify these items, use -q to supress this message."      
