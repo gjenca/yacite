@@ -4,7 +4,7 @@ import sys
 
 from yacite.types import Datadir
 from yacite.exception import *
-from yacite.types import BibObject
+from yacite.types import BibRecord
 from yacite.utils.sane_yaml import record_stream
 from yacite.utils.misc import describe_record
 
@@ -75,7 +75,7 @@ class Merge(object):
                         print >>sys.stderr,"%s matches uniquely file '%s', differs from it, but no change was requested; field(s) %s differ" % (describe_record(i,rec),match.path,",".join(diff))
                 match.save()
             else:
-                newrecord=BibObject(rec,datadir=self.datadir)
+                newrecord=BibRecord(rec,datadir=self.datadir)
                 newrecord.dirty=True
                 newrecord.save()
                 self.datadir.append(newrecord)

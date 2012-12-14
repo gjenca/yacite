@@ -74,7 +74,7 @@ def exists_and_is_almost_same(d1,d2,key):
         return l1 == l2
     return False
 
-class BibObject(dict):
+class BibRecord(dict):
 
     def __init__(self,d,path=None,datadir=None):
         self.path=path
@@ -153,7 +153,7 @@ class Datadir(list):
                         data=yaml_load_as_unicode(file(path))
                         if type(data) is not dict:
                             raise DataError("File %s does not contain a dictionary" % path)
-                        self.append(BibObject(data,path=path,datadir=self))
+                        self.append(BibRecord(data,path=path,datadir=self))
         else:
             raise NotDirectoryError("%s is not a directory" % dirname) 
 
