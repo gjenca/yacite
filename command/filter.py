@@ -2,7 +2,7 @@
 
 import sys
 from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded
-from yacite.utils.misc import describe_item 
+from yacite.utils.misc import describe_record 
 
 class Filter(object):
 
@@ -47,7 +47,7 @@ class Filter(object):
                     sys.stdout.write(yaml_dump_encoded(rec))
                 elif self.ns.keep_going:
                     exceptions+=1
-                    print >> sys.stderr, "filter: Warning: failed on item %s" % describe_item(i,rec)
+                    print >> sys.stderr, "filter: Warning: failed on item %s" % describe_record(i,rec)
                     print >> sys.stderr, "filter: The exception was %s" % sys.exc_info()[0]
                 else:
                     raise

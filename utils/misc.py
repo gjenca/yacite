@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-def describe_item(i,d):
+def describe_record(i,rec):
     
-    return "item %d (key=%s)" % (i,d.get("key","None")) 
+    return "item %d (key=%s)" % (i,rec.get("key","None")) 

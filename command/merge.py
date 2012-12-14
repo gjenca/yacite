@@ -6,7 +6,7 @@ from yacite.types import Datadir
 from yacite.exception import *
 from yacite.types import BibObject
 from yacite.utils.sane_yaml import record_stream
-from yacite.utils.misc import describe_item
+from yacite.utils.misc import describe_record
 
 
 class Merge(object):
@@ -40,10 +40,10 @@ class Merge(object):
         bounces=0
         for i,rec in enumerate(record_stream(sys.stdin)):
             if type(rec) is not dict:
-                raise DataError("merge: expecting dict as %s in stream, got %s instead" % (describe_item(i,rec),type(rec)))
+                raise DataError("merge: expecting dict as %s in stream, got %s instead" % (describe_record(i,rec),type(rec)))
             matches=self.datadir.list_matching(rec)
             if len(matches)>1:
-                raise DataError("merge: %s in stream matches multiple items in datadir" %  describe_item(i,rec))
+                raise DataError("merge: %s in stream matches multiple items in datadir" %  describe_record(i,rec))
             elif len(matches)==1:
                 match=matches[0]
                 bounced=True
@@ -61,7 +61,7 @@ class Merge(object):
                         else:
                             raise DataError(
                              "merge: union of non-lists requested: %s in stream, file='%s', name='%s"
-                                % (describe_item(i,rec),match.path,field_name))
+                                % (describe_record(i,rec),match.path,field_name))
                     elif field_name in self.delete_names and field_name in match:
                         del match[field_name]
                         bounced=False
@@ -72,7 +72,7 @@ class Merge(object):
                     if diff:
                         bounces=bounces+1
                     if self.verbose and diff:
-                        print >>sys.stderr,"%s matches uniquely file '%s', differs from it, but no change was requested; field(s) %s differ" % (describe_item(i,rec),match.path,",".join(diff))
+                        print >>sys.stderr,"%s matches uniquely file '%s', differs from it, but no change was requested; field(s) %s differ" % (describe_record(i,rec),match.path,",".join(diff))
                 match.save()
             else:
                 newitem=BibObject(rec,datadir=self.datadir)

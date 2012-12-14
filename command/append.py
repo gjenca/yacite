@@ -2,7 +2,7 @@
 
 import sys
 from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded
-from yacite.utils.misc import describe_item
+from yacite.utils.misc import describe_record
 from yacite.exception import *
 
 class Append(object):
@@ -24,7 +24,7 @@ class Append(object):
                 value=rec[self.ns.fieldname]
                 if type(value) is not list:
                     raise DataError("append: expecting a list under %s in %s, got %s instead" %
-                        (self.ns.fieldname,describe_item(i,rec),type(value)))
+                        (self.ns.fieldname,describe_record(i,rec),type(value)))
                 value.extend(self.ns.string)
                 value=list(set(value))
                 rec[self.ns.fieldname]=value
