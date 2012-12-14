@@ -13,18 +13,18 @@ w_pattern = re.compile('[\W_]+')
 def just_alnum(x):
     return w_pattern.sub('',x)
 
-def makekey(bi,datadir):
+def makekey(bib_rec,datadir):
 
-    if any(name not in bi for name in ("title","year","authors")):
+    if any(name not in bib_rec for name in ("title","year","authors")):
         raise IncompleteDataError("Cannot create key without title, year and authors")
-    author=u"".join(bi["authors"][0].split(u",")[0].lower().split())
+    author=u"".join(bib_rec["authors"][0].split(u",")[0].lower().split())
     title=u""
-    for w in bi["title"].split():
+    for w in bib_rec["title"].split():
         w=just_alnum(w)
         title=title+w.lower()
         if len(title)>=4:
             break
-    year=u"%s" % bi["year"]
+    year=u"%s" % bib_rec["year"]
     keyprefix=u"%s%s%s" % (author,year,title)
     if datadir is None:
         return keyprefix
@@ -134,11 +134,11 @@ class BibRecord(dict):
 
 class Datadir(list):
 
-    def append(self,bi):
+    def append(self,bib_rec):
 
-        list.append(self,bi)
-        if "key" in bi:
-            self.keys.append(bi["key"])
+        list.append(self,bib_rec)
+        if "key" in bib_rec:
+            self.keys.append(bib_rec["key"])
 
     def __init__(self,dirname):
 
@@ -160,4 +160,4 @@ class Datadir(list):
 
     def list_matching(self,pattern):
         
-        return [bi for bi in self if bi.match(pattern)]
+        return [bib_rec for bib_rec in self if bib_rec.match(pattern)]
