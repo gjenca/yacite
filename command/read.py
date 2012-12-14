@@ -9,7 +9,7 @@ from yacite.utils.sane_yaml import yaml_load_as_unicode,yaml_dump_encoded
 class Read(object):
 
 
-    help="reads records from datadir"
+    help="reads records from datadir, outputs them"
 
     @staticmethod
     def add_arguments(subparser):
@@ -20,7 +20,7 @@ class Read(object):
 
     def execute(self):
         dd=Datadir(self.ns.datadir)
-        for d in dd:
+        for rec in dd:
             print "---"
-            sys.stdout.write(yaml_dump_encoded(dict(d)))
+            sys.stdout.write(yaml_dump_encoded(dict(rec)))
         
