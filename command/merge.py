@@ -43,7 +43,7 @@ class Merge(object):
                 raise DataError("merge: expecting dict as %s in stream, got %s instead" % (describe_record(i,rec),type(rec)))
             matches=self.datadir.list_matching(rec)
             if len(matches)>1:
-                raise DataError("merge: %s in stream matches multiple items in datadir" %  describe_record(i,rec))
+                raise DataError("merge: %s in stream matches multiple records in datadir" %  describe_record(i,rec))
             elif len(matches)==1:
                 match=matches[0]
                 bounced=True
@@ -75,10 +75,10 @@ class Merge(object):
                         print >>sys.stderr,"%s matches uniquely file '%s', differs from it, but no change was requested; field(s) %s differ" % (describe_record(i,rec),match.path,",".join(diff))
                 match.save()
             else:
-                newitem=BibObject(rec,datadir=self.datadir)
-                newitem.dirty=True
-                newitem.save()
-                self.datadir.append(newitem)
+                newrecord=BibObject(rec,datadir=self.datadir)
+                newrecord.dirty=True
+                newrecord.save()
+                self.datadir.append(newrecord)
         if bounces and not self.quiet:
             print >>sys.stderr,"merge: %d records matched uniquely, but no change in them was requested." % bounces
-            print >>sys.stderr,"merge: Use -v to see identify these items, use -q to supress this message."      
+            print >>sys.stderr,"merge: Use -v to see identify these records, use -q to supress this message."      

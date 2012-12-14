@@ -3,6 +3,7 @@
 import sys
 from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded,yaml_load
 from yacite.exception import *
+from yacite.utils import describe_record
 import re
 
 class Rewrite(object):
@@ -37,8 +38,8 @@ class Rewrite(object):
                     for pat,repl_with in self.rules: 
                         rec[self.ns.fieldname]=pat.sub(repl_with,rec[self.ns.fieldname])
                 elif type(rec[self.ns.fieldname]) is not list:
-                    raise DataError("rewrite: %s in item %d is %s, expected a string or list" % 
-                        (self.ns.fieldname,i,type(rec[self.ns.fieldname])))
+                    raise DataError("rewrite: %s in %s is %s, expected a string or list" % 
+                        (self.ns.fieldname,describe_record(i,rec),type(rec[self.ns.fieldname])))
                 for pat,repl_with in self.rules:
                     new=[]
                     for s in rec[self.ns.fieldname]:

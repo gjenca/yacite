@@ -3,6 +3,7 @@
 import sys
 from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded
 from yacite.exception import *
+from yacite.utils.misc import describe_record
 
 class Unappend(object):
 
@@ -22,8 +23,8 @@ class Unappend(object):
         for i,rec in enumerate(record_stream(sys.stdin)):
             if self.ns.fieldname in rec:
                 if type(rec[self.ns.fieldname]) is not list:
-                    raise DataError("unappend: expecting list under fieldname %s in item %d, got %s instead" %
-                        (self.ns.fieldname,i,type(rec[self.ns.fieldname])))
+                    raise DataError("unappend: expecting list under fieldname %s in %s, got %s instead" %
+                        (self.ns.fieldname,describe_record(i,rec),type(rec[self.ns.fieldname])))
                 rec[self.ns.fieldname]=list(set(rec[self.ns.fieldname])-ustrings)
             print "---"
             sys.stdout.write(yaml_dump_encoded(rec))

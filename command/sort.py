@@ -7,7 +7,7 @@ from yacite.exception import *
 class Sort(object):
 
 
-    help="sorts the items in input stream"
+    help="sorts the records in input stream according to given fields"
 
     @staticmethod
     def add_arguments(subparser):
