@@ -22,26 +22,26 @@ class Exec(object):
 
     def execute(self):
         exceptions=0
-        for i,d in enumerate(record_stream(sys.stdin)):
+        for i,rec in enumerate(record_stream(sys.stdin)):
             try:
-                exec self.ns.statement in d
+                exec self.ns.statement in rec
             except:
                 if self.ns.failed:
-                    if '__builtins__' in d:    
-                        del d['__builtins__']
+                    if '__builtins__' in rec:    
+                        del rec['__builtins__']
                     print "---"
-                    sys.stdout.write(yaml_dump_encoded(d))
+                    sys.stdout.write(yaml_dump_encoded(rec))
                 elif self.ns.keep_going:
                     exceptions+=1
-                    print >> sys.stderr, "exec: Warning: failed on item %s" % describe_item(i,d)
+                    print >> sys.stderr, "exec: Warning: failed on %s" % describe_item(i,rec)
                     print >> sys.stderr, "exec: The exception was %s" % sys.exc_info()[0]
                 else:
                     raise
-            if '__builtins__' in d:    
-                del d['__builtins__']
+            if '__builtins__' in rec:    
+                del rec['__builtins__']
             if not self.ns.quiet and not self.ns.failed:
                 print "---"
-                sys.stdout.write(yaml_dump_encoded(d))
+                sys.stdout.write(yaml_dump_encoded(rec))
         if exceptions and not self.ns.failed:
             print >> sys.stderr, "exec: Warning: there were %d exceptions" % exceptions
             
