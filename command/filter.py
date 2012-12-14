@@ -13,10 +13,10 @@ class Filter(object):
     def add_arguments(subparser):
         subparser.add_argument("--myown",
             action='store_true',
-            help="filter applies only is myown == True, otherwise the record passes through")
+            help="filter applies only if myown == True, otherwise the record passes through")
         subparser.add_argument("--notmyown",
             action='store_true',
-            help="filter applies only is myown == False or undefined, otherwise the record passes through")
+            help="filter applies only if myown == False or undefined, otherwise the record passes through")
         subparser.add_argument("expr",help="python expression")
         subparser.add_argument("-f","--failed",action="store_true",help="output only the failed records,supress error message")
         subparser.add_argument("-k","--keep-going",action="store_true",help="do not stop when the eval(expr) throws an exception")
