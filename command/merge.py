@@ -72,7 +72,7 @@ class Merge(object):
                     if diff:
                         bounces=bounces+1
                     if self.verbose and diff:
-                        print >>sys.stderr,"%s matches uniquely file '%s', differs from it, but no change was requested; field(s) %s differ" % (describe_record(i,rec),match.path,",".join(diff))
+                        print >>sys.stderr,"merge: %s matches uniquely file '%s', differs from it, but no change was requested; field(s) %s differ" % (describe_record(i,rec),match.path,",".join(diff))
                 match.save()
             else:
                 newrecord=BibRecord(rec,datadir=self.datadir)
