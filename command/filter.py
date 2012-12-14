@@ -26,35 +26,35 @@ class Filter(object):
 
     def execute(self):
         exceptions=0
-        for i,d in enumerate(record_stream(sys.stdin)):
+        for i,rec in enumerate(record_stream(sys.stdin)):
             if self.ns.myown:
-                if (not u"myown" in d) or d[u"myown"]==False:
+                if (not u"myown" in rec) or rec[u"myown"]==False:
                     print "---"
-                    sys.stdout.write(yaml_dump_encoded(d))
+                    sys.stdout.write(yaml_dump_encoded(rec))
                     continue
             if self.ns.notmyown:
-                if "myown" in d and d[u"myown"]:
+                if "myown" in rec and rec[u"myown"]:
                     print "---"
-                    sys.stdout.write(yaml_dump_encoded(d))
+                    sys.stdout.write(yaml_dump_encoded(rec))
                     continue
             try:
-                tf=eval(self.ns.expr,dict(d))
+                tf=eval(self.ns.expr,dict(rec))
             except:
                 if self.ns.failed:
-                    if '__builtins__' in d:    
-                        del d['__builtins__']
+                    if '__builtins__' in rec:    
+                        del rec['__builtins__']
                     print "---"
-                    sys.stdout.write(yaml_dump_encoded(d))
+                    sys.stdout.write(yaml_dump_encoded(rec))
                 elif self.ns.keep_going:
                     exceptions+=1
-                    print >> sys.stderr, "filter: Warning: failed on item %s" % describe_item(i,d)
+                    print >> sys.stderr, "filter: Warning: failed on item %s" % describe_item(i,rec)
                     print >> sys.stderr, "filter: The exception was %s" % sys.exc_info()[0]
                 else:
                     raise
             else:
                 if not self.ns.failed and tf:
                     print "---"
-                    sys.stdout.write(yaml_dump_encoded(d))
+                    sys.stdout.write(yaml_dump_encoded(rec))
 
         if exceptions and not self.ns.failed:
             print >> sys.stderr, "exec: Warning: there were %d exceptions" % exceptions
