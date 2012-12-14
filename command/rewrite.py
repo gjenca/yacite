@@ -8,11 +8,11 @@ import re
 class Rewrite(object):
 
 
-    help="rewrites values of a given variable using a file with rewrite rules"
+    help="rewrites values of a given field using a file with rewrite rules"
 
     @staticmethod
     def add_arguments(subparser):
-        subparser.add_argument("variable",help="variable")
+        subparser.add_argument("fieldname",help="field name")
         subparser.add_argument("rewrite_file",help="file with rewrite rules - see the docs for format")
 
     def __init__(self,ns):
@@ -31,21 +31,21 @@ class Rewrite(object):
             self.rules.append((re.compile(head),tail))
 
     def execute(self):
-        for i,d in enumerate(record_stream(sys.stdin)):
-            if self.ns.variable in d:
-                if type(d[self.ns.variable]) in (str,unicode):
+        for i,rec in enumerate(record_stream(sys.stdin)):
+            if self.ns.fieldname in rec:
+                if type(rec[self.ns.fieldname]) in (str,unicode):
                     for pat,repl_with in self.rules: 
-                        d[self.ns.variable]=pat.sub(repl_with,d[self.ns.variable])
-                elif type(d[self.ns.variable]) is not list:
+                        rec[self.ns.fieldname]=pat.sub(repl_with,rec[self.ns.fieldname])
+                elif type(rec[self.ns.fieldname]) is not list:
                     raise DataError("rewrite: %s in item %d is %s, expected a string or list" % 
-                        (self.ns.variable,i,type(d[self.ns.variable])))
+                        (self.ns.fieldname,i,type(rec[self.ns.fieldname])))
                 for pat,repl_with in self.rules:
                     new=[]
-                    for s in d[self.ns.variable]:
+                    for s in rec[self.ns.fieldname]:
                         new.append(pat.sub(repl_with,s))
-                    d[self.ns.variable]=new
+                    rec[self.ns.fieldname]=new
             print "---"
-            sys.stdout.write(yaml_dump_encoded(d))
+            sys.stdout.write(yaml_dump_encoded(rec))
 
                 
         
