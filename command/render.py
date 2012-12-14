@@ -29,32 +29,32 @@ class Render(object):
             self.extra=None
 
     def execute(self):
-        bibitems=list(record_stream(sys.stdin))
-        keybi={}
-        for bi in bibitems:
-            if "key" in bi:
-                keybi[bi["key"]]=bi
-        for bi in bibitems:
-            if "myown" not in bi:
-                bi["myown"]=False
-            if not "citedby" in bi:
-                bi["citedby"]=[]
-            if not "cites" in bi:
-                bi["cites"]=[]
-            bi["cites"]=[keybi[key] for key in bi["cites"] if key in keybi]
-        for bi in bibitems:
-            if "arxiv" in bi:
-                bi["arxivurl"]="http://arxiv.org/abs/%s" % bi["arxiv"]
-        for bi in bibitems:
-            if bi["myown"]:
+        records=list(record_stream(sys.stdin))
+        key_dict={}
+        for rec in records:
+            if "key" in rec:
+                key_dict[rec["key"]]=rec
+        for rec in records:
+            if "myown" not in rec:
+                rec["myown"]=False
+            if not "citedby" in rec:
+                rec["citedby"]=[]
+            if not "cites" in rec:
+                rec["cites"]=[]
+            rec["cites"]=[key_dict[key] for key in rec["cites"] if key in key_dict]
+        for rec in records:
+            if "arxiv" in rec:
+                rec["arxivurl"]="http://arxiv.org/abs/%s" % rec["arxiv"]
+        for rec in records:
+            if rec["myown"]:
                 continue
-            for cited in bi["cites"]:
-                cited["citedby"].append(bi)
+            for cited in rec["cites"]:
+                cited["citedby"].append(rec)
         env=Environment(loader=FileSystemLoader('templates'),
             line_statement_prefix="#")
         env.filters['authorsformat']=authors_format
         t=env.get_template(self.ns.template)
-        sys.stdout.write(t.render(bibitems=bibitems,extra=self.extra).encode('utf-8'))
+        sys.stdout.write(t.render(records=records,extra=self.extra).encode('utf-8'))
 
                 
         
