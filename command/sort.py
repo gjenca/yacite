@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded
+import yacite.utils.sane_yaml as sane_yaml
 from yacite.exception import *
 
 class Sort(object):
@@ -38,11 +38,11 @@ class Sort(object):
 
     def execute(self):
 
-        l=list(record_stream(sys.stdin))
+        l=list(sane_yaml.load_all(sys.stdin))
         l.sort(cmp=self.cmp_keys)
         for d in l:
             print "---"
-            sys.stdout.write(yaml_dump_encoded(d))
+            sys.stdout.write(sane_yaml.dump(d))
 
                 
         

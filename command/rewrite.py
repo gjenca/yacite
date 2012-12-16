@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded,yaml_load
+import yacite.utils.sane_yaml as sane_yaml
 from yacite.exception import *
 from yacite.utils.misc import describe_record
 import re
@@ -32,7 +32,7 @@ class Rewrite(object):
             self.rules.append((re.compile(head),tail))
 
     def execute(self):
-        for i,rec in enumerate(record_stream(sys.stdin)):
+        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             if self.ns.fieldname in rec:
                 if type(rec[self.ns.fieldname]) in (str,unicode):
                     for pat,repl_with in self.rules: 
@@ -46,7 +46,7 @@ class Rewrite(object):
                         new.append(pat.sub(repl_with,s))
                     rec[self.ns.fieldname]=new
             print "---"
-            sys.stdout.write(yaml_dump_encoded(rec))
+            sys.stdout.write(sane_yaml.dump(rec))
 
                 
         

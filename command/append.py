@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded
+import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.misc import describe_record
 from yacite.exception import *
 
@@ -19,7 +19,7 @@ class Append(object):
         self.ns=ns
 
     def execute(self):
-        for i,rec in enumerate(record_stream(sys.stdin)):
+        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             if self.ns.fieldname in rec:
                 value=rec[self.ns.fieldname]
                 if type(value) is not list:
@@ -31,7 +31,7 @@ class Append(object):
             else:
                 rec[self.ns.fieldname]=[s.decode('utf-8') for s in self.ns.string]
             print "---"
-            sys.stdout.write(yaml_dump_encoded(rec))
+            sys.stdout.write(sane_yaml.dump(rec))
 
                 
         

@@ -5,7 +5,7 @@ import sys
 from yacite.types import Datadir
 from yacite.exception import *
 from yacite.types import BibRecord
-from yacite.utils.sane_yaml import record_stream
+import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.misc import describe_record
 
 
@@ -38,7 +38,7 @@ class Merge(object):
     def execute(self):
 
         bounces=0
-        for i,rec in enumerate(record_stream(sys.stdin)):
+        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             if type(rec) is not dict:
                 raise DataError("merge: expecting dict as %s in stream, got %s instead" % (describe_record(i,rec),type(rec)))
             matches=self.datadir.list_matching(rec)

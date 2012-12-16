@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from yacite.utils.sane_yaml import record_stream,yaml_dump_encoded
+import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.misc import describe_record 
 
 class Filter(object):
@@ -26,16 +26,16 @@ class Filter(object):
 
     def execute(self):
         exceptions=0
-        for i,rec in enumerate(record_stream(sys.stdin)):
+        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             if self.ns.myown:
                 if (not u"myown" in rec) or rec[u"myown"]==False:
                     print "---"
-                    sys.stdout.write(yaml_dump_encoded(rec))
+                    sys.stdout.write(sane_yaml.dump(rec))
                     continue
             if self.ns.notmyown:
                 if "myown" in rec and rec[u"myown"]:
                     print "---"
-                    sys.stdout.write(yaml_dump_encoded(rec))
+                    sys.stdout.write(sane_yaml.dump(rec))
                     continue
             try:
                 tf=eval(self.ns.expr,dict(rec))
@@ -44,7 +44,7 @@ class Filter(object):
                     if '__builtins__' in rec:    
                         del rec['__builtins__']
                     print "---"
-                    sys.stdout.write(yaml_dump_encoded(rec))
+                    sys.stdout.write(sane_yaml.dump(rec))
                 elif self.ns.keep_going:
                     exceptions+=1
                     print >> sys.stderr, "filter: Warning: failed on %s" % describe_record(i,rec)
@@ -54,7 +54,7 @@ class Filter(object):
             else:
                 if not self.ns.failed and tf:
                     print "---"
-                    sys.stdout.write(yaml_dump_encoded(rec))
+                    sys.stdout.write(sane_yaml.dump(rec))
 
         if exceptions and not self.ns.failed:
             print >> sys.stderr, "exec: Warning: there were %d exceptions" % exceptions

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from yacite.utils.sane_yaml import record_stream,yaml_load
+import yacite.utils.sane_yaml as sane_yaml
 from jinja2 import Template,FileSystemLoader,Environment
 import pybtex.bibtex.names
 
@@ -29,7 +29,7 @@ class Render(object):
             self.extra=None
 
     def execute(self):
-        records=list(record_stream(sys.stdin))
+        records=list(sane_yaml.load_all(sys.stdin))
         key_dict={}
         for rec in records:
             if "key" in rec:

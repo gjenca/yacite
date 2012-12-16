@@ -6,7 +6,7 @@ import tempfile
 import shutil
 
 from yacite.exception import *
-from yacite.utils.sane_yaml import yaml_dump_encoded, yaml_load_as_unicode
+import yacite.utils.sane_yaml as sane_yaml
 
 w_pattern = re.compile('[\W_]+')
 
@@ -106,7 +106,7 @@ class BibRecord(dict):
             mkdir_p(pathdir)
             self.path=pathdir+("%s.yaml" % self["key"].encode("ascii"))
         f=tempfile.NamedTemporaryFile(delete=False)
-        f.write(yaml_dump_encoded(dict(self)))
+        f.write(sane_yaml.dump(dict(self)))
         f.close()
         shutil.move(f.name,self.path)
 
@@ -150,7 +150,7 @@ class Datadir(list):
                 for name in files:
                     if name.endswith(".yaml"):
                         path=os.path.join(root,name)
-                        data=yaml_load_as_unicode(file(path))
+                        data=sane_yaml.load(file(path))
                         if type(data) is not dict:
                             raise DataError("File %s does not contain a dictionary" % path)
                         self.append(BibRecord(data,path=path,datadir=self))
