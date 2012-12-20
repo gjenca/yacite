@@ -24,7 +24,7 @@ class Render(object):
     def __init__(self,ns):
         self.ns=ns
         if ns.extra_yaml:
-            self.extra=yaml_load(ns.extra_yaml)
+            self.extra=sane_yaml.load(ns.extra_yaml)
         else:
             self.extra=None
 

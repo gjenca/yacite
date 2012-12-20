@@ -3,7 +3,7 @@
 import yaml
 import sys
 from pybtex.database.input import bibtex
-from yacite.utils.sane_yaml import yaml_dump_encoded
+import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.titlecase import titlecase 
 import re
 import tempfile
@@ -63,7 +63,7 @@ def patch_and_convert(fin):
     pubs=readpubs(f)
     for pub in pubs:
         print "---"
-        sys.stdout.write(yaml_dump_encoded(pub))
+        sys.stdout.write(sane_yaml.dump(pub))
 
 if len(sys.argv)==1:
     patch_and_convert(sys.stdin)
