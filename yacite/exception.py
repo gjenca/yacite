@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
 
-class ParameterError(Exception):
-
-    pass
-class NotDirectoryError(Exception):
-
+class YaciteException(Exception):
     pass
 
-class DataError(Exception):
+class ParameterError(YaciteException):
 
     pass
 
-class SaveError(Exception):
+class NotDirectoryError(YaciteException):
+
+    pass
+
+class DataError(YaciteException):
+
+    pass
+
+class SaveError(YaciteException):
     
     pass
 
-class IncompleteDataError(Exception):
+class IncompleteDataError(YaciteException):
     
     pass
 
