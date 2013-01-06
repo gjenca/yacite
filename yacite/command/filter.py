@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from yacite.command.command import YaciteCommand
 import sys
 import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.misc import describe_record 
 
-class Filter(object):
+class Filter(YaciteCommand):
 
 
     help="evaluates a python expression in the context of the each record, outputs records for which expression returns True"
@@ -21,8 +22,6 @@ class Filter(object):
         subparser.add_argument("-f","--failed",action="store_true",help="output only the failed records,supress error message")
         subparser.add_argument("-k","--keep-going",action="store_true",help="do not stop when the eval(expr) throws an exception")
 
-    def __init__(self,ns):
-        self.ns=ns
 
     def execute(self):
         exceptions=0

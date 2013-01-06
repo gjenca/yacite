@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from yacite.command.command import YaciteCommand
 import sys
 import yacite.utils.sane_yaml as sane_yaml
 from yacite.exception import *
 
-class Sort(object):
+class Sort(YaciteCommand):
 
 
     help="sorts the records in input stream according to given fields"
@@ -14,8 +15,8 @@ class Sort(object):
         subparser.add_argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname")
 
     def __init__(self,ns):
-
         self.ns=ns
+
         if not self.ns.sort_key:
             raise ParameterError("sort: no keys given")
 

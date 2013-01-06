@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from yacite.command.command import YaciteCommand
 import os,sys
 
 from yacite.exception import *
 from yacite.types import Datadir
 import yacite.utils.sane_yaml as sane_yaml
 
-class Read(object):
+class Read(YaciteCommand):
 
 
     help="reads records from datadir, outputs them"
@@ -15,8 +16,6 @@ class Read(object):
     def add_arguments(subparser):
         subparser.add_argument("datadir")
 
-    def __init__(self,ns):
-        self.ns=ns
 
     def execute(self):
         dd=Datadir(self.ns.datadir)

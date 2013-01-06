@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from yacite.command.command import YaciteCommand
 import sys
 import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.misc import describe_record 
 
-class Exec(object):
+class Exec(YaciteCommand):
 
 
     help="execute a python statement on every record"
@@ -17,8 +18,6 @@ class Exec(object):
         subparser.add_argument("-k","--keep-going",action="store_true",help="do not stop when the statement throws an exception")
         group.add_argument("-f","--failed",action="store_true",help="output only the failed records,supress error message")
 
-    def __init__(self,ns):
-        self.ns=ns
 
     def execute(self):
         exceptions=0

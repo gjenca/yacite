@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from yacite.command.command import YaciteCommand
 import sys
 import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.misc import describe_record
 from yacite.exception import *
 
-class Append(object):
+class Append(YaciteCommand):
 
 
     help="appends each string in the list to the value of a field"
@@ -15,8 +16,6 @@ class Append(object):
         subparser.add_argument("fieldname",help="Field name. Value must be a 'list of strings'.")
         subparser.add_argument("string",nargs="+",help="these strings are appended to the value")
 
-    def __init__(self,ns):
-        self.ns=ns
 
     def execute(self):
         for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):

@@ -7,9 +7,9 @@ from yacite.exception import *
 from yacite.types import BibRecord
 import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.misc import describe_record
+from yacite.command.command import YaciteCommand
 
-
-class Merge(object):
+class Merge(YaciteCommand):
 
 
     help="merge records with datadir - see the docs for merge rules"

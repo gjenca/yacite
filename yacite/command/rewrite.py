@@ -5,8 +5,9 @@ import yacite.utils.sane_yaml as sane_yaml
 from yacite.exception import *
 from yacite.utils.misc import describe_record
 import re
+from yacite.command.command import YaciteCommand
 
-class Rewrite(object):
+class Rewrite(YaciteCommand):
 
 
     help="rewrites values of a given field using a file with rewrite rules"

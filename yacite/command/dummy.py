@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from yacite.command.command import YaciteCommand
 
-class Dummy(object):
+class Dummy(YaciteCommand):
 
 
     help="dummy command"
@@ -12,8 +13,6 @@ class Dummy(object):
         subparser.add_argument("--option",action="store_true")
         subparser.add_argument("-m","--module",dest="module",action="append",help="module",default=[])
 
-    def __init__(self,ns):
-        self.ns=ns
 
     def execute(self):
         print self.ns

@@ -4,14 +4,14 @@ import sys
 import yacite.utils.sane_yaml as sane_yaml
 from jinja2 import Template,FileSystemLoader,Environment
 import pybtex.bibtex.names
-
+from yacite.command.command import YaciteCommand
 
 def authors_format(authors,bst_format):
 
     return [pybtex.bibtex.names.format(auth,bst_format) for auth in authors]
 
 
-class Render(object):
+class Render(YaciteCommand):
 
 
     help="renders records using a jinja2 template"
