@@ -85,7 +85,7 @@ class Merge(object):
                 newrecord.dirty=True
                 newrecord.save()
                 self.datadir.append(newrecord)
-                if self.verbose:
+                if not self.quiet:
                     print >>sys.stderr,"merge: Created new record: %s" % newrecord.path
         if bounces and not self.quiet:
             print >>sys.stderr,"merge: %d records matched uniquely, but no change in them was requested." % bounces
