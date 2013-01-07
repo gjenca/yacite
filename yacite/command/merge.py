@@ -56,10 +56,11 @@ class Merge(YaciteCommand):
                         continue
                     elif (field_name in self.union_names) and (field_name in match):
                         if type(rec[field_name]) is list and type(match[field_name]) is list:
-                            match[field_name].extend(rec[field_name])
-                            match[field_name]=list(set(match[field_name]))
-                            if not self.quiet:
-                                print >>sys.stderr,"merge: SET %s[%s] to %s (union)" %(match["key"],field_name,match[field_name])
+                            if not set(match[field_name])>=set(rec[field_name]):
+                                match[field_name].extend(rec[field_name])
+                                match[field_name]=list(set(match[field_name]))
+                                if not self.quiet:
+                                    print >>sys.stderr,"merge: SET %s[%s] to %s (union)" %(match["key"],field_name,match[field_name])
                             bounced=False
                             continue
                         else:
