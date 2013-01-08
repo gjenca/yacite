@@ -1,0 +1,11 @@
+Required python modules:
+
+jinja2 http://jinja.pocoo.org/docs/
+pybtex http://pybtex.sourceforge.net/
+
+How to install:
+
+hg clone https://bitbucket.org/gjenca/yacite 
+cd yacite
+python setup.py install
+
