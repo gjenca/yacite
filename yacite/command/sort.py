@@ -4,6 +4,7 @@ from yacite.command.command import YaciteCommand
 import sys
 import yacite.utils.sane_yaml as sane_yaml
 from yacite.exception import *
+from yacite.utils.compare import keys_to_cmp
 
 class Sort(YaciteCommand):
 
@@ -20,22 +21,7 @@ class Sort(YaciteCommand):
         if not self.ns.sort_key:
             raise ParameterError("sort: no keys given")
 
-        sgn_fieldnames=[]
-        for k in self.ns.sort_key:
-            if k[0]=="~":
-                sgn_fieldnames.append((-1,k[1:]))
-            else:
-                sgn_fieldnames.append((1,k))
-        
-        def cmp_keys(d1,d2):
-            
-            for sgn,fieldname in sgn_fieldnames:
-                c=cmp(d1[fieldname],d2[fieldname])*sgn
-                if c:
-                    return c
-            return 0
-
-        self.cmp_keys=cmp_keys
+        self.cmp_keys=keys_to_cmp(self.ns.sort_key)
 
     def execute(self):
 
