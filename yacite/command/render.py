@@ -20,7 +20,7 @@ class Render(YaciteCommand):
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("-e","--extra-yaml",help="additional yaml to pass to template")
-        subparser.add_argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname (for cited_by sorting)")
+        subparser.add_argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname (for citedby sorting)")
         subparser.add_argument("template",help="template file")
 
     def __init__(self,ns):
