@@ -5,6 +5,7 @@ import yacite.utils.sane_yaml as sane_yaml
 from jinja2 import Template,FileSystemLoader,Environment
 import pybtex.bibtex.names
 from yacite.command.command import YaciteCommand
+from yacite.utils.compare import keys_to_cmp
 
 def authors_format(authors,bst_format):
 
@@ -19,6 +20,7 @@ class Render(YaciteCommand):
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("-e","--extra-yaml",help="additional yaml to pass to template")
+        subparser.add_argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname (for cited_by sorting)")
         subparser.add_argument("template",help="template file")
 
     def __init__(self,ns):
@@ -27,6 +29,10 @@ class Render(YaciteCommand):
             self.extra=sane_yaml.load(ns.extra_yaml)
         else:
             self.extra=None
+        if self.ns.sort_key:
+            self.cmp_keys=keys_to_cmp(self.ns.sort_key)
+        else:
+            self.cmp_keys=None
 
     def execute(self):
         records=list(sane_yaml.load_all(sys.stdin))
@@ -50,6 +56,9 @@ class Render(YaciteCommand):
                 continue
             for cited in rec["cites"]:
                 cited["citedby"].append(rec)
+        if self.cmp_keys:
+            for rec in records:
+                rec["citedby"].sort(cmp=self.cmp_keys)
         env=Environment(loader=FileSystemLoader('templates'),
             line_statement_prefix="#")
         env.filters['authorsformat']=authors_format
