@@ -20,8 +20,15 @@ class Filter(YaciteCommand):
             help="filter applies only if myown == False or undefined, otherwise the record passes through")
         subparser.add_argument("expr",help="python expression")
         subparser.add_argument("-f","--failed",action="store_true",help="output only the failed records,supress error message")
+        subparser.add_argument("-m","--module",action="append",default=[],help="python module to import")
         subparser.add_argument("-k","--keep-going",action="store_true",help="do not stop when the eval(expr) throws an exception")
 
+    def __init__(self,ns):
+        
+        super(Filter,self).__init__(ns)
+        self.mods={}
+        for m in self.ns.module:
+            self.mods[m]=__import__(m)
 
     def execute(self):
         exceptions=0
@@ -37,7 +44,9 @@ class Filter(YaciteCommand):
                     sys.stdout.write(sane_yaml.dump(rec))
                     continue
             try:
-                tf=eval(self.ns.expr,dict(rec))
+                d=dict(rec)
+                d.update(self.mods)
+                tf=eval(self.ns.expr,d)
             except:
                 if self.ns.failed:
                     if '__builtins__' in rec:    
