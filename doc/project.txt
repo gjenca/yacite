@@ -2,39 +2,59 @@ SOURCES
 -------
 
 yacite read *datadir*
-	reads everything from *datadir*, outputs YAML
+	reads all records from *datadir*, outputs YAML
 
-ris2yaml
-	reads RIS, outputs YAML
-
-bib2yaml
-	reads BibTeX, outputs YAML
+bib2yaml [ *bibfile* ]
+	reads BibTeX from *bibfile* or from standard input, outputs YAML
+	
+	OPTIONS:
+	  -s, --scopus         correct broken BibTeX produced by SCOPUS
+	  -a, --keep-abstract  keep abstract
+	  -n, --no-titlecase   by default, if the value of journal, title,
+	    series or booktitle is in ALL CAPS it is converted to titlestring.
+	    this option supresses this behaviour
 
 SINKS
 -----
+yacite merge [-h] [-u UNAME] [-s SNAME] [-d DNAME] [-v] [-q] *datadir*
 
-yacite merge *datadir* field1 field2 ...
-	reads YAML from stdin, merges into *datadir*
-	merge means this:
-		- oldlist = bibliography items [bibitems] from datadir
-		- newlist = bibitems from stdin
-		- for each pair (newitem in newlist,olditem in oldlist):
-			- determine whether they are "very similar", that means
-			  one of the following:
-			  	- same key
-				- same year,title,authors
-				- same journal name,volume,startpage 
-				- same article-id
-				if yes, merge the named fields into newitem
-			- if there is no matching olditem for a newitem,
-			  a new item is created
-			- more than two matchings are ignored, with a written
-			  warning
+positional arguments:
+  *datadir*		directory containing individual files with YAML
+  			records
 
-yacite replace *datadir* 
-	like merge, but the matching olditem is overwritten by the newitem
-	if no newitem matches a given olditem, the olditem is ignored with a
-	warning
+optional arguments:
+  -h, --help            show this help message and exit
+  -u UNAME, --union UNAME
+                        take union of lists - original and new
+  -s SNAME, --set SNAME
+                        replace orginal values by new value
+  -d DNAME, --delete-field DNAME
+                        delete field
+  -v, --verbose         be verbose
+  -q, --quiet           be quiet
+
+reads YAML from stdin, merges into *datadir*
+merge means this:
+	- for each newrecord in *stdin*
+		- determine how many records in *datadir* are "very similar"
+		  to newrecord, that means
+		  one of the following:
+			- same key
+			- same year,title,authors
+			- same journal name,volume,startpage 
+			- same article-id
+		- if there is no record in datadir very similar to newrecord, then
+		  CREATE a new file as follows:
+		  - generate a new key field in newrecord (if not present)
+		  - create a new file in datadir. The filename of the new file is 
+		     - *datadir*/*year*/*key*.yaml, if the boolean-valued
+		       field newrecord[myown] is not true or not present
+		     - *datadir*/myown/*year/*key*.yaml if newrecord[myown] is
+		       true.
+		- if there is exacly one record in datadir very similar to
+		  newrecord, then UPDATE the record in *datadir* with values from
+		  newrecord according to the following rules
+		  ... TODO
 
 yacite render *template*
 	reads YAML from stdin, renders using the jinja2 *template*
