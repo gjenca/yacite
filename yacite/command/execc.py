@@ -17,17 +17,23 @@ class Exec(YaciteCommand):
         group.add_argument("-q","--quiet",action="store_true",help="supress output stream")
         subparser.add_argument("-k","--keep-going",action="store_true",help="do not stop when the statement throws an exception")
         group.add_argument("-f","--failed",action="store_true",help="output only the failed records,supress error message")
+        subparser.add_argument("-m","--module",action="append",default=[],help="python module to import")
+    
+    def __init__(self,ns):
+        
+        super(Exec,self).__init__(ns)
+        self.mods={}
+        for m in self.ns.module:
+            self.mods[m]=__import__(m)
 
 
     def execute(self):
         exceptions=0
         for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             try:
-                exec self.ns.statement in rec
+                exec self.ns.statement in self.mods,rec
             except:
                 if self.ns.failed:
-                    if '__builtins__' in rec:    
-                        del rec['__builtins__']
                     print "---"
                     sys.stdout.write(sane_yaml.dump(rec))
                 elif self.ns.keep_going:
@@ -36,8 +42,6 @@ class Exec(YaciteCommand):
                     print >> sys.stderr, "exec: The exception was %s" % sys.exc_info()[0]
                 else:
                     raise
-            if '__builtins__' in rec:    
-                del rec['__builtins__']
             if not self.ns.quiet and not self.ns.failed:
                 print "---"
                 sys.stdout.write(sane_yaml.dump(rec))
