@@ -8,6 +8,7 @@ from yacite.utils.titlecase import titlecase
 import re
 import tempfile
 import unicodedata
+import argparse
 from io import StringIO
 
 def readpubs(f):
@@ -24,7 +25,9 @@ def readpubs(f):
             pub["authors"]=map(unicode,entry.persons['author'])
             for fname,value in entry.fields.iteritems():
                 pub[fname]=value.strip('{}')
-                if fname in ("journal","title","series","booktitle") and pub[fname].isupper():
+                if not ns.no_titlecase and \
+                        fname in ("journal","title","series","booktitle") and \
+                        pub[fname].isupper():
                     pub[fname]=titlecase(pub[fname].lower())
             if "pages" in pub:
                 if "-" in  pub["pages"]:
@@ -39,7 +42,7 @@ def readpubs(f):
                         pub[fname]=int(pub[fname])
                 except ValueError:
                     pass
-            if "abstract" in pub:
+            if "abstract" in pub and not ns.keep_abstract:
                 del pub["abstract"]
             if "art_number" in pub:
                 pub["article-number"]=pub["art_number"]
@@ -51,23 +54,39 @@ def readpubs(f):
     return ret
 
 def patch_and_convert(fin):
-    f=tempfile.TemporaryFile()
-    for line in fin:
-        if re.match("^ *author *=.*$",line):
-            key,val=line.split("=",1)
-            val=re.sub(r", *(\w\w)",r" and \1",val)
-            f.write("%s=%s" % (key,val))
-        else:
-            f.write(line)
-    f.seek(0)
+    
+    if ns.scopus:
+        f=tempfile.TemporaryFile()
+        for line in fin:
+            # Scopus generates invalid key for auhors
+            # with multiword surnames
+            if re.match(r"^ *@.*{",line):
+                line="".join(line.split())
+            # For years, Scopus produces invalid list of authors
+            if re.match("^ *author *=.*$",line):
+                key,val=line.split("=",1)
+                val=re.sub(r", *(\w\w)",r" and \1",val)
+                f.write("%s=%s" % (key,val))
+            else:
+                f.write(line)
+        f.seek(0)
+    else:
+        f=fin
     pubs=readpubs(f)
     for pub in pubs:
         print "---"
         sys.stdout.write(sane_yaml.dump(pub))
 
-if len(sys.argv)==1:
+parser=argparse.ArgumentParser()
+parser.add_argument("bibfile",nargs="*",help="BibTeX file to read; reads standard input if omitted")
+parser.add_argument("-s","--scopus",action="store_true",help="correct broken BibTeX produced by SCOPUS")
+parser.add_argument("-a","--keep-abstract",action="store_true",help="keep abstract")
+parser.add_argument("-n","--no-titlecase",action="store_true",help="do not titlecase ALL CAPS strings")
+ns=parser.parse_args()
+
+if not ns.bibfile:
     patch_and_convert(sys.stdin)
 else:
-    for fnm in sys.argv[1:]:
+    for fnm in ns.bibfile:
         patch_and_convert(file(fnm))
 
