@@ -24,6 +24,7 @@ def readpubs(f):
             pub["type"]=entry.type
             pub["authors"]=map(unicode,entry.persons['author'])
             for fname,value in entry.fields.iteritems():
+                fname=fname.replace("-","_")
                 pub[fname]=value.strip('{}')
                 if not ns.no_titlecase and \
                         fname in ("journal","title","series","booktitle") and \
@@ -45,7 +46,7 @@ def readpubs(f):
             if "abstract" in pub and not ns.keep_abstract:
                 del pub["abstract"]
             if "art_number" in pub:
-                pub["article-number"]=pub["art_number"]
+                pub["article_number"]=pub["art_number"]
                 del pub["art_number"]
             ret.append(pub)
         except:
