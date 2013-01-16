@@ -19,8 +19,7 @@ class Rewrite(YaciteCommand):
 
     def __init__(self,ns):
         self.ns=ns
-        f=file(ns.rewrite_file)
-        rf=yaml_load(f)
+        rf=sane_yaml.yaml.load(file(ns.rewrite_file))
         if type(rf) is not list:
             raise DataError("rewrite: file %s should contain list of pairs of strings" % ns.rewrite_file)
         self.rules=[]
