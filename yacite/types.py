@@ -117,8 +117,8 @@ class BibRecord(dict):
             self["key"]==other["key"]:
             return True
 
-        for k1 in ("article-number","art_number"):
-            for k2 in ("article-number","art_number"):
+        for k1 in ("article-number","art_number","article_number"):
+            for k2 in ("article-number","art_number","article_number"):
                 if k1 in self and k2 in other and self[k1]==other[k2]:
                     return True
 
