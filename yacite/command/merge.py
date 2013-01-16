@@ -21,8 +21,6 @@ class Merge(YaciteCommand):
             dest="uname",action="append",default=[])
         subparser.add_argument("-s","--set",help="replace orginal values by new value",
             dest="sname",action="append",default=[])
-        subparser.add_argument("-d","--delete-field",help="delete field",dest="dname",action="append",
-            default=[])
         subparser.add_argument("-v","--verbose",action="store_true",help="be verbose")
         subparser.add_argument("-q","--quiet",action="store_true",help="be quiet")
 
@@ -33,11 +31,11 @@ class Merge(YaciteCommand):
         self.datadir=Datadir(self.datadir_name)
         self.union_names=ns.uname
         self.set_names=ns.sname
-        self.delete_names=ns.dname
 
     def execute(self):
 
-        bounces=0
+        bounced_records=0
+        bounced_fields_num=0
         for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             if type(rec) is not dict:
                 raise DataError("merge: expecting dict as %s in stream, got %s instead" % (describe_record(i,rec),type(rec)))
@@ -46,45 +44,36 @@ class Merge(YaciteCommand):
                 raise DataError("merge: %s in stream matches multiple records in datadir" %  describe_record(i,rec))
             elif len(matches)==1:
                 match=matches[0]
-                bounced=True
+                bounced=False
+                bounced_fields=[]
                 for field_name in rec:
                     if field_name not in match:
                         print >>sys.stderr,"merge: SET %s[%s] to %s (new field)" %(match["key"],field_name,rec[field_name])
                         match[field_name]=rec[field_name]
-                        bounced=False
-                    elif field_name in self.set_names:
-                        if match[field_name]!=rec[field_name]:
+                    elif match[field_name]!=rec[field_name]:
+                        if field_name in self.set_names:
                             if not self.quiet:
                                 print >>sys.stderr,"merge: SET %s[%s] to %s" %(match["key"],field_name,rec[field_name])
                             match[field_name]=rec[field_name]
-                            bounced=False
-                        continue
-                    elif (field_name in self.union_names) and (field_name in match):
-                        if type(rec[field_name]) is list and type(match[field_name]) is list:
-                            if not set(match[field_name])>=set(rec[field_name]):
-                                match[field_name].extend(rec[field_name])
-                                match[field_name]=list(set(match[field_name]))
-                                if not self.quiet:
-                                    print >>sys.stderr,"merge: SET %s[%s] to %s (union)" %(match["key"],field_name,match[field_name])
-                            bounced=False
-                            continue
-                        else:
-                            raise DataError(
-                             "merge: union of non-lists requested: %s in stream, file='%s', name='%s"
+                        elif field_name in self.union_names:
+                            if type(rec[field_name]) is list and type(match[field_name]) is list:
+                                if not set(match[field_name])>=set(rec[field_name]):
+                                    match[field_name].extend(rec[field_name])
+                                    match[field_name]=list(set(match[field_name]))
+                                    if not self.quiet:
+                                        print >>sys.stderr,"merge: SET %s[%s] to %s (union)" %(match["key"],field_name,match[field_name])
+                            else:
+                                raise DataError(
+                                 "merge: union of non-lists requested: %s in stream, file='%s', name='%s"
                                 % (describe_record(i,rec),match.path,field_name))
-                    elif field_name in self.delete_names and field_name in match:
-                        del match[field_name]
-                        if not self.quiet:
-                            print >>sys.stderr,"merge: DELETE %s[%s]" %(match["key"],field_name)
-                        bounced=False
-                        match.dirty=True
+                        else:
+                            bounced=True
+                            bounced_fields_num+=1
+                            bounced_fields.append(field_name)
                 if bounced:
-                    diff=[field_name for field_name in set(rec)&set(match) 
-                        if rec[field_name]!=match[field_name]]
-                    if diff:
-                        bounces=bounces+1
-                    if self.verbose and diff:
-                        print >>sys.stderr,"merge: %s matches uniquely file '%s', differs from it, but no change was requested; field(s) %s differ" % (describe_record(i,rec),match.path,",".join(diff))
+                    bounced_records=bounced_records+1
+                    if self.verbose and bounced_fields:
+                        print >>sys.stderr,"merge: %s, file '%s':fields %s bounced" % (describe_record(i,rec),match.path,",".join(bounced_fields))
                 match.save()
             else:
                 newrecord=BibRecord(rec,datadir=self.datadir)
@@ -93,6 +82,6 @@ class Merge(YaciteCommand):
                 self.datadir.append(newrecord)
                 if not self.quiet:
                     print >>sys.stderr,"merge: Created new record: %s" % newrecord.path
-        if bounces and not self.quiet:
-            print >>sys.stderr,"merge: %d records matched uniquely, but no change in them was requested." % bounces
-            print >>sys.stderr,"merge: Use -v to see identify these records, use -q to supress this message."      
+        if bounced_fields_num and not self.quiet and not self.verbose:
+            print >>sys.stderr,"merge: %d fields in %d records bounced" % (bounced_fields_num,bounced_records)
+            print >>sys.stderr,"merge: Use -v to see identify these fields, use -q to supress this message."      
