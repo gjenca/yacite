@@ -1,0 +1,322 @@
+
+<h1>
+<tt>yacite</tt> command reference
+</h1>
+
+* * *
+
+SOURCES
+-------
+
+`yacite read` *datadir*
+
+**description:**
+
+> reads all records from *datadir*, outputs YAML
+
+**positional arguments:**
+
+>  *datadir*            
+
+>> directory containing individual files with YAML records
+
+* * *
+
+`bib2yaml [-s] [-a] [-n] [` *bibfile* `]`
+
+**description:**
+
+> reads BibTeX from *bibfile* or from standard input, outputs YAML
+
+**optional arguments:**
+
+> `-s, --scopus`
+
+>> Correct broken BibTeX produced by SCOPUS.
+
+> `-a, --keep-abstract`  
+
+>> Keep abstract.
+
+> `-n, --no-titlecase`   
+
+>> By default, if the value of journal, title, series or booktitle is in ALL
+>> CAPS it is converted to titlecase string. This option supresses this behaviour.
+
+SINKS
+-----
+
+`yacite merge [-h] [-u` *UNAME* `] [-s` *SNAME* `] [-d` *DNAME* `] [-v] [-q]` *datadir*
+
+**description:** 
+
+> reads YAML from stdin, creates or updates records in *datadir*
+
+**positional arguments:**
+
+> *datadir*             
+
+>> directory containing individual files with YAML records
+
+**optional arguments:**
+
+> `-h,` `--help` 
+
+>> show this help message and exit
+
+> `-u` *UNAME*, `--union` *UNAME*
+
+>> take union of lists - original and new
+
+> `-s` *SNAME*, `--set` *SNAME*
+
+>> replace orginal values by new value
+
+> `-d` *DNAME*, `--delete-field` *DNAME*
+
+>> delete field
+
+> `-v,` `--verbose` 
+
+>> be verbose
+
+> `-q,` `--quiet` 
+
+>> be quiet
+
+**how does the merge command work:**
+
+> merge means this:
+
+- for each *newrecord* in *stdin*
+	- determine how many records in *datadir* are "very similar"
+	  to *newrecord*, that means
+	  one of the following:
+		- same key
+		- same year,title,authors
+		- same journal name,volume,startpage 
+		- same article-id
+	- if there is more than one record in datadir very similar to
+	  *newrecord*, then fail with an error.
+	- if there is no record in datadir very similar to *newrecord*, then
+	  CREATE a new file as follows:
+		- generate a new key field in *newrecord* (if not present)
+		- create a new file in datadir. The filename of the new file is 
+			- *datadir*/*year*/*key*`.yaml`, if the boolean-valued 
+			  field *newrecord*[myown] is not true or not present
+			- *datadir*/myown/*year/*key*`.yaml` if
+			  *newrecord*`[myown]` is true.
+	- if there is exacly one record in datadir very similar to
+	  *newrecord*, then UPDATE the matching record (called *match* from
+	  now on) in *datadir* with values from
+	  *newrecord* according to the following rules
+	  - for each *fieldname* in *newrecord*
+		- if *fieldname* is not present in *match*, extend *match* by
+		  new *fieldname*=*fieldvalue*
+		- if *fieldname* is present in *match* but its values are the
+		  same in *newrecord* and in *match*, do nothing
+		- if *fieldname* is present in match and its values are
+		  distinct if *newrecord* and in *match* then UPDATE the
+		  corresponding field in *match* according to the '-s', '-u'
+		  or '-d' options of the 'yacite merge' command, meaning this:
+			  - if *fieldname* is one of the *SNAME*s, the set the value
+			    in *match* to the value in *newrecord*
+			  - if *fieldname* is one of the *UNAME*s, then the values in
+			    botch *newrecord* and *match* must be of the type "list of
+			    something". The value in *match* is extended by the value
+			    in in *newrecord*.
+			  - if *fieldname* is one of the *DNAME*s, then the
+			    corresponding field in *match* is deleted.
+			  - if *fieldname* is not present in any of *UNAME* *SNAME*
+			    *DNAME*, then a warning is issued with level according to
+			    '-v' and '-q' options.
+
+* * *
+
+`yacite render [-e EXTRA_YAML] [-k SORT_KEY] template`
+
+**description:**
+
+> reads YAML from stdin, renders to stdout using the jinja2 *template*
+
+**positional arguments:**
+
+>  template              template file
+
+**optional arguments:**
+
+> -e EXTRA_YAML, --extra-yaml EXTRA_YAML
+
+>> additional yaml to pass to template; the data is available as `extra`
+
+>-k SORT_KEY, --sort-key SORT_KEY
+
+>> either fieldname of ~fieldname (for citedby sorting)
+
+**implementation:**
+
+> The render subcommand is the producer of the final result: the list of
+> citations. The data is passed to the jinja2 python library, which uses a
+> template to produce the list of citations. The jinja2 template language is
+> documented at http://jinja.pocoo.org/docs/templates/ .
+
+> Currently, the templates are expected to be in the subdirectory `templates`
+> of the current directory. You can use `#` as the prefix of jinja2 tag lines.
+> The environment passed to the template consists of
+> the following data:
+
+> `records`
+>> List of dictionaries, includes all of the data in the input YAML
+>> stream. Additionally, the following data are computed/altered:
+
+>> - in the input YAML the `cites` fields is expected to contain list of keys to
+     `key`s of other records. The keys (i.e. strings) are replaced by
+     records to the corresponding keys themselves.
+>> - in every record, a new `citedby` field is created. The field is a list of
+     records that cite the current record via the `cites` field.
+
+> `extra`
+>> Some python data from the argument of the -e option.
+
+**example template:**
+
+    # for bibrec in records
+    {{ bibrec.authors|join(", ") }}:{{bibrec.title}}
+    Was cited by:
+    
+    # for cit in bibrec citedby
+      * {{ bibrec.authors|join(", ") }}:{{bibrec.title}}
+    # endfor
+    # endfor 
+
+** custom filters:**
+
+> `authorsformat(*bst-name-format*)`
+>> expects list of authors, rewrites them according to given BibTeX style
+>> name format string. See http://www.tug.org/TUGboat/tb27-2/tb87hufflen.pdf
+>> for details.
+
+** example usage in a template:**
+
+    {{ rec.authors|authorsformat("{f. }{vv}{ll{ }}{, jj}")|join(", ") }}
+
+FILTERS
+-------
+
+`yacite filter [-h] [--myown] [--notmyown] [-f] [-m MODULE] [-k] *expr*`
+
+**positional arguments:**
+
+>  *expr*
+
+>> python expression
+
+
+**optional arguments:**
+
+>  -h, --help            
+
+>> show this help message and exit
+
+>  --myown               
+
+>> filter applies only if myown == True, otherwise the record passes through
+
+>  --notmyown            
+
+>> filter applies only if myown == False or undefined, otherwise the record passes through
+
+>  -f, --failed          
+
+>> output only the failed records,supress error message
+
+>  -m MODULE, --module MODULE
+
+>> python module to import
+
+>  -k, --keep-going
+
+>> do not stop when the eval(expr) throws an exception
+
+**description:**
+
+> reads YAML from stdin outputs YAML, but only the bibitems that are evaluated as TRUE.
+
+* * *
+
+`yacite exec [-h] [-n] [-k] [-f] [-m MODULE] *statement*`
+
+**positional arguments:**
+
+> statement             
+
+>> python statement
+
+**optional arguments:**
+
+>  -h, --help            
+
+>> show this help message and exit
+
+>  -n, --no-output       
+
+>> supress normal yaml ouy[ut stream; any intended output must be preformed by statement itself
+
+>  -k, --keep-going      
+
+>> do not stop when the statement throws an exception
+
+>  -f, --failed          
+
+>> output only the failed records,supress error messages
+
+>  -m MODULE, --module MODULE
+
+>> python module to import; multiple -m options are possible
+
+**description:**
+
+> reads YAML from stdin, executes statement on every record
+
+* * *
+
+`yacite append [-h] fieldname string [string ...]`
+
+**positional arguments:**
+
+> fieldname 
+
+>> Field name. Value must be a 'list of strings'.
+
+>  string      
+
+>> these strings are appended to the value
+
+**optional arguments:**
+
+>  -h, --help  
+
+>> show this help message and exit
+
+**description:**
+
+> appends all strings in the list to the value of a field
+
+* * *
+
+`yacite unappend [-h] fieldname string [string ...]`
+
+**positional arguments:**
+
+> fieldname 
+
+>> Value of the field must be 'list of strings'.
+
+> string 
+
+>> these strings are removed from the value, if present
+
+**optional arguments:**
+
+> -h, --help  show this help message and exit
+

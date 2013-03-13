@@ -19,7 +19,7 @@ class Sort(YaciteCommand):
         self.ns=ns
 
         if not self.ns.sort_key:
-            raise ParameterError("sort: no keys given")
+            raise ParameterError("sort: no key(s) given")
 
         self.cmp_keys=keys_to_cmp(self.ns.sort_key)
 

@@ -14,7 +14,7 @@ class Unappend(YaciteCommand):
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("fieldname",help="Value of the field must be 'list of strings'.")
-        subparser.add_argument("string",nargs="+",help="these strings are removed from the value")
+        subparser.add_argument("string",nargs="+",help="these strings are removed from the value, if present")
 
 
     def execute(self):

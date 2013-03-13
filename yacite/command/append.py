@@ -9,7 +9,7 @@ from yacite.exception import *
 class Append(YaciteCommand):
 
 
-    help="appends each string in the list to the value of a field"
+    help="appends all strings in the list to the value of a field"
 
     @staticmethod
     def add_arguments(subparser):

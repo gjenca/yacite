@@ -11,6 +11,7 @@ import unicodedata
 import argparse
 from io import StringIO
 
+
 def readpubs(f):
 
     parser = bibtex.Parser(encoding='utf-8')

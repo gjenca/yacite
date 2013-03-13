@@ -14,10 +14,10 @@ class Exec(YaciteCommand):
     def add_arguments(subparser):
         subparser.add_argument("statement",help="python statement")
         group=subparser.add_mutually_exclusive_group()
-        group.add_argument("-q","--quiet",action="store_true",help="supress output stream")
+        group.add_argument("-n","--no-output",action="store_true",help="supress normal yaml ouy[ut stream; any intended output must be preformed by statement itself")
         subparser.add_argument("-k","--keep-going",action="store_true",help="do not stop when the statement throws an exception")
-        group.add_argument("-f","--failed",action="store_true",help="output only the failed records,supress error message")
-        subparser.add_argument("-m","--module",action="append",default=[],help="python module to import")
+        group.add_argument("-f","--failed",action="store_true",help="output only the failed records,supress error messages")
+        subparser.add_argument("-m","--module",action="append",default=[],help="python module to import; multiple -m options are possible")
     
     def __init__(self,ns):
         
