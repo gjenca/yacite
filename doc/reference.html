@@ -166,7 +166,7 @@ CAPS it is converted to titlecase string. This option supresses this behaviour.<
 </blockquote>
 <p><strong>implementation:</strong></p>
 <blockquote>
-<p>The render subcommand is the producer of the final result: the list of
+<p>The render subcommand  produces the final result: the list of
 citations. The data is passed to the jinja2 python library, which uses a
 template to produce the list of citations. The jinja2 template language is
 documented at http://jinja.pocoo.org/docs/templates/ .</p>
@@ -193,12 +193,15 @@ stream. Additionally, the following data are computed/altered:</p>
 </blockquote>
 <p><strong>example template:</strong></p>
 <pre><code># for bibrec in records
-{{ bibrec.authors|join(", ") }}:{{bibrec.title}}
+# if bibrec.myown
+{{ bibrec.authors|join(", ") }}:{{bibrec.title}} {{bibrec.year}}
+# if bibrec.citedby
 Was cited by:
-
 # for cit in bibrec citedby
-  * {{ bibrec.authors|join(", ") }}:{{bibrec.title}}
+  * {{ bibrec.authors|join(", ") }}:{{bibrec.title}} {{bibrec.year}}
 # endfor
+# endif
+# endif
 # endfor
 </code></pre>
 <p><strong> custom filters:</strong></p>
