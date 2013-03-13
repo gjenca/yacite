@@ -42,7 +42,7 @@ class Exec(YaciteCommand):
                     print >> sys.stderr, "exec: The exception was %s" % sys.exc_info()[0]
                 else:
                     raise
-            if not self.ns.quiet and not self.ns.failed:
+            if not self.ns.no_output and not self.ns.failed:
                 print "---"
                 sys.stdout.write(sane_yaml.dump(rec))
         if exceptions and not self.ns.failed:

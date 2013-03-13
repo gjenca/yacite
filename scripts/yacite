@@ -3,7 +3,6 @@
 import sys
 import argparse
 
-import yacite.command.dummy
 import yacite.command.read
 import yacite.command.merge
 import yacite.command.filter
@@ -15,7 +14,6 @@ import yacite.command.rewrite
 import yacite.command.sort
 
 c_map={
-    "dummy":yacite.command.dummy.Dummy,
     "read":yacite.command.read.Read,
     "merge":yacite.command.merge.Merge,
     "filter":yacite.command.filter.Filter,

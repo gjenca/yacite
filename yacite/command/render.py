@@ -49,9 +49,6 @@ class Render(YaciteCommand):
                 rec["cites"]=[]
             rec["cites"]=[key_dict[key] for key in rec["cites"] if key in key_dict]
         for rec in records:
-            if "arxiv" in rec:
-                rec["arxivurl"]="http://arxiv.org/abs/%s" % rec["arxiv"]
-        for rec in records:
             if rec["myown"]:
                 continue
             for cited in rec["cites"]:
