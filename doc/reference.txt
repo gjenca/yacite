@@ -155,7 +155,7 @@ SINKS
 
 **implementation:**
 
-> The render subcommand is the producer of the final result: the list of
+> The render subcommand  produces the final result: the list of
 > citations. The data is passed to the jinja2 python library, which uses a
 > template to produce the list of citations. The jinja2 template language is
 > documented at http://jinja.pocoo.org/docs/templates/ .
@@ -181,12 +181,15 @@ SINKS
 **example template:**
 
     # for bibrec in records
-    {{ bibrec.authors|join(", ") }}:{{bibrec.title}}
+    # if bibrec.myown
+    {{ bibrec.authors|join(", ") }}:{{bibrec.title}} {{bibrec.year}}
+    # if bibrec.citedby
     Was cited by:
-    
     # for cit in bibrec citedby
-      * {{ bibrec.authors|join(", ") }}:{{bibrec.title}}
+      * {{ bibrec.authors|join(", ") }}:{{bibrec.title}} {{bibrec.year}}
     # endfor
+    # endif
+    # endif
     # endfor 
 
 ** custom filters:**
