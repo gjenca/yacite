@@ -25,7 +25,11 @@ c_map={
     "sort":yacite.command.sort.Sort,
 }
 
-parse=argparse.ArgumentParser()
+class YaciteHelpFormatter(object):
+
+    pass
+
+parse=argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 subparsers=parse.add_subparsers(dest="command",help="The yacite subcommand you want to run")
 for cmd in c_map:
     cmd_class=c_map[cmd]

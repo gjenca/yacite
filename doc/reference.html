@@ -1,3 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+  <title>
+   yacite command reference
+  </title>
+ </head>
+<body>
+
 <h1>
 <tt>yacite</tt> command reference
 </h1>
@@ -163,13 +174,17 @@ CAPS it is converted to titlecase string. This option supresses this behaviour.<
 <blockquote>
 <p>either fieldname of ~fieldname (for citedby sorting)</p>
 </blockquote>
+<p>-t TEMPLATE_DIR, --template-dir TEMPLATE_DIR</p>
+<blockquote>
+<p>directory with templates; default: <code>./templates</code></p>
+</blockquote>
 </blockquote>
 <p><strong>implementation:</strong></p>
 <blockquote>
 <p>The render subcommand  produces the final result: the list of
 citations. The data is passed to the jinja2 python library, which uses a
 template to produce the list of citations. The jinja2 template language is
-documented at http://jinja.pocoo.org/docs/templates/ .</p>
+documented at the <a href="http://jinja.pocoo.org/docs/templates/">jinja2 site</a> .</p>
 <p>Currently, the templates are expected to be in the subdirectory <code>templates</code>
 of the current directory. You can use <code>#</code> as the prefix of jinja2 tag lines.
 The environment passed to the template consists of
@@ -385,3 +400,5 @@ names.</p>
 - ["Kuhr","Kühr"]
 - ["Kuehr","Kühr"]
 </code></pre>
+<p></body>
+</html></p>

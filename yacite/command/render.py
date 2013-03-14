@@ -21,6 +21,7 @@ class Render(YaciteCommand):
     def add_arguments(subparser):
         subparser.add_argument("-e","--extra-yaml",help="additional yaml to pass to template; the data is available as `extra` ")
         subparser.add_argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname (for citedby sorting)")
+        subparser.add_argument("-t","--template-dir",default="./templates",help="directory with templates; default: ./templates")
         subparser.add_argument("template",help="template file")
 
     def __init__(self,ns):
@@ -56,7 +57,7 @@ class Render(YaciteCommand):
         if self.cmp_keys:
             for rec in records:
                 rec["citedby"].sort(cmp=self.cmp_keys)
-        env=Environment(loader=FileSystemLoader('templates'),
+        env=Environment(loader=FileSystemLoader(self.ns.template_dir),
             line_statement_prefix="#")
         env.filters['authorsformat']=authors_format
         t=env.get_template(self.ns.template)

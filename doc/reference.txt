@@ -1,3 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+  <title>
+   yacite command reference
+  </title>
+ </head>
+<body>
 
 <h1>
 <tt>yacite</tt> command reference
@@ -11,13 +21,10 @@ SOURCES
 `yacite read` *datadir*
 
 **description:**
-
 > reads all records from *datadir*, outputs YAML
 
 **positional arguments:**
-
 >  *datadir*            
-
 >> directory containing individual files with YAML records
 
 * * *
@@ -31,15 +38,12 @@ SOURCES
 **optional arguments:**
 
 > `-s, --scopus`
-
 >> Correct broken BibTeX produced by SCOPUS.
 
 > `-a, --keep-abstract`  
-
 >> Keep abstract.
 
 > `-n, --no-titlecase`   
-
 >> By default, if the value of journal, title, series or booktitle is in ALL
 >> CAPS it is converted to titlecase string. This option supresses this behaviour.
 
@@ -55,33 +59,26 @@ SINKS
 **positional arguments:**
 
 > *datadir*             
-
 >> directory containing individual files with YAML records
 
 **optional arguments:**
 
 > `-h,` `--help` 
-
 >> show this help message and exit
 
 > `-u` *UNAME*, `--union` *UNAME*
-
 >> take union of lists - original and new
 
 > `-s` *SNAME*, `--set` *SNAME*
-
 >> replace orginal values by new value
 
 > `-d` *DNAME*, `--delete-field` *DNAME*
-
 >> delete field
 
 > `-v,` `--verbose` 
-
 >> be verbose
 
 > `-q,` `--quiet` 
-
 >> be quiet
 
 **how does the merge command work:**
@@ -146,19 +143,20 @@ SINKS
 **optional arguments:**
 
 > -e EXTRA_YAML, --extra-yaml EXTRA_YAML
-
 >> additional yaml to pass to template; the data is available as `extra`
 
 >-k SORT_KEY, --sort-key SORT_KEY
-
 >> either fieldname of ~fieldname (for citedby sorting)
+
+> -t TEMPLATE_DIR, --template-dir TEMPLATE_DIR
+>> directory with templates; default: `./templates`
 
 **implementation:**
 
 > The render subcommand  produces the final result: the list of
 > citations. The data is passed to the jinja2 python library, which uses a
 > template to produce the list of citations. The jinja2 template language is
-> documented at http://jinja.pocoo.org/docs/templates/ .
+> documented at the [jinja2 site](http://jinja.pocoo.org/docs/templates/) .
 
 > Currently, the templates are expected to be in the subdirectory `templates`
 > of the current directory. You can use `#` as the prefix of jinja2 tag lines.
@@ -211,34 +209,27 @@ FILTERS
 **positional arguments:**
 
 >  *expr*
-
 >> python expression
 
 
 **optional arguments:**
 
 >  -h, --help            
-
 >> show this help message and exit
 
 >  --myown               
-
 >> filter applies only if myown == True, otherwise the record passes through
 
 >  --notmyown            
-
 >> filter applies only if myown == False or undefined, otherwise the record passes through
 
 >  -f, --failed          
-
 >> output only the failed records,supress error message
 
 >  -m MODULE, --module MODULE
-
 >> python module to import
 
 >  -k, --keep-going
-
 >> do not stop when the eval(expr) throws an exception
 
 **description:**
@@ -252,29 +243,23 @@ FILTERS
 **positional arguments:**
 
 > statement             
-
 >> python statement
 
 **optional arguments:**
 
 >  -h, --help            
-
 >> show this help message and exit
 
 >  -n, --no-output       
-
 >> supress normal yaml ouy[ut stream; any intended output must be preformed by statement itself
 
 >  -k, --keep-going      
-
 >> do not stop when the statement throws an exception
 
 >  -f, --failed          
-
 >> output only the failed records,supress error messages
 
 >  -m MODULE, --module MODULE
-
 >> python module to import; multiple -m options are possible
 
 **description:**
@@ -288,17 +273,14 @@ FILTERS
 **positional arguments:**
 
 > fieldname 
-
 >> Field name. Value must be a 'list of strings'.
 
 >  string      
-
 >> these strings are appended to the value
 
 **optional arguments:**
 
 >  -h, --help  
-
 >> show this help message and exit
 
 **description:**
@@ -312,11 +294,9 @@ FILTERS
 **positional arguments:**
 
 > fieldname 
-
 >> Value of the field must be 'list of strings'.
 
 > string 
-
 >> these strings are removed from the value, if present
 
 **optional arguments:**
@@ -330,17 +310,14 @@ FILTERS
 ** positional arguments:**
 
 > fieldname 
-
 >> field name
 
 > rewrite_file 
-
 >> file with rewrite rules - see the docs for format
 
 **optional arguments:**
 
 >  -h, --help    
-
 >> show this help message and exit
 
 **description:**
@@ -363,4 +340,6 @@ FILTERS
     - ["Jenca","Jenča"]
     - ["Kuhr","Kühr"]
     - ["Kuehr","Kühr"]
+</body>
+</html>
 
