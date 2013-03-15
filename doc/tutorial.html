@@ -5,9 +5,11 @@
 <p>This is the Unix philosophy: Write programs that do one thing and do it well. Write programs to work together. Write programs to handle text streams, because that is a universal interface.</p>
 <p>Bell Laboratories. M. D. McIlroy, E. N. Pinson, and B. A. Tague.
 “Unix Time-Sharing System Forward”. <em>The Bell System Technical
-Journal</em> 1978. <strong>57</strong> (6, part 2). p. 1902. </p>
+Journal</em> 1978. <strong>57</strong> (6, part 2). p. 1902.</p>
 </blockquote>
-<h2>Creating HTML list of your publications</h2>
+<h2>What is <tt>yacite</tt></h2>
+<h2>What is <tt>yacite</tt> not</h2>
+<h2>Example 1: Creating HTML list of your publications</h2>
 <ol>
 <li>
 <p>Open a terminal emulator and type the following commands on the shell
@@ -56,11 +58,12 @@ XML), the YAML format was designed to be both human-readable and
 human-editable. It can be edited using any text editor.</p>
 </li>
 <li>
-<p>What we need to do now is to convert a YAML stream into a HTML document.
+<p>What we want to do now is to convert a YAML stream into a HTML document.
     This is accomplished using a <em>template</em>. A HTML template is a HTML file
-    enriched with special sequences representing variables, loops, conditions
+    containing special non-HTML control sequences 
+    representing variables, loops, conditions
     etc. <code>yacite</code> uses the jinja2 template language.</p>
-<p>To avoid chaos, the templates are kept in a separate directory. Create the
+<p>The templates are kept in a separate directory. Create the
 directory on the command prompt:</p>
 <pre><code>mkdir templates
 </code></pre>
@@ -123,12 +126,12 @@ citations) but, for the moment, we do not care.</p>
 <li>
 <p>If you need to create a MS Word document, there are some ways how to convert a
     simple HTML document to a <code>.doc</code> file. For example, you can try the
-    fantastic <code>pandoc</code> document conversion program. In addition, as I was
+    excellent <code>pandoc</code> document conversion utility. In addition, as I was
     told, MS Word should be capable to load a HTML file and save it as a
     MS Word file.</p>
 </li>
 </ol>
-<h2>Filtering the YAML stream</h2>
+<h2>Example 2: Filtering the YAML stream</h2>
 <ol>
 <li>
 <p>Try the following command</p>
@@ -136,7 +139,7 @@ citations) but, for the moment, we do not care.</p>
 </code></pre>
 <p>Note that the argument of the <code>yacite filter</code> command in enclosed in
 apostrophes. This tell the shell to pass it to the <code>yacite</code> as a
-single argument.  The argument <code>year == 2012</code> is a Python expression </p>
+single argument.  The argument <code>year == 2012</code> is a Python expression.</p>
 <p>The result should be a filtered YAML stream that contains only the
 2012 publications. </p>
 <p><strong>Explanation:</strong> The <code>yacite filter</code> command evaluates the <code>year == 2012</code>
@@ -155,13 +158,21 @@ the previous example.</p>
 substring of the title.</p>
 </li>
 <li>
-<p>You can use conjunction or disjunction:</p>
+<p>You can use conjunction (<code>and</code>), disjunction (<code>or</code>), negation ('not'):</p>
 <pre><code>... yacite filter '("Fourier" in title) or "(Laplace" in title)' ...
 ... yacite filter '(year &gt; 2000) and (year &lt;= 2010)' ...
+... yacite filter 'not ("Effect" in keywords)' ...
 </code></pre>
-</li>
-<li>
+<p>Let me remark that the last command is equivalent to much more
+readable</p>
+<pre><code>... yacite filter '"Effect" not in keywords' ...
+</code></pre>
 <p>We refer to Python tutorial for more information about Python
-    expressions.</p>
+expressions.</p>
 </li>
 </ol>
+<h2>Saving the data into database directory</h2>
+<h2>Changing the data in the datadir</h2>
+<h2>Adding citations</h2>
+<h2>Rendering citation lists</h2>
+<h2>Rewriting</h2>
