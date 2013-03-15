@@ -23,17 +23,25 @@ def readpubs(f):
         try:
             pub={}
             pub["type"]=entry.type
-            pub["authors"]=map(unicode,entry.persons['author'])
+            if entry.persons:
+                pub["authors"]=map(unicode,entry.persons['author'])
+            else:
+                pub["authors"]=[u"NOBODY, X."]
             for fname,value in entry.fields.iteritems():
-                fname=fname.replace("-","_")
+                # TODO: sanitize fname properly
+                fname=fname.replace("-","_") # - is forbidden in yaml map keys
                 pub[fname]=value.strip('{}')
                 if not ns.no_titlecase and \
                         fname in ("journal","title","series","booktitle") and \
                         pub[fname].isupper():
                     pub[fname]=titlecase(pub[fname].lower())
+            if "year" not in pub:
+                pub["year"]="NOYEAR"
+            if "title" not in pub:
+                pub["title"]="NOTITLE"
             if "pages" in pub:
                 if "-" in  pub["pages"]:
-                    pub["startpage"],pub["endpage"]=[x for x in pub["pages"].split("-",1)]
+                    pub["startpage"],pub["endpage"]=[x for x in re.split('-+',pub["pages"],maxsplit=1)]
                 else:
                     pub["startpage"]=pub["pages"]
                     pub["endpage"]=pub["pages"]
