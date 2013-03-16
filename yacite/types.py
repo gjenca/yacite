@@ -26,8 +26,14 @@ def makekey(bib_rec,datadir):
             break
     year=u"%s" % bib_rec["year"]
     keyprefix=u"%s%s%s" % (author,year,title)
+    zkey=[]
+    for c in unicodedata.normalize('NFKD',keyprefix):
+        if not unicodedata.combining(c):
+            zkey.append(c)
+    keyprefix=u"".join(zkey)
     if datadir is None:
         return keyprefix
+    #print >>sys.stderr,"keyprefix",keyprefix,"keys",datadir.keys
     if keyprefix in datadir.keys:
         for i in range(1,10):
             key=u"%s-%d" % (keyprefix,i)
@@ -35,11 +41,6 @@ def makekey(bib_rec,datadir):
                 break
     else:
         key=keyprefix
-    zkey=[]
-    for c in unicodedata.normalize('NFKD',key):
-        if not unicodedata.combining(c):
-            zkey.append(c)
-    key=u"".join(zkey)
     return(key)
                 
 
