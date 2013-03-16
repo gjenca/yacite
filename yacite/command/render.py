@@ -11,6 +11,15 @@ def authors_format(authors,bst_format):
 
     return [pybtex.bibtex.names.format(auth,bst_format) for auth in authors]
 
+def merge(dest,src):
+
+    for k in src:
+        if k not in dest:
+            dest[k]=src
+        else:
+            if type(dest[k]) is list and type(src[k]) is list:
+                dest[k].extend(src[k])
+                dest[k]=list(set(dest[k]))
 
 class Render(YaciteCommand):
 
@@ -38,9 +47,22 @@ class Render(YaciteCommand):
     def execute(self):
         records=list(sane_yaml.load_all(sys.stdin))
         key_dict={}
+        records_new=[]
         for rec in records:
             if "key" in rec:
+                if "@" in rec["key"]:
+                    key_main=rec["key"][:rec["key"].find("@")]
+                    if key_main in key_dict:
+                        # Twin records are merged
+                        rec["key"]=key_main
+                        merge(key_dict[key_main],rec)
+                        # the other twin is not appended
+                        continue
+                    else:
+                        rec["key"]=key_main
                 key_dict[rec["key"]]=rec
+            records_new.append(rec)
+        records=records_new
         for rec in records:
             if "myown" not in rec:
                 rec["myown"]=False
