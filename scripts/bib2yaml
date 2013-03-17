@@ -22,7 +22,7 @@ def readpubs(f):
     for entry in bib_data.entries.itervalues():
         try:
             pub={}
-            pub["type"]=entry.type
+            pub["type"]=entry.type.lower()
             if entry.persons:
                 pub["authors"]=map(unicode,entry.persons['author'])
             else:
