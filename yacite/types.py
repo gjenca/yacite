@@ -126,6 +126,10 @@ class BibRecord(dict):
         if all(exists_and_is_almost_same(self,other,key) \
             for key in ("title","year","authors")):
                 return True
+        
+        if all(exists_and_is_almost_same(self,other,key) \
+            for key in ("title","volume","startpage")):
+                return True
 
         if all(exists_and_is_almost_same(self,other,key) \
             for key in ("journal","volume","startpage")):
