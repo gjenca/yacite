@@ -24,11 +24,11 @@ prompt
 		mkdir yacite_sandbox
 		cd yacite_sandbox
 
-	This creates a new directory.
+	This creates a new working directory. 
 
 1.	You will need a BibTeX ('*.bib') database file containing your publications.
 	You can download it from a bibliographic database like Scopus of Web of
-	Science. Save the file (let us call it `mypubs.bib`) in the
+	Science or Google Scholar. Save the file (let us call it `mypubs.bib`) in the
 	`yacite_sandbox` directory you created.
 1.	Go back to the shell prompt (the current directory should be `yacite
 	sandbox` and type the following command 
@@ -172,7 +172,7 @@ Example 2: Filtering the YAML stream
 
 		... yacite filter '("Fourier" in title) or "(Laplace" in title)' ...
 		... yacite filter '(year > 2000) and (year <= 2010)' ...
-		... yacite filter 'not ("Effect" in keywords)' ...
+		... yacite filter 'not ("semigroup" in keywords)' ...
 
 	Let me remark that the last command is equivalent to much more
 	readable
@@ -182,8 +182,97 @@ Example 2: Filtering the YAML stream
 	We refer to Python tutorial for more information about Python
 	expressions.
 
-Saving the data into database directory
----------------------------------------
+Example 3: Persistence: saving the data into database directory
+---------------------------------------------------------------
+1.	In `yacite`, data are saved in plain YAML documents, one record per
+	file. The documents are saved in a database directory, called *datadir*. 
+	Currently, datadir simple and allows for editing the
+	data in place using any text editor, since there are no metadata.
+
+	Create the datadir:
+
+		mkdir pubcit
+
+	The name of the datadir does not matter at all.
+1.	The command `yacite merge` reads the YAML stream from its input
+	and saves the individual records in the datadir.
+
+		bib2yaml mypubs.bib | yacite merge pubcit
+
+	You see a couple of log messages saying that some new records were
+	created. Go into the `pubcit` directory and look around. There is 
+	a couple of files with the name scheme
+
+	`pubcit/${YEAR}/${AUTHOR}${YEAR}${TITLEWORD}.yaml`
+
+	`${AUTHOR}` is the surname of the first author.
+	`${TITLEWORD}` is the first word in the title, unless it is too short,
+	like "a" or "the". In this case, `${TITLEWORD}` are first two word of
+	the title. The name scheme makes it easy to find individual records.
+
+
+	When you open one the files you in a text editor can see that in every
+	file a new field `key` was created. The value of `key` is
+	`${AUTHOR}${YEAR}${TITLEWORD}`. It is easy to infer the value of `key`
+	whan looking at a paper.
+1.	Sometimes, there are multiple records with the same first author, year
+	and the first word of the title. If this happens, a suffix `-1` (or
+	more) is appended to `key` and to the corresponding part of the
+	filename.
+1.	Try again the command 
+		
+		bib2yaml mypubs.bib | yacite merge pubcit
+
+	Hopefully, nothing happens. 
+	For every record on its input, `yacite merge` figured out using a
+	heuristics that the records on its input is the same as the one stored in 
+	the database.
+
+Example 4: Marking the records as your own
+------------------------------------------
+1.	Let us start with a clean table. Remove the datadir and start with an
+	empty one.
+		
+		rm -rv pubcit
+		mkdir pubcit
+	
+1.	Try this command
+
+		bib2yaml mypubs.bib | yacite exec 'myown=True`
+
+	The result is an altered YAML stream. There is a new field,
+	`myown` with value `true` in every record. Note the difference;
+	`True` is a Python constant, `true` is a YAML constant. Also,
+	there is a single `=`, not `==`; we are assigning a value, not making
+	a comparision.
+
+	**Explanation:** The `yacite exec` command executes the Python command 
+	(in this case, `myown=True`) in the environment given by the record in stream. 
+
+1.	Now let the altered YAML stream flow into the `yacite merge` command:
+
+		bib2yaml mypubs.bib | yacite exec 'myown=True` | yacite merge pubcit
+	
+	Note that the filenames are different now: every new file is placed
+	into a `myown` subdirectory. This allows one to easily find his/her
+	own records.
+	
+Example 5: Reading and updating the database directory
+------------------------------------------------------
+1.	The command `yacite read` reads all data in the datadir and outputs
+	them as a YAML stream:
+
+		yacite read pubcit
+
+	You can render the stream using a template:
+
+		yacite read pubcit | yacite render publist.html
+
+1.	There are two ways how to update records in the datadir: either direct
+	editing or via the `yacite merge` command. Direct editing should be
+	clear: just edit the files using any text editor. This is aprropriate
+	for individual changes.
+
 
 Changing the data in the datadir
 --------------------------------
