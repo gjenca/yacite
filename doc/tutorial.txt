@@ -15,7 +15,7 @@ What is <tt>yacite</tt>
 What is <tt>yacite</tt> not
 ---------------------------
 
-Example 1: Creating HTML list of your publications
+Lesson 1: Creating HTML list of your publications
 --------------------------------------------------
 
 1.	Open a terminal emulator and type the following commands on the shell
@@ -138,7 +138,7 @@ prompt
 	told, MS Word should be capable to load a HTML file and save it as a
 	MS Word file.
 
-Example 2: Filtering the YAML stream
+Lesson 2: Filtering the YAML stream
 ------------------------------------
 
 1.	Try the following command
@@ -182,7 +182,7 @@ Example 2: Filtering the YAML stream
 	We refer to Python tutorial for more information about Python
 	expressions.
 
-Example 3: Persistence: saving the data into database directory
+Lesson 3: Persistence: saving the data into database directory
 ---------------------------------------------------------------
 1.	In `yacite`, data are saved in plain YAML documents, one record per
 	file. The documents are saved in a database directory, called *datadir*. 
@@ -225,10 +225,13 @@ Example 3: Persistence: saving the data into database directory
 
 	Hopefully, nothing happens. 
 	For every record on its input, `yacite merge` figured out using a
-	heuristics that the records on its input is the same as the one stored in 
-	the database.
+	heuristics that the record on its input points (in the real world) 
+	to the same article as the one stored in 
+	the database. Since every filed value in the input record (except for the `key`, which is
+	ignored in this respect) is the same as the stored one, there nothing
+	to do and the stored record is unchanged.
 
-Example 4: Marking the records as your own
+Lesson 4: Marking the records as your own
 ------------------------------------------
 1.	Let us start with a clean table. Remove the datadir and start with an
 	empty one.
@@ -257,8 +260,8 @@ Example 4: Marking the records as your own
 	into a `myown` subdirectory. This allows one to easily find his/her
 	own records.
 	
-Example 5: Reading and updating the database directory
-------------------------------------------------------
+Lesson 5: Reading the database directory
+-----------------------------------------
 1.	The command `yacite read` reads all data in the datadir and outputs
 	them as a YAML stream:
 
@@ -266,16 +269,81 @@ Example 5: Reading and updating the database directory
 
 	You can render the stream using a template:
 
-		yacite read pubcit | yacite render publist.html
+		yacite read pubcit | yacite render publist.html > out.html
+
+	Try to put some `yacite filter` in the middle of the pipe sequence
+	and look at the result.
+
+Lesson 6: Tagging the records in the database directory 
+------------------------------------------
 
 1.	There are two ways how to update records in the datadir: either direct
 	editing or via the `yacite merge` command. Direct editing should be
 	clear: just edit the files using any text editor. This is aprropriate
 	for individual changes.
+1.	Let us supose we that all the data in datadir were created from
+	SCOPUS. We would like to mark them as such. One of the possibilities
+	would be to add a boolean variable `scopus` in every record, as we
+	did with `myown` in one of the above examples.
 
+		yacite read pubcit | yacite exec 'scopus=True' | yacite merge pubcit
 
-Changing the data in the datadir
---------------------------------
+	However, this is not necessarily a good idea, because, for example,
+	it is not clear from looking at the data which fields are "real data"
+	and which are "custom marks". It is better to equip
+	every record with a list of strings, let us say `tags`. There is a
+	special pair of commands for manipulation with lists of strings,
+	namely `yacite append` and `yacite unappend`. Look at the output of
+	this command:
+		
+		yacite read pubcit | yacite append tags scopus
+
+	There is `tags: [scopus]` in every record in the resulting YAML stream.
+	Let the stream flow back into the database:
+
+		yacite read pubcit | yacite append tags scopus | yacite merge pubcit
+
+	The merge command displays a couple of log messages about creating new fields for every
+	record in the database. 
+1.	Let us mark the records older than 2005 as old. This can be done using
+	sequence of filtering and marking: 
+
+		yacite read pubcit | yacite filter 'year<2005' | yacite append tags old
+
+	This works as expected, the resulting YAML stream contains either '[scopus,old]'
+	or '[scopus]' as the value of 'tags', depending of the value of year. However,  
+		
+		yacite read pubcit | yacite filter 'year<2005' | yacite append tags old | yacite merge pubcit
+
+	produces a strange message about "bounced" fields. To see what
+	happened, try the '-v' option (v is for verbose):
+
+		yacite read pubcit | yacite filter 'year<2005' | yacite append tags old | yacite merge -v pubcit
+
+	Every changed `tags` field bounced. What happened? The `yacite merge`
+	command recognized that the records in the YAML stream are new
+	versions of the records in the database and that the value of `tags`
+	is different. `yacite merge` is careful, it does not change existing
+	data unless explicily said to do so.
+	And did not say what to do with the changed value of `tags`. What
+	we want to do is to set `tags` to the new value. This command
+	does the trick:
+
+		yacite read pubcit | yacite filter 'year<2005' | yacite append tags old | yacite merge -s tags pubcit
+
+	The `-s tags` says that the value of `tags` should be updated to the
+	value obtained from the YAML stream.
+
+1.	Let us delete the 'old' tag (it was a silly example anyway).
+
+		yacite read pubcit | yacite unappend tags old
+
+	shows a YAML stream without any `old` tag among `tags`. The rest of
+	the task of deleting the `old` tag is left as an excercise to the esteemed reader.  
+		
+
+Merging data from different sources
+-----------------------------------
 
 Adding citations
 ----------------

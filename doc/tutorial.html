@@ -9,7 +9,7 @@ Journal</em> 1978. <strong>57</strong> (6, part 2). p. 1902.</p>
 </blockquote>
 <h2>What is <tt>yacite</tt></h2>
 <h2>What is <tt>yacite</tt> not</h2>
-<h2>Example 1: Creating HTML list of your publications</h2>
+<h2>Lesson 1: Creating HTML list of your publications</h2>
 <ol>
 <li>
 <p>Open a terminal emulator and type the following commands on the shell
@@ -17,12 +17,12 @@ prompt</p>
 <pre><code>mkdir yacite_sandbox
 cd yacite_sandbox
 </code></pre>
-<p>This creates a new directory.</p>
+<p>This creates a new working directory. </p>
 </li>
 <li>
 <p>You will need a BibTeX ('*.bib') database file containing your publications.
     You can download it from a bibliographic database like Scopus of Web of
-    Science. Save the file (let us call it <code>mypubs.bib</code>) in the
+    Science or Google Scholar. Save the file (let us call it <code>mypubs.bib</code>) in the
     <code>yacite_sandbox</code> directory you created.</p>
 </li>
 <li>
@@ -131,7 +131,7 @@ citations) but, for the moment, we do not care.</p>
     MS Word file.</p>
 </li>
 </ol>
-<h2>Example 2: Filtering the YAML stream</h2>
+<h2>Lesson 2: Filtering the YAML stream</h2>
 <ol>
 <li>
 <p>Try the following command</p>
@@ -161,7 +161,7 @@ substring of the title.</p>
 <p>You can use conjunction (<code>and</code>), disjunction (<code>or</code>), negation ('not'):</p>
 <pre><code>... yacite filter '("Fourier" in title) or "(Laplace" in title)' ...
 ... yacite filter '(year &gt; 2000) and (year &lt;= 2010)' ...
-... yacite filter 'not ("Effect" in keywords)' ...
+... yacite filter 'not ("semigroup" in keywords)' ...
 </code></pre>
 <p>Let me remark that the last command is equivalent to much more
 readable</p>
@@ -171,8 +171,157 @@ readable</p>
 expressions.</p>
 </li>
 </ol>
-<h2>Saving the data into database directory</h2>
-<h2>Changing the data in the datadir</h2>
+<h2>Lesson 3: Persistence: saving the data into database directory</h2>
+<ol>
+<li>
+<p>In <code>yacite</code>, data are saved in plain YAML documents, one record per
+    file. The documents are saved in a database directory, called <em>datadir</em>. 
+    Currently, datadir simple and allows for editing the
+    data in place using any text editor, since there are no metadata.</p>
+<p>Create the datadir:</p>
+<pre><code>mkdir pubcit
+</code></pre>
+<p>The name of the datadir does not matter at all.
+1.  The command <code>yacite merge</code> reads the YAML stream from its input
+and saves the individual records in the datadir.</p>
+<pre><code>bib2yaml mypubs.bib | yacite merge pubcit
+</code></pre>
+<p>You see a couple of log messages saying that some new records were
+created. Go into the <code>pubcit</code> directory and look around. There is 
+a couple of files with the name scheme</p>
+<p><code>pubcit/${YEAR}/${AUTHOR}${YEAR}${TITLEWORD}.yaml</code></p>
+<p><code>${AUTHOR}</code> is the surname of the first author.
+<code>${TITLEWORD}</code> is the first word in the title, unless it is too short,
+like "a" or "the". In this case, <code>${TITLEWORD}</code> are first two word of
+the title. The name scheme makes it easy to find individual records.</p>
+<p>When you open one the files you in a text editor can see that in every
+file a new field <code>key</code> was created. The value of <code>key</code> is
+<code>${AUTHOR}${YEAR}${TITLEWORD}</code>. It is easy to infer the value of <code>key</code>
+whan looking at a paper.
+1.  Sometimes, there are multiple records with the same first author, year
+and the first word of the title. If this happens, a suffix <code>-1</code> (or
+more) is appended to <code>key</code> and to the corresponding part of the
+filename.
+1.  Try again the command </p>
+<pre><code>bib2yaml mypubs.bib | yacite merge pubcit
+</code></pre>
+<p>Hopefully, nothing happens. 
+For every record on its input, <code>yacite merge</code> figured out using a
+heuristics that the record on its input points (in the real world) 
+to the same article as the one stored in 
+the database. Since every filed value in the input record (except for the <code>key</code>, which is
+ignored in this respect) is the same as the stored one, there nothing
+to do and the stored record is unchanged.</p>
+</li>
+</ol>
+<h2>Lesson 4: Marking the records as your own</h2>
+<ol>
+<li>
+<p>Let us start with a clean table. Remove the datadir and start with an
+    empty one.</p>
+<pre><code>rm -rv pubcit
+mkdir pubcit
+</code></pre>
+</li>
+<li>
+<p>Try this command</p>
+<pre><code>bib2yaml mypubs.bib | yacite exec 'myown=True`
+</code></pre>
+<p>The result is an altered YAML stream. There is a new field,
+<code>myown</code> with value <code>true</code> in every record. Note the difference;
+<code>True</code> is a Python constant, <code>true</code> is a YAML constant. Also,
+there is a single <code>=</code>, not <code>==</code>; we are assigning a value, not making
+a comparision.</p>
+<p><strong>Explanation:</strong> The <code>yacite exec</code> command executes the Python command 
+(in this case, <code>myown=True</code>) in the environment given by the record in stream. </p>
+</li>
+<li>
+<p>Now let the altered YAML stream flow into the <code>yacite merge</code> command:</p>
+<pre><code>bib2yaml mypubs.bib | yacite exec 'myown=True` | yacite merge pubcit
+</code></pre>
+<p>Note that the filenames are different now: every new file is placed
+into a <code>myown</code> subdirectory. This allows one to easily find his/her
+own records.</p>
+</li>
+</ol>
+<h2>Lesson 5: Reading the database directory</h2>
+<ol>
+<li>
+<p>The command <code>yacite read</code> reads all data in the datadir and outputs
+    them as a YAML stream:</p>
+<pre><code>yacite read pubcit
+</code></pre>
+<p>You can render the stream using a template:</p>
+<pre><code>yacite read pubcit | yacite render publist.html &gt; out.html
+</code></pre>
+<p>Try to put some <code>yacite filter</code> in the middle of the pipe sequence
+and look at the result.</p>
+</li>
+</ol>
+<h2>Lesson 6: Tagging the records in the database directory</h2>
+<ol>
+<li>There are two ways how to update records in the datadir: either direct
+    editing or via the <code>yacite merge</code> command. Direct editing should be
+    clear: just edit the files using any text editor. This is aprropriate
+    for individual changes.</li>
+<li>
+<p>Let us supose we that all the data in datadir were created from
+    SCOPUS. We would like to mark them as such. One of the possibilities
+    would be to add a boolean variable <code>scopus</code> in every record, as we
+    did with <code>myown</code> in one of the above examples.</p>
+<pre><code>yacite read pubcit | yacite exec 'scopus=True' | yacite merge pubcit
+</code></pre>
+<p>However, this is not necessarily a good idea, because, for example,
+it is not clear from looking at the data which fields are "real data"
+and which are "custom marks". It is better to equip
+every record with a list of strings, let us say <code>tags</code>. There is a
+special pair of commands for manipulation with lists of strings,
+namely <code>yacite append</code> and <code>yacite unappend</code>. Look at the output of
+this command:</p>
+<pre><code>yacite read pubcit | yacite append tags scopus
+</code></pre>
+<p>There is <code>tags: [scopus]</code> in every record in the resulting YAML stream.
+Let the stream flow back into the database:</p>
+<pre><code>yacite read pubcit | yacite append tags scopus | yacite merge pubcit
+</code></pre>
+<p>The merge command displays a couple of log messages about creating new fields for every
+record in the database. 
+1.  Let us mark the records older than 2005 as old. This can be done using
+sequence of filtering and marking: </p>
+<pre><code>yacite read pubcit | yacite filter 'year&lt;2005' | yacite append tags old
+</code></pre>
+<p>This works as expected, the resulting YAML stream contains either '[scopus,old]'
+or '[scopus]' as the value of 'tags', depending of the value of year. However,<br />
+</p>
+<pre><code>yacite read pubcit | yacite filter 'year&lt;2005' | yacite append tags old | yacite merge pubcit
+</code></pre>
+<p>produces a strange message about "bounced" fields. To see what
+happened, try the '-v' option (v is for verbose):</p>
+<pre><code>yacite read pubcit | yacite filter 'year&lt;2005' | yacite append tags old | yacite merge -v pubcit
+</code></pre>
+<p>Every changed <code>tags</code> field bounced. What happened? The <code>yacite merge</code>
+command recognized that the records in the YAML stream are new
+versions of the records in the database and that the value of <code>tags</code>
+is different. <code>yacite merge</code> is careful, it does not change existing
+data unless explicily said to do so.
+And did not say what to do with the changed value of <code>tags</code>. What
+we want to do is to set <code>tags</code> to the new value. This command
+does the trick:</p>
+<pre><code>yacite read pubcit | yacite filter 'year&lt;2005' | yacite append tags old | yacite merge -s tags pubcit
+</code></pre>
+<p>The <code>-s tags</code> says that the value of <code>tags</code> should be updated to the
+value obtained from the YAML stream.</p>
+</li>
+<li>
+<p>Let us delete the 'old' tag (it was a silly example anyway).</p>
+<pre><code>yacite read pubcit | yacite unappend tags old
+</code></pre>
+<p>shows a YAML stream without any <code>old</code> tag among <code>tags</code>. The rest of
+the task of deleting the <code>old</code> tag is left as an excercise to the esteemed reader.<br />
+</p>
+</li>
+</ol>
+<h2>Merging data from different sources</h2>
 <h2>Adding citations</h2>
 <h2>Rendering citation lists</h2>
 <h2>Rewriting</h2>
