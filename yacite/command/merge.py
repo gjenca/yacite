@@ -24,6 +24,7 @@ class Merge(YaciteCommand):
         subparser.add_argument("-d","--delete",help="delete these fields",
             dest="dname",action="append",default=[])
         subparser.add_argument("-v","--verbose",action="store_true",help="be verbose")
+        subparser.add_argument("-b","--bounced",action="store_true",help="write bounced fields to a YAML stream")
         subparser.add_argument("-q","--quiet",action="store_true",help="be quiet")
 
     def __init__(self,ns):
@@ -43,8 +44,8 @@ class Merge(YaciteCommand):
             # 2.0. prepare:
             matches=self.datadir.list_matching(rec)
             if len(matches)>1:
-                raise DataError("merge: %s in stream matches multiple records in datadir" \
-                    % describe_record(i,rec))
+                raise DataError("merge: %s in stream matches multiple records in datadir; the keys are: %s" \
+                    % (describe_record(i,rec),",".join(match["key"] for match in matches)))
             record_bounced=False
             if not matches:
                 # 2.1 new record
@@ -64,6 +65,18 @@ class Merge(YaciteCommand):
                             bounced_fields_num+=1
                             record_bounced=True
                             bounced_fields.append(field_name)
+                if self.ns.bounced and bounced_fields:
+                    print "---"
+                    d_rec={}
+                    d_match={}
+                    for bf in bounced_fields:
+                        d_rec[bf]=rec[bf]
+                        d_match[bf]=match[bf]
+                    d_rec["key"]=match["key"]
+                    for line in sane_yaml.dump(d_match).split("\n"):
+                        if line:
+                            print "#",line
+                    sys.stdout.write(sane_yaml.dump(d_rec))
                 if self.ns.verbose and bounced_fields:
                     print >>sys.stderr,"merge: %s, file '%s':fields %s bounced" \
                     % (describe_record(i,rec),match.path,",".join(bounced_fields))
