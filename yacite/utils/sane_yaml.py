@@ -16,8 +16,8 @@ def unicode_representer(dumper, uni):
 # This is necessary to dump ASCII string normally
 yaml.add_representer(unicode, unicode_representer)
 
-def load_all(f):
-    for d in yaml.load_all(f):
+def load_all(f,**kwargs):
+    for d in yaml.load_all(f,**kwargs):
         for key in d:
             if type(d[key]) is unicode:
                 try:
@@ -28,9 +28,9 @@ def load_all(f):
 
 yaml_load=yaml.load
 
-def dump(obj):
-    return yaml.dump(obj,encoding="utf-8",allow_unicode=True)
+def dump(obj,**kwargs):
+    return yaml.dump(obj,encoding="utf-8",allow_unicode=True,**kwargs)
 
-def load(f):
-    return yaml.load(f)
+def load(f,**kwargs):
+    return yaml.load(f,**kwargs)
 

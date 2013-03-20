@@ -81,6 +81,9 @@ SINKS
 > `-q,` `--quiet` 
 >> be quiet
 
+> `-b` `--bounced`
+>> write bounced fields to stdout as a mergeable YAML stream
+
 **how does the merge command work:**
 
 > merge means this:

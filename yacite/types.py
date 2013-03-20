@@ -96,10 +96,10 @@ class BibRecord(dict):
         if self.path is None:
             if self.datadir is None:
                 raise SaveError("Cannot save: no path and no datadir given") 
-            if not "year" in self:
-                year="none"
-            else:
-                year=self["year"]
+            if "year" not in pub:
+                pub["year"]="NOYEAR"
+            if "title" not in pub:
+                pub["title"]="NOTITLE"
             if ("myown" in self) and self["myown"]:
                 pathdir="%s/myown/%s/" % (self.datadir.dirname,year)
             else:
@@ -114,9 +114,8 @@ class BibRecord(dict):
     def match(self,other):
         
         if "key" in self and \
-            "key" in other and\
-            self["key"]==other["key"]:
-            return True
+            "key" in other:
+            return self["key"]==other["key"]
 
         for k1 in ("article-number","art_number","article_number"):
             for k2 in ("article-number","art_number","article_number"):
