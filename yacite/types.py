@@ -91,19 +91,19 @@ class BibRecord(dict):
     def save(self):
         if not self.dirty:
             return
+        if "year" not in self:
+            self["year"]="NOYEAR"
+        if "title" not in self:
+            self["title"]="NOTITLE"
         if not "key" in self:
             self["key"]=makekey(self,self.datadir)
         if self.path is None:
             if self.datadir is None:
                 raise SaveError("Cannot save: no path and no datadir given") 
-            if "year" not in pub:
-                pub["year"]="NOYEAR"
-            if "title" not in pub:
-                pub["title"]="NOTITLE"
             if ("myown" in self) and self["myown"]:
-                pathdir="%s/myown/%s/" % (self.datadir.dirname,year)
+                pathdir="%s/myown/%s/" % (self.datadir.dirname,self["year"])
             else:
-                pathdir="%s/%s/" % (self.datadir.dirname,year)
+                pathdir="%s/%s/" % (self.datadir.dirname,self["year"])
             mkdir_p(pathdir)
             self.path=pathdir+("%s.yaml" % self["key"].encode("ascii"))
         f=tempfile.NamedTemporaryFile(delete=False)
@@ -111,32 +111,60 @@ class BibRecord(dict):
         f.close()
         shutil.move(f.name,self.path)
 
-    def match(self,other):
+    def _same_position(self,other):
         
-        if "key" in self and \
-            "key" in other:
-            return self["key"]==other["key"]
-
         for k1 in ("article-number","art_number","article_number"):
             for k2 in ("article-number","art_number","article_number"):
                 if k1 in self and k2 in other and self[k1]==other[k2]:
                     return True
 
         if all(exists_and_is_almost_same(self,other,key) \
-            for key in ("title","year","authors")):
+            for key in ("volume","startpage")):
                 return True
         
         if all(exists_and_is_almost_same(self,other,key) \
-            for key in ("title","volume","startpage")):
+            for key in ("year","number","startpage")):
+                return True
+        if "key" in self and \
+            "key" in other:
+            return self["key"]==other["key"]
+
+        return False
+
+    def _same_source(self,other):
+        
+        return any(exists_and_is_almost_same(self,other,key) \
+            for key in ("journal","series"))
+
+    def _same_authors(self,other):
+
+        def _surname(author):
+            author=u"".join(author.split(u",")[0].lower().split())
+
+        if "authors" is self and "authors" in other:
+            l1=[_surname(author) for author in self["authors"]]
+            l2=[_surname(author) for author in other["authors"]]
+            l1.sort()
+            l2.sort()
+            return l1==l2
+        return False
+
+    def match(self,other):
+
+        if "key" in self and "key" in other and \
+            self["key"]==other["key"]:
                 return True
 
-        if all(exists_and_is_almost_same(self,other,key) \
-            for key in ("journal","volume","startpage")):
-                return True
-        
-        if all(exists_and_is_almost_same(self,other,key) \
-            for key in ("series","volume","startpage")):
-                return True
+        if self._same_source(other) and self._same_position(other):
+            return True
+
+        if self._same_authors(other) and all(exists_and_is_almost_same(self,other,key) \
+            for key in ("title","year")):
+            return True
+
+        if exists_and_is_almost_same(self,other,"title") and \
+            self._same_position(other):
+            return True
 
         return False
 
