@@ -295,7 +295,7 @@ or '[scopus]' as the value of 'tags', depending of the value of year. However,<b
 </p>
 <pre><code>yacite read pubcit | yacite filter 'year&lt;2005' | yacite append tags old | yacite merge pubcit
 </code></pre>
-<p>produces a strange message about "bounced" fields. To see what
+<p>produces a message about "bounced" fields. To see what
 happened, try the '-v' option (v is for verbose):</p>
 <pre><code>yacite read pubcit | yacite filter 'year&lt;2005' | yacite append tags old | yacite merge -v pubcit
 </code></pre>
@@ -303,13 +303,13 @@ happened, try the '-v' option (v is for verbose):</p>
 command recognized that the records in the YAML stream are new
 versions of the records in the database and that the value of <code>tags</code>
 is different. <code>yacite merge</code> is careful, it does not change existing
-data unless explicily said to do so.
+data in the database unless explicily said to do so.
 And did not say what to do with the changed value of <code>tags</code>. What
 we want to do is to set <code>tags</code> to the new value. This command
 does the trick:</p>
 <pre><code>yacite read pubcit | yacite filter 'year&lt;2005' | yacite append tags old | yacite merge -s tags pubcit
 </code></pre>
-<p>The <code>-s tags</code> says that the value of <code>tags</code> should be updated to the
+<p>The <code>-s tags</code> (s stands for SET) says that the value of <code>tags</code> should be updated to the
 value obtained from the YAML stream.</p>
 </li>
 <li>
@@ -321,7 +321,41 @@ the task of deleting the <code>old</code> tag is left as an excercise to the est
 </p>
 </li>
 </ol>
-<h2>Merging data from different sources</h2>
+<h2>Lesson 7: Merging data from different sources</h2>
+<ol>
+<li>
+<p>Let us start with a clean database again:</p>
+<pre><code>rm -r pubcit
+mkdir pubcit
+</code></pre>
+</li>
+<li>
+<p>We assume in this lesson that we have two BibTeX files containing bibliography data concerning 
+    your own articles, the names of the files are <code>scopus.bib</code> and <code>wos.bib</code>. Merge the data from
+    the <code>scopus.bib</code> into the database, marking them with <code>scopus</code> tag and <code>myown=true</code> in each
+    record.</p>
+<pre><code>bib2yaml scopus.bib | yacite append tags scopus | yacite exec 'myown=True' | yacite merge pubcit
+</code></pre>
+</li>
+<li>
+<p>Take the other file, <code>wos.bib</code> and do the same thing with it, use the <code>-v</code> (verbose) option with
+    yacite merge.</p>
+<pre><code>bib2yaml wos.bib | yacite append tags wos | yacite exec 'myown=True' | yacite merge -v pubcit
+</code></pre>
+<p>What happened? Examine the messages given by <code>yacite merge</code>.</p>
+<ol>
+<li>If there are some records that are in <code>wos.bib</code> and not in <code>scopus.bib</code>, they were
+    new so the <code>yacite merge</code> did the right thing: it created new records. These</li>
+<li>For the records that are in both BibTeX files, there were some new fields present in YAML stream.
+    These were appended to the corresponding records.</li>
+<li>A lot of fields "bounced". That means that they were present in both records, but they values were
+    different. It is for sure that the field <code>tags</code> is amoung the bounced fields, since its value is
+    <code>[scopus]</code> in the database and <code>[wos]</code> in the YAML stream. It is possible that the other fields differ
+    as well, mostly <code>title</code>, <code>journal</code>, <code>authors</code> and others. Probably the only difference 
+    is the capitalization and whether the authors field contains full names. </li>
+</ol>
+</li>
+</ol>
 <h2>Adding citations</h2>
 <h2>Rendering citation lists</h2>
 <h2>Rewriting</h2>

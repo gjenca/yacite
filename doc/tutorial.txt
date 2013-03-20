@@ -315,7 +315,7 @@ Lesson 6: Tagging the records in the database directory
 		
 		yacite read pubcit | yacite filter 'year<2005' | yacite append tags old | yacite merge pubcit
 
-	produces a strange message about "bounced" fields. To see what
+	produces a message about "bounced" fields. To see what
 	happened, try the '-v' option (v is for verbose):
 
 		yacite read pubcit | yacite filter 'year<2005' | yacite append tags old | yacite merge -v pubcit
@@ -324,14 +324,14 @@ Lesson 6: Tagging the records in the database directory
 	command recognized that the records in the YAML stream are new
 	versions of the records in the database and that the value of `tags`
 	is different. `yacite merge` is careful, it does not change existing
-	data unless explicily said to do so.
+	data in the database unless explicily said to do so.
 	And did not say what to do with the changed value of `tags`. What
 	we want to do is to set `tags` to the new value. This command
 	does the trick:
 
 		yacite read pubcit | yacite filter 'year<2005' | yacite append tags old | yacite merge -s tags pubcit
 
-	The `-s tags` says that the value of `tags` should be updated to the
+	The `-s tags` (s stands for SET) says that the value of `tags` should be updated to the
 	value obtained from the YAML stream.
 
 1.	Let us delete the 'old' tag (it was a silly example anyway).
@@ -342,8 +342,43 @@ Lesson 6: Tagging the records in the database directory
 	the task of deleting the `old` tag is left as an excercise to the esteemed reader.  
 		
 
-Merging data from different sources
------------------------------------
+Lesson 7: Merging data from different sources
+---------------------------------------------
+
+1.	Let us start with a clean database again:
+
+		rm -r pubcit
+		mkdir pubcit
+
+1.	We assume in this lesson that we have two BibTeX files containing bibliography data concerning 
+	your own articles, the names of the files are `scopus.bib` and `wos.bib`. Merge the data from
+	the `scopus.bib` into the database, marking them with `scopus` tag and `myown=true` in each
+	record.
+
+		bib2yaml scopus.bib | yacite append tags scopus | yacite exec 'myown=True' | yacite merge pubcit
+	
+1.	Take the other file, `wos.bib` and do the same thing with it, use the `-v` (verbose) option with
+	yacite merge.
+
+		bib2yaml wos.bib | yacite append tags wos | yacite exec 'myown=True' | yacite merge -v pubcit
+
+	What happened? Examine the messages given by `yacite merge`.
+
+	1.	If there are some records that are in `wos.bib` and not in `scopus.bib`, they were
+		new so the `yacite merge` did the right thing: it created new records. These
+	1.	For the records that are in both BibTeX files, there were some new fields present in YAML stream.
+		These were appended to the corresponding records.
+	1.	A lot of fields "bounced". That means that they were present in both records, but they values were
+		different. It is for sure that the field `tags` is amoung the bounced fields, since its value is
+		`[scopus]` in the database and `[wos]` in the YAML stream. It is possible that the other fields differ
+		as well, mostly `title`, `journal`, `authors` and others. Probably the only difference 
+		is the capitalization and whether the authors field contains full names. 
+
+
+	
+		
+
+
 
 Adding citations
 ----------------
