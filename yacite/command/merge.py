@@ -24,7 +24,7 @@ class Merge(YaciteCommand):
         subparser.add_argument("-d","--delete",help="delete these fields",
             dest="dname",action="append",default=[])
         subparser.add_argument("-v","--verbose",action="store_true",help="be verbose")
-        subparser.add_argument("-b","--bounced",action="store_true",help="write bounced fields to a YAML stream")
+        subparser.add_argument("-b","--bounced",action="store_true",help="write bounced fields to a mergeable YAML stream")
         subparser.add_argument("-q","--quiet",action="store_true",help="be quiet")
 
     def __init__(self,ns):
