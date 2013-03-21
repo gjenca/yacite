@@ -141,7 +141,7 @@ class BibRecord(dict):
         def _surname(author):
             author=u"".join(author.split(u",")[0].lower().split())
 
-        if "authors" is self and "authors" in other:
+        if "authors" in self and "authors" in other:
             l1=[_surname(author) for author in self["authors"]]
             l2=[_surname(author) for author in other["authors"]]
             l1.sort()
@@ -154,17 +154,17 @@ class BibRecord(dict):
         if "key" in self and "key" in other and \
             self["key"]==other["key"]:
                 return True
+        same_position=self._same_position(other)
+        if exists_and_is_almost_same(self,other,"title") and same_position:
+            return True
 
-        if self._same_source(other) and self._same_position(other):
+        if self._same_source(other) and same_position:
             return True
 
         if self._same_authors(other) and all(exists_and_is_almost_same(self,other,key) \
             for key in ("title","year")):
             return True
 
-        if exists_and_is_almost_same(self,other,"title") and \
-            self._same_position(other):
-            return True
 
         return False
 
