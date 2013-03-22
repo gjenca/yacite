@@ -73,10 +73,15 @@ class Merge(YaciteCommand):
                         d_rec[bf]=rec[bf]
                         d_match[bf]=match[bf]
                     d_rec["key"]=match["key"]
-                    for line in sane_yaml.dump(d_match).split("\n"):
+                    fs=None
+                    if all(type(x) in (int,unicode,str) for x in d_match.values()):
+                        fs=False
+                    for line in sane_yaml.dump(d_match,default_flow_style=fs).split("\n"):
                         if line:
                             print "#",line
-                    sys.stdout.write(sane_yaml.dump(d_rec))
+                    if all(type(x) in (int,unicode,str) for x in d_rec.values()):
+                        fs=False
+                    sys.stdout.write(sane_yaml.dump(d_rec,default_flow_style=fs))
                 if self.ns.verbose and bounced_fields:
                     print >>sys.stderr,"merge: %s, file '%s':fields %s bounced" \
                     % (describe_record(i,rec),match.path,",".join(bounced_fields))
