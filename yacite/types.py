@@ -26,11 +26,8 @@ def makekey(bib_rec,datadir):
             break
     year=u"%s" % bib_rec["year"]
     keyprefix=u"%s%s%s" % (author,year,title)
-    zkey=[]
-    for c in unicodedata.normalize('NFKD',keyprefix):
-        if not unicodedata.combining(c):
-            zkey.append(c)
-    keyprefix=u"".join(zkey)
+    # strip accents
+    keyprefix=unicodedata.normalize('NFKD',keyprefix).encode("ascii","ignore").decode("ascii")
     if datadir is None:
         return keyprefix
     #print >>sys.stderr,"keyprefix",keyprefix,"keys",datadir.keys
@@ -115,20 +112,17 @@ class BibRecord(dict):
         
         for k1 in ("article-number","art_number","article_number"):
             for k2 in ("article-number","art_number","article_number"):
-                if k1 in self and k2 in other and self[k1]==other[k2]:
+                if k1 in self and k2 in other and self[k1]==other[k2] and \
+                    (exists_and_is_almost_same(self,other,"volume") \
+                        or ("volume" not in self and "volume" not in other)) and \
+                    (exists_and_is_almost_same(self,other,"number") \
+                        or ("number" not in self and "number" not in other)):
                     return True
 
         if all(exists_and_is_almost_same(self,other,key) \
             for key in ("volume","startpage")):
                 return True
         
-        if all(exists_and_is_almost_same(self,other,key) \
-            for key in ("year","number","startpage")):
-                return True
-        if "key" in self and \
-            "key" in other:
-            return self["key"]==other["key"]
-
         return False
 
     def _same_source(self,other):
@@ -151,20 +145,37 @@ class BibRecord(dict):
 
     def match(self,other):
 
-        if "key" in self and "key" in other and \
-            self["key"]==other["key"]:
-                return True
-        same_position=self._same_position(other)
-        if exists_and_is_almost_same(self,other,"title") and same_position:
-            return True
+        # if keys are present, it is trivial
+        if "key" in self and "key" in other:
+            return self["key"]==other["key"]
 
-        if self._same_source(other) and same_position:
-            return True
+        # a distinct startpage, both greater than 1 
+        # means no match
+        if "startpage" in self and "startpage" in other and \
+            min(self["startpage"],other["startpage"])>1 and \
+            self["startpage"]!=other["startpage"]:
+            return False
 
+        # distinct length (not too short) means no match
+        try:
+            self_l=self["endpage"]-self["startpage"]
+            other_l=other["endpage"]-other["startpage"]
+            if self_l>2 and other_l>2 and self_l!=other_l:
+                return False
+        except:
+            pass
+            
         if self._same_authors(other) and all(exists_and_is_almost_same(self,other,key) \
             for key in ("title","year")):
             return True
+        
+        same_position=self._same_position(other)
 
+        if same_position and exists_and_is_almost_same(self,other,"title"):
+            return True
+
+        if same_position and self._same_source(other):
+            return True
 
         return False
 
@@ -195,5 +206,5 @@ class Datadir(list):
 
 
     def list_matching(self,pattern):
-        
+
         return [bib_rec for bib_rec in self if bib_rec.match(pattern)]
