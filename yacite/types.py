@@ -185,13 +185,13 @@ class Datadir(list):
 
         list.append(self,bib_rec)
         if "key" in bib_rec:
-            self.keys.append(bib_rec["key"])
+            self.keys[bib_rec["key"]]=bib_rec
 
     def __init__(self,dirname):
 
         list.__init__(self)
+        self.keys={}
         self.dirname=dirname
-        self.keys=[]
         if os.path.isdir(dirname):
             for root,dirs,files in os.walk(dirname):
                 for name in files:
@@ -207,4 +207,7 @@ class Datadir(list):
 
     def list_matching(self,pattern):
 
-        return [bib_rec for bib_rec in self if bib_rec.match(pattern)]
+        if "key" in pattern and pattern["key"] in self.keys:
+            return [self.keys[pattern["key"]]]
+        else:
+            return [bib_rec for bib_rec in self if bib_rec.match(pattern)]

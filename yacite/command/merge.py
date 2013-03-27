@@ -39,6 +39,7 @@ class Merge(YaciteCommand):
         # 1. statistics
         bounced_fields_num=0
         bounced_records_num=0
+        glob_bounced_fields=[]
         # 2. new_record, new_field, set, union, delete
         for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             # 2.0. prepare:
@@ -65,6 +66,9 @@ class Merge(YaciteCommand):
                             bounced_fields_num+=1
                             record_bounced=True
                             bounced_fields.append(field_name)
+                            if field_name not in glob_bounced_fields:
+                                glob_bounced_fields.append(field_name)
+                                glob_bounced_fields.sort()
                 if self.ns.bounced and bounced_fields:
                     print "---"
                     d_rec={}
@@ -125,5 +129,6 @@ class Merge(YaciteCommand):
                 bounced_records_num+=1
         if bounced_fields_num and not self.ns.quiet:
             print >>sys.stderr,"merge: %d fields in %d records bounced" % (bounced_fields_num,bounced_records_num)
+            print >>sys.stderr,"merge: the field names of the bounced fields are: %s" % glob_bounced_fields
             if not self.ns.verbose:
                 print >>sys.stderr,"merge: Use -v to see identify these fields, use -q to supress this message."
