@@ -129,6 +129,6 @@ class Merge(YaciteCommand):
                 bounced_records_num+=1
         if bounced_fields_num and not self.ns.quiet:
             print >>sys.stderr,"merge: %d fields in %d records bounced" % (bounced_fields_num,bounced_records_num)
-            print >>sys.stderr,"merge: the field names of the bounced fields are: %s" % glob_bounced_fields
+            print >>sys.stderr,(u"merge: the field names of the bounced fields are: %s" % u",".join(glob_bounced_fields)).encode("utf-8")
             if not self.ns.verbose:
                 print >>sys.stderr,"merge: Use -v to see identify these fields, use -q to supress this message."
