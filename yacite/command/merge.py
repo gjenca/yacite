@@ -6,8 +6,25 @@ from yacite.types import Datadir
 from yacite.exception import *
 from yacite.types import BibRecord
 import yacite.utils.sane_yaml as sane_yaml
-from yacite.utils.misc import describe_record
+from yacite.utils.misc import describe_record, strip_accents
 from yacite.command.command import YaciteCommand
+import difflib
+
+def isjunk(s):
+    return s.isspace()
+
+def check_strongly_bounced(rec,match,key):
+
+    if key == "authors":
+        return not match.same_authors(rec,preprocess=strip_accents)
+    elif all(t in (unicode,str) for t in (type(rec[key]),type(match[key]))):
+        ratio=difflib.SequenceMatcher(isjunk,rec[key],match[key]).ratio()
+        return ratio<0.50
+    elif type(rec[key]) is list and type(match[key]) is list:
+        return set(rec[key])==set(match[key])
+    else:
+        return rec[key]==match[key]
+        
 
 class Merge(YaciteCommand):
 
@@ -24,7 +41,9 @@ class Merge(YaciteCommand):
         subparser.add_argument("-d","--delete",help="delete these fields",
             dest="dname",action="append",default=[])
         subparser.add_argument("-v","--verbose",action="store_true",help="be verbose")
-        subparser.add_argument("-b","--bounced",action="store_true",help="write bounced fields to a mergeable YAML stream")
+        group=subparser.add_mutually_exclusive_group()
+        group.add_argument("-b","--bounced",action="store_true",help="write bounced fields to a mergeable YAML stream")
+        group.add_argument("-B","--strongly-bounced",action="store_true",help="write strongly bounced fields to a mergeable YAML stream")
         subparser.add_argument("-q","--quiet",action="store_true",help="be quiet")
 
     def __init__(self,ns):
@@ -60,20 +79,28 @@ class Merge(YaciteCommand):
                 match=matches[0]
                 # 2.2. count bounced fields
                 bounced_fields=[]
+                strongly_bounced_fields=[]
                 for field_name in rec:
                     if field_name in match and match[field_name]!=rec[field_name] and field_name not in \
                         self.fields_to_change:
                             bounced_fields_num+=1
                             record_bounced=True
                             bounced_fields.append(field_name)
+                            if check_strongly_bounced(rec,match,field_name):
+                                strongly_bounced_fields.append(field_name)
                             if field_name not in glob_bounced_fields:
                                 glob_bounced_fields.append(field_name)
                                 glob_bounced_fields.sort()
-                if self.ns.bounced and bounced_fields:
+                if (self.ns.bounced and bounced_fields) or \
+                    (self.ns.strongly_bounced and strongly_bounced_fields):
                     print "---"
                     d_rec={}
                     d_match={}
-                    for bf in bounced_fields:
+                    if self.ns.bounced:
+                        bfs=bounced_fields
+                    else:
+                        bfs=strongly_bounced_fields
+                    for bf in bfs:
                         d_rec[bf]=rec[bf]
                         d_match[bf]=match[bf]
                     d_rec["key"]=match["key"]
