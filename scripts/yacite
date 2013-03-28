@@ -13,6 +13,7 @@ import yacite.command.unappend
 import yacite.command.rewrite
 import yacite.command.sort
 import yacite.command.delfields
+import yacite.command.checkdups
 
 c_map={
     "read":yacite.command.read.Read,
@@ -25,6 +26,7 @@ c_map={
     "rewrite":yacite.command.rewrite.Rewrite,
     "sort":yacite.command.sort.Sort,
     "delfields":yacite.command.delfields.DelFields,
+    "checkdups":yacite.command.checkdups.CheckDups,
 }
 
 class YaciteHelpFormatter(object):
