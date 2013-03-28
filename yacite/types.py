@@ -130,14 +130,14 @@ class BibRecord(dict):
         return any(exists_and_is_almost_same(self,other,key) \
             for key in ("journal","series"))
 
-    def _same_authors(self,other):
+    def same_authors(self,other,preprocess=lambda x: x):
 
         def _surname(author):
-            author=u"".join(author.split(u",")[0].lower().split())
+            return u"".join(author.split(u",")[0].lower().split())
 
         if "authors" in self and "authors" in other:
-            l1=[_surname(author) for author in self["authors"]]
-            l2=[_surname(author) for author in other["authors"]]
+            l1=[_surname(preprocess(author)) for author in self["authors"]]
+            l2=[_surname(preprocess(author)) for author in other["authors"]]
             l1.sort()
             l2.sort()
             return l1==l2
@@ -165,7 +165,7 @@ class BibRecord(dict):
         except:
             pass
             
-        if self._same_authors(other) and all(exists_and_is_almost_same(self,other,key) \
+        if self.same_authors(other) and all(exists_and_is_almost_same(self,other,key) \
             for key in ("title","year")):
             return True
         
