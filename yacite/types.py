@@ -7,6 +7,7 @@ import shutil
 
 from yacite.exception import *
 import yacite.utils.sane_yaml as sane_yaml
+from yacite.utils.misc import strip_accents
 
 w_pattern = re.compile('[\W_]+')
 
@@ -26,11 +27,9 @@ def makekey(bib_rec,datadir):
             break
     year=u"%s" % bib_rec["year"]
     keyprefix=u"%s%s%s" % (author,year,title)
-    # strip accents
-    keyprefix=unicodedata.normalize('NFKD',keyprefix).encode("ascii","ignore").decode("ascii")
+    keyprefix=strip_accents(keyprefix)
     if datadir is None:
         return keyprefix
-    #print >>sys.stderr,"keyprefix",keyprefix,"keys",datadir.keys
     if keyprefix in datadir.keys:
         for i in range(1,10):
             key=u"%s-%d" % (keyprefix,i)
