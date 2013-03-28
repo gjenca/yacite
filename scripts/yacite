@@ -12,6 +12,7 @@ import yacite.command.append
 import yacite.command.unappend
 import yacite.command.rewrite
 import yacite.command.sort
+import yacite.command.delfields
 
 c_map={
     "read":yacite.command.read.Read,
@@ -23,6 +24,7 @@ c_map={
     "unappend":yacite.command.unappend.Unappend,
     "rewrite":yacite.command.rewrite.Rewrite,
     "sort":yacite.command.sort.Sort,
+    "delfields":yacite.command.delfields.DelFields,
 }
 
 class YaciteHelpFormatter(object):
