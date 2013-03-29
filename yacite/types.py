@@ -135,6 +135,8 @@ class BibRecord(dict):
             return u"".join(author.split(u",")[0].lower().split())
 
         if "authors" in self and "authors" in other:
+            if len(self["authors"])!=len(other["authors"]):
+                return False
             l1=[_surname(preprocess(author)) for author in self["authors"]]
             l2=[_surname(preprocess(author)) for author in other["authors"]]
             l1.sort()
