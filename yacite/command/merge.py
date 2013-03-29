@@ -13,17 +13,18 @@ import difflib
 def isjunk(s):
     return s.isspace()
 
+
 def check_strongly_bounced(rec,match,key):
 
     if key == "authors":
         return not match.same_authors(rec,preprocess=strip_accents)
     elif all(t in (unicode,str) for t in (type(rec[key]),type(match[key]))):
-        ratio=difflib.SequenceMatcher(isjunk,rec[key],match[key]).ratio()
+        ratio=difflib.SequenceMatcher(isjunk,rec[key].lower(),match[key].lower()).ratio()
         return ratio<0.50
     elif type(rec[key]) is list and type(match[key]) is list:
         return set(rec[key])==set(match[key])
     else:
-        return rec[key]==match[key]
+        return rec[key]!=match[key]
         
 
 class Merge(YaciteCommand):

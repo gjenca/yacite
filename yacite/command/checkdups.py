@@ -19,7 +19,7 @@ def strongly_similar(rec1,rec2,field_name):
         return rec2.same_authors(rec1,preprocess=strip_accents)
     elif all(t in (unicode,str) for t in (type(rec1[field_name]),type(rec2[field_name]))):
         ratio=difflib.SequenceMatcher(isjunk,rec1[field_name],rec2[field_name]).ratio()
-        return ratio>0.8
+        return ratio>0.85
     elif type(rec1[field_name]) is list and type(rec2[field_name]) is list:
         return set(rec1[field_name])==set(rec2[field_name])
     else:
@@ -43,7 +43,7 @@ class CheckDups(YaciteCommand):
         dupkeys=[]
         for rec1 in everything:
             for rec2 in everything:
-                if rec1["key"]==rec2["key"]:
+                if rec1["key"]<=rec2["key"]:
                     continue
                 if all(strongly_similar(rec1,rec2,fn) for fn in self.ns.fieldname):
                     dupkeys.append([rec1["key"],rec2["key"]])
