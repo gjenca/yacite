@@ -1,13 +1,18 @@
+<!---
+vim:ft=markdown
+-->
 <h1><tt>yacite</tt> tutorial</h1>
 
 Motto
 -----
 
->This is the Unix philosophy: Write programs that do one thing and do it well. Write programs to work together. Write programs to handle text streams, because that is a universal interface.
+>This is the Unix philosophy: Write programs that do one thing and do it well.
+>Write programs to work together. Write programs to handle text streams,
+>because that is a universal interface.
 
->Bell Laboratories. M. D. McIlroy, E. N. Pinson, and B. A. Tague.
->“Unix Time-Sharing System Forward”. *The Bell System Technical
->Journal* 1978. **57** (6, part 2). p. 1902.
+>Bell Laboratories. M. D. McIlroy, E. N. Pinson, and B. A. Tague.  “Unix
+>Time-Sharing System Forward”. *The Bell System Technical Journal* 1978.
+>**57** (6, part 2). p. 1902.
 
 What is <tt>yacite</tt>
 -----------------------
@@ -19,14 +24,14 @@ Lesson 1: Creating HTML list of your publications
 --------------------------------------------------
 
 1.	Open a terminal emulator and type the following commands on the shell
-prompt
+	prompt
 
 		mkdir yacite_sandbox
 		cd yacite_sandbox
 
 	This creates a new working directory. 
 
-1.	You will need a BibTeX ('*.bib') database file containing your publications.
+1.	You will need a BibTeX ('.bib') database file containing your publications.
 	You can download it from a bibliographic database like Scopus of Web of
 	Science or Google Scholar. Save the file (let us call it `mypubs.bib`) in the
 	`yacite_sandbox` directory you created.
@@ -63,7 +68,6 @@ prompt
    	read and write YAML data. Unlike other serialization formats (like
 	XML), the YAML format was designed to be both human-readable and
 	human-editable. It can be edited using any text editor.
-
 1. 	What we want to do now is to convert a YAML stream into a HTML document.
    	This is accomplished using a *template*. A HTML template is a HTML file
    	containing special non-HTML control sequences 
@@ -102,36 +106,32 @@ prompt
 		{{  rec.authors|join(", ") }}
 	
 	means that the authors should be separated by a comma and a space.
-
 1. 	Save the template under some name, let us say `publist.html` in the
    	`templates` directory.
-
 1. 	Type in the following command on the shell prompt.
    
 		bib2yaml mypubs.bib | yacite render publist.html
 	
-	This is called a *pipe sequence*. The whole `yacite` system is based on
-   	pipe sequences. There are two commands at work here. The `bib2yaml` command
-   	produces a YAML stream as its output. The `|` sign (called *pipe*) in the middle connects
-   	the output of the `bib2yaml` command and with the input of the other
-   	command, `yacite render`.  The `yacite render` command reads a YAML stream
-   	on its input, fills in the template, and then produces HTML on its output. 
+	This is called a *pipe sequence*. The whole `yacite` system is based
+	on pipe sequences. There are two commands at work here. The `bib2yaml`
+	command produces a YAML stream as its output. The `|` sign (called
+	*pipe*) in the middle connects the output of the `bib2yaml` command
+	and with the input of the other command, `yacite render`.  The `yacite
+	render` command reads a YAML stream on its input, fills in the
+	template, and then produces HTML on its output. 
 	
 	There are more things that `yacite render` does (like dealing with
 	citations) but, for the moment, we do not care.
-
 1. 	Save the resulting HTML into a file using the redirect sign `>` :
 
 		bib2yaml mypubs.bib | yacite render publist.html > mypubs.html
    	
 	and open the `mypubs.html` in you favourite browser. Enjoy the result. 
-	
 1.	Try to alter the
 	template; for example, change the `<ol>` and `</ol>` tags to `<ul>`
 	and `</ul>`, respectively, and observe the results in `mypubs.html`. 
 	Note that you need to click the reload button in your browser to see the 
 	updates in a HTML document.
-
 1.	If you need to create a MS Word document, there are some ways how to convert a
 	simple HTML document to a `.doc` file. For example, you can try the
 	excellent `pandoc` document conversion utility. In addition, as I was
@@ -168,13 +168,13 @@ Lesson 2: Filtering the YAML stream
 	This should create a list of publications containg 'the' as a
 	substring of the title.
 
-1.	You can use conjunction (`and`), disjunction (`or`), negation ('not'):
+1.	You can use conjunction (`and`), disjunction (`or`), negation (`not`):
 
 		... yacite filter '("Fourier" in title) or "(Laplace" in title)' ...
 		... yacite filter '(year > 2000) and (year <= 2010)' ...
 		... yacite filter 'not ("semigroup" in keywords)' ...
 
-	Let me remark that the last command is equivalent to much more
+	The last command is equivalent to much more
 	readable
 		
 		... yacite filter '"Effect" not in keywords' ...
@@ -210,26 +210,24 @@ Lesson 3: Persistence: saving the data into database directory
 	like "a" or "the". In this case, `${TITLEWORD}` are first two word of
 	the title. The name scheme makes it easy to find individual records.
 
-
 	When you open one the files you in a text editor can see that in every
 	file a new field `key` was created. The value of `key` is
 	`${AUTHOR}${YEAR}${TITLEWORD}`. It is easy to infer the value of `key`
-	whan looking at a paper.
+	from the basic bibliographic data of the paper.
 1.	Sometimes, there are multiple records with the same first author, year
-	and the first word of the title. If this happens, a suffix `-1` (or
+	and the first word of the title. Whenever this happens, a suffix `-1` (or
 	more) is appended to `key` and to the corresponding part of the
 	filename.
 1.	Try again the command 
 		
 		bib2yaml mypubs.bib | yacite merge pubcit
 
-	Hopefully, nothing happens. 
-	For every record on its input, `yacite merge` figured out using a
-	heuristics that the record on its input points (in the real world) 
-	to the same article as the one stored in 
-	the database. Since every filed value in the input record (except for the `key`, which is
-	ignored in this respect) is the same as the stored one, there nothing
-	to do and the stored record is unchanged.
+	Hopefully, nothing happens.  For every record on its input, `yacite
+	merge` figured out using a heuristics that the record on its input
+	points (in the real world) to the same article as the one stored in
+	the database. Since every filed value in the input record (except for
+	the `key`, which is ignored in this respect) is the same as the stored
+	one, there nothing to do and the stored record is unchanged.
 
 Lesson 4: Marking the records as your own
 ------------------------------------------
@@ -241,7 +239,7 @@ Lesson 4: Marking the records as your own
 	
 1.	Try this command
 
-		bib2yaml mypubs.bib | yacite exec 'myown=True`
+		bib2yaml mypubs.bib | yacite exec 'myown=True'
 
 	The result is an altered YAML stream. There is a new field,
 	`myown` with value `true` in every record. Note the difference;
@@ -251,10 +249,11 @@ Lesson 4: Marking the records as your own
 
 	**Explanation:** The `yacite exec` command executes the Python command 
 	(in this case, `myown=True`) in the environment given by the record in stream. 
-
+	The transformed records are written to the standard output of `yacite
+	exec` as a YAML stream.
 1.	Now let the altered YAML stream flow into the `yacite merge` command:
 
-		bib2yaml mypubs.bib | yacite exec 'myown=True` | yacite merge pubcit
+		bib2yaml mypubs.bib | yacite exec 'myown=True' | yacite merge pubcit
 	
 	Note that the filenames are different now: every new file is placed
 	into a `myown` subdirectory. This allows one to easily find his/her
@@ -303,8 +302,8 @@ Lesson 6: Tagging the records in the database directory
 
 		yacite read pubcit | yacite append tags scopus | yacite merge pubcit
 
-	The merge command displays a couple of log messages about creating new fields for every
-	record in the database. 
+	The merge command displays a couple of log messages about creating new
+	`tags` fields for every record in the database. 
 1.	Let us mark the records older than 2005 as old. This can be done using
 	sequence of filtering and marking: 
 
@@ -331,15 +330,16 @@ Lesson 6: Tagging the records in the database directory
 
 		yacite read pubcit | yacite filter 'year<2005' | yacite append tags old | yacite merge -s tags pubcit
 
-	The `-s tags` (s stands for SET) says that the value of `tags` should be updated to the
-	value obtained from the YAML stream.
+	The `-s tags` (s stands for SET) says that the value of `tags` should
+	be updated to the value obtained from the YAML stream.
 
 1.	Let us delete the 'old' tag (it was a silly example anyway).
 
 		yacite read pubcit | yacite unappend tags old
 
 	shows a YAML stream without any `old` tag among `tags`. The rest of
-	the task of deleting the `old` tag is left as an excercise to the esteemed reader.  
+	the task of deleting the `old` tag is left as an exercise to the
+	esteemed reader.  
 		
 
 Lesson 7: Merging data from different sources
@@ -350,38 +350,147 @@ Lesson 7: Merging data from different sources
 		rm -r pubcit
 		mkdir pubcit
 
-1.	We assume in this lesson that we have two BibTeX files containing bibliography data concerning 
-	your own articles, the names of the files are `scopus.bib` and `wos.bib`. Merge the data from
-	the `scopus.bib` into the database, marking them with `scopus` tag and `myown=true` in each
-	record.
+1.	We assume in this lesson that we have two BibTeX files containing
+	bibliography data concerning your own articles, the names of the files
+	are `scopus.bib` and `wos.bib`. Merge the data from the `scopus.bib`
+	into the database, marking them with `scopus` tag and `myown=true` in
+	each record.
 
 		bib2yaml scopus.bib | yacite append tags scopus | yacite exec 'myown=True' | yacite merge pubcit
 	
-1.	Take the other file, `wos.bib` and do the same thing with it, use the `-v` (verbose) option with
-	yacite merge.
+1.	Take the other file, `wos.bib` and do the same thing with it, use the
+	`-v` (verbose) option with yacite merge.
 
 		bib2yaml wos.bib | yacite append tags wos | yacite exec 'myown=True' | yacite merge -v pubcit
 
 	What happened? Examine the messages given by `yacite merge`.
 
-	1.	If there are some records that are in `wos.bib` and not in `scopus.bib`, they were
-		new so the `yacite merge` did the right thing: it created new records. These
-	1.	For the records that are in both BibTeX files, there were some new fields present in YAML stream.
-		These were appended to the corresponding records.
-	1.	A lot of fields "bounced". That means that they were present in both records, but they values were
-		different. It is for sure that the field `tags` is amoung the bounced fields, since its value is
-		`[scopus]` in the database and `[wos]` in the YAML stream. It is possible that the other fields differ
-		as well, mostly `title`, `journal`, `authors` and others. Probably the only difference 
-		is the capitalization and whether the authors field contains full names. 
+	1.	If there are some records that are in `wos.bib` and not in
+		`scopus.bib`, they were new so the `yacite merge` did the
+		right thing: it created new records. These are exactly the
+		records that are in `wos.bib` and not in `scopus.bib`.
+		Their value of `tags` is `[wos]`.
+	1.	For the records that are in both BibTeX files, there were some
+		new fields present in YAML stream.  These were appended to the
+		corresponding records.
+	1.	A lot of fields "bounced". That means that they were present
+		in both records, but their values were different. It is for
+		sure that the field `tags` is amoung the bounced fields, since
+		its value is `[scopus]` in the database and `[wos]` in the
+		YAML stream. It is possible that the other fields differ as
+		well, mostly `title`, `journal`, `authors` and others.
+		Probably the only difference is the capitalization and whether
+		the authors field contains full names. 
 
+1.	What we need to do now, is to set the value of the field `tags` in a
+	record in the database to `[scopus, wos]` for every record in the
+	database that matched a record in the YAML stream originated; these
+	are the records that are in both `wos.bib` and `scopus.bib`. For each
+	matching pair of records, the record in the YAML stream has
+	`tags: [wos]` and the record in the database has `tags: [scopus]`.
+	So we instruct `yacite merge` to make a union (`-u`) of the value of
+	`tags`:
 
+		bib2yaml wos.bib | yacite append tags wos | yacite exec 'myown=True' | yacite merge -v -u tags pubcit
+
+Lesson 8: Dealing with bounced fields
+-------------------------------------
+
+1.	When merging data from different sources, it is often necessary to
+	deal with the fact that the fields that (ideally) should have the same
+	value are, in fact different. Examples follow.
 	
+	*	The first name of one of the authors is (not) given.
+	*	The capitalization in title differs.
+	*	The capitalization in journal or series name differs.
+	*	The name of the journal contains a subtitle.
+
+	The `yacite merge` command detects that the fields are different, but it
+	does not do anything about it without an user intervention.
+1.	Try the following command:
 		
+		bib2yaml wos.bib | yacite append tags wos | yacite exec 'myown=True' | yacite merge -b -u tags pubcit > diff.yaml
 
+	You should see a short message about the number of bounced
+	fields/records. Open the file `diff.yaml` in a text editor. For every
+	record that has at least one bounced field, it contains the following
+	data:
 
+	*	The `key` field of the record in the database. This allows to
+		identify the database record unambigously.
+	*	The names and values from the input YAML stream that bounced.
+	*	The field names and values of the bounced fields that are
+		present in the database are given in a remark. This allows you
+		to compare the old value with the new one to decide which one
+		is better.
 
-Adding citations
-----------------
+	So now you could open the corresponding database file in a text editor
+	and copy/paste the values from `diff.yaml`, right? Wrong!
+
+	The key point is that the file `diff.yaml` now contains a *mergeable
+	YAML stream!*. So the following command is legal, but has no effect on
+	the database:
+
+		yacite merge pubcit < diff.yaml
+
+	If you edit the `diff.yaml` so that it contains only the fields that
+	are "better" in `diff.yaml` than in the database, you can tell `yacite
+	merge` to rewrite the field with the new value. This is the right way
+	to deal with the problem of bounced fields.
+
+	For example:
+
+	1.	Pick some important field, let us say `authors`
+	1.	Delete every line `authors:...` in `diff.yaml` where the value
+		in `diff.yaml` is "worse" than the one in the database.
+	1.	Use the following command (note that the output goes to a
+		different file than `diff.yaml`)
+
+			yacite merge -b -s authors pubcit < diff.yaml > diff2.yaml
+
+		The `-s authors` means: SET `authors` to the new value.
+	1.	Look at the message: the value of `authors` was updated in the
+		database. The `diff2.yaml` file contains remaining bounced
+		fields.
+	1.	Repeat for another field you consider important.
+
+	Of course, you can edit all the fields at once and then merge them
+	with a single `yacite merge` command; there can be multiple `-s`
+	options when doing a merge.
+
+Lesson 8: Adding citations -- per cited article 
+-----------------------------------------------
+
+1.	Let us assume you already managed to register all of your own papers in the
+	database. Now go to the citation database, for example SCOPUS and export all
+	citations of *one* of your papers to a file, let us say `citations.bib`.
+1.	Let us say that the `key` of your paper is `yourname2012aword`. Run
+	the following command to merge the citations.
+
+		bib2yaml citations.bib | yacite append cites yourname2012aword | yacite append tags scopus | yacite merge -u cites -u tags pubcit
+
+1.	Repeat for all of your papers. Maybe you have to deal with some
+	bounces, especially when you use multiple citation databases.
+1.	This workflow is more effective for creating the initial database of
+	citations,simply because the number of cited papers is probably
+	smaller than the number of citing papers.
+
+Lesson 9: Adding citations -- per citing article
+------------------------------------------------
+
+1.	There is another type of workflow for adding citations, probably more
+	effective for updating the database with new citing papers.
+1.	Export the bibliographic data of the new citing papers to a file, say
+	`newcites_scopus.bib`.
+1.	Convert the file to yaml:
+
+		bib2yaml newcites_scopus.bib | yacite append tags scopus |
+		yacite exec 'cites=[]' > newcites_scopus.yaml
+1.	Edit the `newcites_scopus.yaml` file. Fill the value of the cites
+	field with corresponding keys of your articles. Then, merge the
+	edited file:
+	
+		yacite merge -u tags -u cites < newcites_scopus.yaml
 
 Rendering citation lists
 ------------------------
