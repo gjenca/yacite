@@ -29,11 +29,7 @@ c_map={
     "checkdups":yacite.command.checkdups.CheckDups,
 }
 
-class YaciteHelpFormatter(object):
-
-    pass
-
-parse=argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+parse=argparse.ArgumentParser()
 subparsers=parse.add_subparsers(dest="command",help="The yacite subcommand you want to run")
 for cmd in c_map:
     cmd_class=c_map[cmd]

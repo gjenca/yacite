@@ -3,18 +3,18 @@
 from yacite.command.command import YaciteCommand
 import sys
 import yacite.utils.sane_yaml as sane_yaml
-from yacite.utils.misc import describe_record
+from yacite.utils.misc import describe_record, Argument
 from yacite.exception import *
 
 class Append(YaciteCommand):
+    """appends all strings in the list to the value of a field
+    """
 
-
-    help="appends all strings in the list to the value of a field"
-
-    @staticmethod
-    def add_arguments(subparser):
-        subparser.add_argument("fieldname",help="Field name. Value must be a 'list of strings'.")
-        subparser.add_argument("string",nargs="+",help="these strings are appended to the value")
+    name="append"
+    arguments=(
+        Argument("fieldname",help="Field name. Value must be a 'list of strings'."),
+        Argument("string",nargs="+",help="these strings are appended to the value"),
+    )
 
 
     def execute(self):
