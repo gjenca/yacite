@@ -10,3 +10,9 @@ def strip_accents(s):
 
     return unicodedata.normalize('NFKD',s).encode("ascii","ignore").decode("ascii")
 
+class Argument(object):
+
+    def __init__(self,*args,**kwargs):
+        self.args=args
+        self.kwargs=kwargs
+
