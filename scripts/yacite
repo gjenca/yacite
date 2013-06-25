@@ -33,7 +33,7 @@ parse=argparse.ArgumentParser()
 subparsers=parse.add_subparsers(dest="command",help="The yacite subcommand you want to run")
 for cmd in c_map:
     cmd_class=c_map[cmd]
-    subpar=subparsers.add_parser(cmd,help=cmd_class.help)
+    subpar=subparsers.add_parser(cmd,help=cmd_class.__doc__)
     cmd_class.add_arguments(subpar)
 ns=parse.parse_args()
 command=c_map[ns.command](ns)

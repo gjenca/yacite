@@ -8,10 +8,7 @@ import re
 from yacite.command.command import YaciteCommand
 
 class Rewrite(YaciteCommand):
-
-
-    help="rewrites values of a given field using a file with rewrite rules"
-
+    "rewrites values of a given field using a file with rewrite rules"
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("fieldname",help="field name")

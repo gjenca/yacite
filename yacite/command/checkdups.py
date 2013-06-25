@@ -3,7 +3,7 @@
 from yacite.command.command import YaciteCommand
 import sys
 import yacite.utils.sane_yaml as sane_yaml
-from yacite.utils.misc import describe_record,strip_accents
+from yacite.utils.misc import describe_record,strip_accents,Argument
 from yacite.exception import *
 from yacite.types import BibRecord
 import difflib
@@ -27,10 +27,7 @@ def strongly_similar(rec1,rec2,field_name):
         
 
 class CheckDups(YaciteCommand):
-
-
-    help="reads YAML stream, checks for duplicities, writes list of pairs of keys to stdout"
-
+    "reads YAML stream, checks for duplicities, writes list of pairs of keys to stdout"
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("fieldname",nargs="+",help="fields to check for similarities")

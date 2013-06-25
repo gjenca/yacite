@@ -28,10 +28,7 @@ def check_strongly_bounced(rec,match,key):
         
 
 class Merge(YaciteCommand):
-
-
-    help="merge records with datadir - see the docs for merge rules"
-
+    "merge records with datadir - see the docs for merge rules"
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("datadir")

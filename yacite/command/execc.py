@@ -6,10 +6,7 @@ import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.misc import describe_record 
 
 class Exec(YaciteCommand):
-
-
-    help="execute a python statement on every record"
-
+    "execute a python statement on every record"
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("statement",help="python statement")

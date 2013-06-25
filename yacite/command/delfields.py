@@ -7,10 +7,7 @@ from yacite.utils.misc import describe_record
 from yacite.exception import *
 
 class DelFields(YaciteCommand):
-
-
-    help="reads YAML stream, deletes some fields, writes YAML stream"
-
+    "reads YAML stream, deletes some fields, writes YAML stream"
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("fieldname",nargs="+",help="fields to delete")

@@ -22,10 +22,7 @@ def merge(dest,src):
                 dest[k]=list(set(dest[k]))
 
 class Render(YaciteCommand):
-
-
-    help="renders records using a jinja2 template"
-
+    "renders records using a jinja2 template"
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("-e","--extra-yaml",help="additional yaml to pass to template; the data is available as `extra` ")
@@ -71,10 +68,12 @@ class Render(YaciteCommand):
             if not "cites" in rec:
                 rec["cites"]=[]
             rec["cites"]=[key_dict[key] for key in rec["cites"] if key in key_dict]
+            rec["cited_times"]=0
         for rec in records:
             if rec["myown"]:
                 continue
             for cited in rec["cites"]:
+                cited["cited_times"]+=1
                 cited["citedby"].append(rec)
         if self.cmp_keys:
             for rec in records:

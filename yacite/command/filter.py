@@ -6,9 +6,8 @@ import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.misc import describe_record 
 
 class Filter(YaciteCommand):
-
-
-    help="evaluates a python expression in the context of the each record, outputs records for which expression returns True"
+    """evaluates a python expression in the context of the each record,
+    outputs records for which expression returns True"""
 
     @staticmethod
     def add_arguments(subparser):
