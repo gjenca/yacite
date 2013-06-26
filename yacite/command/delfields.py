@@ -3,15 +3,14 @@
 from yacite.command.command import YaciteCommand
 import sys
 import yacite.utils.sane_yaml as sane_yaml
-from yacite.utils.misc import describe_record
+from yacite.utils.misc import describe_record,Argument
 from yacite.exception import *
 
 class DelFields(YaciteCommand):
     "reads YAML stream, deletes some fields, writes YAML stream"
-    @staticmethod
-    def add_arguments(subparser):
-        subparser.add_argument("fieldname",nargs="+",help="fields to delete")
-
+    arguments=(
+        Argument("fieldname",nargs="+",help="fields to delete"),
+    )
 
     def execute(self):
         for rec in sane_yaml.load_all(sys.stdin):

@@ -3,24 +3,24 @@
 from yacite.command.command import YaciteCommand
 import sys
 import yacite.utils.sane_yaml as sane_yaml
-from yacite.utils.misc import describe_record 
+from yacite.utils.misc import describe_record,Argument
 
 class Filter(YaciteCommand):
     """evaluates a python expression in the context of the each record,
     outputs records for which expression returns True"""
 
-    @staticmethod
-    def add_arguments(subparser):
-        subparser.add_argument("--myown",
+    arguments=(
+        Argument("--myown",
             action='store_true',
-            help="filter applies only if myown == True, otherwise the record passes through")
-        subparser.add_argument("--notmyown",
+            help="filter applies only if myown == True, otherwise the record passes through"),
+        Argument("--notmyown",
             action='store_true',
-            help="filter applies only if myown == False or undefined, otherwise the record passes through")
-        subparser.add_argument("expr",help="python expression")
-        subparser.add_argument("-f","--failed",action="store_true",help="output only the failed records,supress error message")
-        subparser.add_argument("-m","--module",action="append",default=[],help="python module to import")
-        subparser.add_argument("-k","--keep-going",action="store_true",help="do not stop when the eval(expr) throws an exception")
+            help="filter applies only if myown == False or undefined, otherwise the record passes through"),
+        Argument("expr",help="python expression"),
+        Argument("-f","--failed",action="store_true",help="output only the failed records,supress error message"),
+        Argument("-m","--module",action="append",default=[],help="python module to import"),
+        Argument("-k","--keep-going",action="store_true",help="do not stop when the eval(expr) throws an exception"),
+        )
 
     def __init__(self,ns):
         

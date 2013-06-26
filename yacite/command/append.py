@@ -10,7 +10,6 @@ class Append(YaciteCommand):
     """appends all strings in the list to the value of a field
     """
 
-    name="append"
     arguments=(
         Argument("fieldname",help="Field name. Value must be a 'list of strings'."),
         Argument("string",nargs="+",help="these strings are appended to the value"),
