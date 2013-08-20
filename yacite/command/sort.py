@@ -7,10 +7,7 @@ from yacite.exception import *
 from yacite.utils.compare import keys_to_cmp
 
 class Sort(YaciteCommand):
-
-
-    help="sorts the records in input stream according to given fields"
-
+    "sorts the records in input stream according to given fields"
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname")

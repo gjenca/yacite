@@ -8,10 +8,7 @@ from yacite.types import Datadir
 import yacite.utils.sane_yaml as sane_yaml
 
 class Read(YaciteCommand):
-
-
-    help="reads records from datadir, outputs them"
-
+    "reads records from datadir, outputs them"
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("datadir")

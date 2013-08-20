@@ -7,10 +7,7 @@ from yacite.exception import *
 from yacite.utils.misc import describe_record
 
 class Unappend(YaciteCommand):
-
-
-    help="deletes each string in the list from the value of a field"
-
+    "deletes each string in the list from the list of strings in the value of a field"
     @staticmethod
     def add_arguments(subparser):
         subparser.add_argument("fieldname",help="Value of the field must be 'list of strings'.")

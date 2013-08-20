@@ -4,10 +4,10 @@ class YaciteCommand(object):
 
     def __init__(self,ns):
         self.ns=ns
-                
+    
     @classmethod
     def add_arguments(cls,subparser):
-        for arg in arguments:
+        for arg in cls.arguments:
             subparser.add_argument(*arg.args,**arg.kwargs)
 
         
