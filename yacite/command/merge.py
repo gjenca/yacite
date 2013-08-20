@@ -6,7 +6,7 @@ from yacite.types import Datadir
 from yacite.exception import *
 from yacite.types import BibRecord
 import yacite.utils.sane_yaml as sane_yaml
-from yacite.utils.misc import describe_record, strip_accents
+from yacite.utils.misc import describe_record, strip_accents, Argument, MexGroup
 from yacite.command.command import YaciteCommand
 import difflib
 
@@ -28,21 +28,24 @@ def check_strongly_bounced(rec,match,key):
         
 
 class Merge(YaciteCommand):
-    "merge records with datadir - see the docs for merge rules"
-    @staticmethod
-    def add_arguments(subparser):
-        subparser.add_argument("datadir")
-        subparser.add_argument("-u","--union",help="take union of lists - original and new",
-            dest="uname",action="append",default=[])
-        subparser.add_argument("-s","--set",help="replace orginal values by new value",
-            dest="sname",action="append",default=[])
-        subparser.add_argument("-d","--delete",help="delete these fields",
-            dest="dname",action="append",default=[])
-        subparser.add_argument("-v","--verbose",action="store_true",help="be verbose")
-        group=subparser.add_mutually_exclusive_group()
-        group.add_argument("-b","--bounced",action="store_true",help="write bounced fields to a mergeable YAML stream")
-        group.add_argument("-B","--strongly-bounced",action="store_true",help="write strongly bounced fields to a mergeable YAML stream")
-        subparser.add_argument("-q","--quiet",action="store_true",help="be quiet")
+    """merge records with datadir - see the docs for merge rules
+"""
+    
+    arguments=(
+        Argument("datadir"),
+        Argument("-u","--union",help="take union of lists - original and new",
+            dest="uname",action="append",default=[]),
+        Argument("-s","--set",help="replace orginal values by new value",
+            dest="sname",action="append",default=[]),
+        Argument("-d","--delete",help="delete these fields",
+            dest="dname",action="append",default=[]),
+        Argument("-v","--verbose",action="store_true",help="be verbose"),
+        MexGroup(
+            Argument("-b","--bounced",action="store_true",help="write bounced fields to a mergeable YAML stream"),
+            Argument("-B","--strongly-bounced",action="store_true",help="write strongly bounced fields to a mergeable YAML stream")
+        ),
+        Argument("-q","--quiet",action="store_true",help="be quiet")
+    )
 
     def __init__(self,ns):
         super(Merge,self).__init__(ns)

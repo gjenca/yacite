@@ -3,18 +3,19 @@
 from yacite.command.command import YaciteCommand
 import sys
 import yacite.utils.sane_yaml as sane_yaml
-from yacite.utils.misc import describe_record 
+from yacite.utils.misc import describe_record, Argument, MexGroup
 
 class Exec(YaciteCommand):
-    "execute a python statement on every record"
-    @staticmethod
-    def add_arguments(subparser):
-        subparser.add_argument("statement",help="python statement")
-        group=subparser.add_mutually_exclusive_group()
-        group.add_argument("-n","--no-output",action="store_true",help="supress normal yaml output stream; any intended output must be preformed by statement itself")
-        subparser.add_argument("-k","--keep-going",action="store_true",help="do not stop when the statement throws an exception")
-        group.add_argument("-f","--failed",action="store_true",help="output only the failed records,supress error messages")
-        subparser.add_argument("-m","--module",action="append",default=[],help="python module to import; multiple -m options are possible")
+    """execute a python statement on every record
+"""
+    arguments=(
+        Argument("statement",help="python statement"),
+        MexGroup(
+            Argument("-n","--no-output",action="store_true",help="supress normal yaml output stream; any intended output must be preformed by statement itself"),
+            Argument("-f","--failed",action="store_true",help="output only the failed records,supress error messages")),
+        Argument("-k","--keep-going",action="store_true",help="do not stop when the statement throws an exception"),
+        Argument("-m","--module",action="append",default=[],help="python module to import; multiple -m options are possible")
+    )
     
     def __init__(self,ns):
         

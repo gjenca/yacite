@@ -6,12 +6,14 @@ import os,sys
 from yacite.exception import *
 from yacite.types import Datadir
 import yacite.utils.sane_yaml as sane_yaml
+from yacite.utils.misc import Argument, MexGroup
 
 class Read(YaciteCommand):
     "reads records from datadir, outputs them"
-    @staticmethod
-    def add_arguments(subparser):
-        subparser.add_argument("datadir")
+    
+    arguments=(
+        Argument("datadir",help="data directory"),
+    )
 
 
     def execute(self):

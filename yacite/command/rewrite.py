@@ -3,16 +3,17 @@
 import sys
 import yacite.utils.sane_yaml as sane_yaml
 from yacite.exception import *
-from yacite.utils.misc import describe_record
+from yacite.utils.misc import describe_record, Argument
 import re
 from yacite.command.command import YaciteCommand
 
 class Rewrite(YaciteCommand):
     "rewrites values of a given field using a file with rewrite rules"
-    @staticmethod
-    def add_arguments(subparser):
-        subparser.add_argument("fieldname",help="field name")
-        subparser.add_argument("rewrite_file",help="file with rewrite rules - see the docs for format")
+    
+    arguments=(
+        Argument("fieldname",help="field name"),
+        Argument("rewrite_file",help="file with rewrite rules - see the docs for format"),
+    )
 
     def __init__(self,ns):
         self.ns=ns

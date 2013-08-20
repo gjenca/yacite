@@ -5,12 +5,14 @@ import sys
 import yacite.utils.sane_yaml as sane_yaml
 from yacite.exception import *
 from yacite.utils.compare import keys_to_cmp
+from yacite.utils.misc import Argument
 
 class Sort(YaciteCommand):
     "sorts the records in input stream according to given fields"
-    @staticmethod
-    def add_arguments(subparser):
-        subparser.add_argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname")
+    
+    arguments=(
+        Argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname"),
+    )
 
     def __init__(self,ns):
         self.ns=ns

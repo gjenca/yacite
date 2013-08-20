@@ -6,6 +6,7 @@ from jinja2 import Template,FileSystemLoader,Environment
 import pybtex.bibtex.names
 from yacite.command.command import YaciteCommand
 from yacite.utils.compare import keys_to_cmp
+from yacite.utils.misc import Argument
 
 def authors_format(authors,bst_format):
 
@@ -23,12 +24,13 @@ def merge(dest,src):
 
 class Render(YaciteCommand):
     "renders records using a jinja2 template"
-    @staticmethod
-    def add_arguments(subparser):
-        subparser.add_argument("-e","--extra-yaml",help="additional yaml to pass to template; the data is available as `extra` ")
-        subparser.add_argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname (for citedby sorting)")
-        subparser.add_argument("-t","--template-dir",default="./templates",help="directory with templates; default: ./templates")
-        subparser.add_argument("template",help="template file")
+    
+    arguments=(
+        Argument("-e","--extra-yaml",help="additional yaml to pass to template; the data is available as `extra` "),
+        Argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname (for citedby sorting)"),
+        Argument("-t","--template-dir",default="./templates",help="directory with templates; default: ./templates"),
+        Argument("template",help="template file"),
+    )
 
     def __init__(self,ns):
         self.ns=ns

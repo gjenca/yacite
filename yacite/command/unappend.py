@@ -4,14 +4,15 @@ from yacite.command.command import YaciteCommand
 import sys
 import yacite.utils.sane_yaml as sane_yaml
 from yacite.exception import *
-from yacite.utils.misc import describe_record
+from yacite.utils.misc import describe_record, Argument
 
 class Unappend(YaciteCommand):
     "deletes each string in the list from the list of strings in the value of a field"
-    @staticmethod
-    def add_arguments(subparser):
-        subparser.add_argument("fieldname",help="Value of the field must be 'list of strings'.")
-        subparser.add_argument("string",nargs="+",help="these strings are removed from the value, if present")
+    
+    arguments=(
+        Argument("fieldname",help="Value of the field must be 'list of strings'."),
+        Argument("string",nargs="+",help="these strings are removed from the value, if present"),
+    )
 
 
     def execute(self):
