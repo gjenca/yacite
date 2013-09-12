@@ -32,7 +32,7 @@ class Merge(YaciteCommand):
 """
     
     arguments=(
-        Argument("datadir"),
+        Argument("datadir",help="data directory"),
         Argument("-u","--union",help="take union of lists - original and new",
             dest="uname",action="append",default=[]),
         Argument("-s","--set",help="replace orginal values by new value",

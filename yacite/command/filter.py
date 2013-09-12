@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 from yacite.command.command import YaciteCommand
 import sys
 import yacite.utils.sane_yaml as sane_yaml
