@@ -30,7 +30,9 @@ def check_strongly_bounced(rec,match,key):
 class Merge(YaciteCommand):
     """merge records with datadir - see the docs for merge rules
 """
-    
+   
+    name="merge"
+
     arguments=(
         Argument("datadir",help="data directory"),
         Argument("-u","--union",help="take union of lists - original and new",

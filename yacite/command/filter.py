@@ -9,6 +9,8 @@ from yacite.utils.misc import describe_record,Argument
 class Filter(YaciteCommand):
     """evaluates a python expression in the context of the each record,
     outputs records for which expression returns True"""
+    
+    name="filter"
 
     arguments=(
         Argument("--myown",

@@ -23,7 +23,10 @@ def merge(dest,src):
                 dest[k]=list(set(dest[k]))
 
 class Render(YaciteCommand):
-    "renders records using a jinja2 template"
+    """renders records using a jinja2 template
+"""
+
+    name="render"
     
     arguments=(
         Argument("-e","--extra-yaml",help="additional yaml to pass to template; the data is available as `extra` "),

@@ -32,6 +32,8 @@ class CheckDups(YaciteCommand):
     arguments=(Argument("fieldname",nargs="+",help="fields to check for similarities"),
             )
 
+    name="checkdups"
+
     def execute(self):
         everything=[BibRecord(d) for d in sane_yaml.load_all(sys.stdin)]
         if any("key" not in rec for rec in everything):

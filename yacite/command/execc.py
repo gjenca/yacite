@@ -8,6 +8,9 @@ from yacite.utils.misc import describe_record, Argument, MexGroup
 class Exec(YaciteCommand):
     """execute a python statement on every record
 """
+
+    name="exec"
+
     arguments=(
         Argument("statement",help="python statement"),
         MexGroup(
@@ -16,7 +19,7 @@ class Exec(YaciteCommand):
         Argument("-k","--keep-going",action="store_true",help="do not stop when the statement throws an exception"),
         Argument("-m","--module",action="append",default=[],help="python module to import; multiple -m options are possible")
     )
-    
+
     def __init__(self,ns):
         
         super(Exec,self).__init__(ns)

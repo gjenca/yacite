@@ -8,7 +8,10 @@ import re
 from yacite.command.command import YaciteCommand
 
 class Rewrite(YaciteCommand):
-    "rewrites values of a given field using a file with rewrite rules"
+    """rewrites values of a given field using a file with rewrite rules
+"""
+
+    name="rewrite"
     
     arguments=(
         Argument("fieldname",help="field name"),

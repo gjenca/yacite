@@ -8,7 +8,10 @@ from yacite.utils.compare import keys_to_cmp
 from yacite.utils.misc import Argument
 
 class Sort(YaciteCommand):
-    "sorts the records in input stream according to given fields"
+    """sorts the records in input stream according to given fields
+"""
+
+    name="sort"
     
     arguments=(
         Argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname"),

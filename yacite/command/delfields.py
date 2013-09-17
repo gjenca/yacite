@@ -8,6 +8,9 @@ from yacite.exception import *
 
 class DelFields(YaciteCommand):
     "reads YAML stream, deletes some fields, writes YAML stream"
+
+    name="delfields"
+
     arguments=(
         Argument("fieldname",nargs="+",help="fields to delete"),
     )
