@@ -28,5 +28,6 @@ for mod_name in dir(yacite.command):
                         break
                     usage_lines.append(line)
                 usage="".join(usage_lines)
-                usage=usage.replace("usage:","USAGE:")
+                usage=usage.replace("usage:","**USAGE:** `")
+                usage=usage+'`'
                 sys.stdout.write(t.render(help=obj.__doc__,name=obj.name,posargs=posargs,optargs=optargs,usage=usage).encode('utf-8'))
