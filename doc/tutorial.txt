@@ -492,8 +492,11 @@ Lesson 9: Adding citations -- per citing article
 	
 		yacite merge -u tags -u cites < newcites_scopus.yaml
 
-Rendering citation lists
-------------------------
+Lesson 10: Rendering citation lists
+-----------------------------------
+
+1.	We already know how to represent citations. How do we get the
+	information in a presentable form? 
 
 Rewriting 
 ---------
