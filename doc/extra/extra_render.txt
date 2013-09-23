@@ -1,0 +1,50 @@
+**implementation:**
+
+> The render subcommand  produces the final result: the list of
+> citations. The data is passed to the jinja2 python library, which uses a
+> template to produce the list of citations. The jinja2 template language is
+> documented at the [jinja2 site](http://jinja.pocoo.org/docs/templates/) .
+
+> Currently, the templates are expected to be in the subdirectory `templates`
+> of the current directory. You can use `#` as the prefix of jinja2 tag lines.
+> The environment passed to the template consists of
+> the following data:
+
+> `records`
+>> List of dictionaries, includes all of the data in the input YAML
+>> stream. Additionally, the following data are computed/altered:
+
+>> - in the input YAML the `cites` fields is expected to contain list of keys to
+     `key`s of other records. The keys (i.e. strings) are replaced by
+     records to the corresponding keys themselves.
+>> - in every record, a new `citedby` field is created. The field is a list of
+     records that cite the current record via the `cites` field.
+
+> `extra`
+>> Some python data from the argument of the -e option.
+
+**example template:**
+
+    # for bibrec in records
+    # if bibrec.myown
+    {{ bibrec.authors|join(", ") }}:{{bibrec.title}} {{bibrec.year}}
+    # if bibrec.citedby
+    Was cited by:
+    # for cit in bibrec citedby
+      * {{ bibrec.authors|join(", ") }}:{{bibrec.title}} {{bibrec.year}}
+    # endfor
+    # endif
+    # endif
+    # endfor 
+
+** custom filters:**
+
+> `authorsformat(*bst-name-format*)`
+>> expects list of authors, rewrites them according to given BibTeX style
+>> name format string. See http://www.tug.org/TUGboat/tb27-2/tb87hufflen.pdf
+>> for details.
+
+** example usage in a template:**
+
+    {{ rec.authors|authorsformat("{f. }{vv}{ll{ }}{, jj}")|join(", ") }}
+

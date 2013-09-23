@@ -1,0 +1,34 @@
+<p><strong>USAGE:</strong> <code>yacite filter [-h] [--myown] [--notmyown] [-f] [-m MODULE] [-k] expr</code></p>
+<p><strong>DESCRIPTION:</strong></p>
+<p>evaluates a python expression in the context of the each record,
+    outputs records for which expression returns True</p>
+<p><strong>POSITIONAL ARGUMENTS:</strong></p>
+<blockquote>
+<p><code>expr</code></p>
+<blockquote>
+<p>python expression</p>
+</blockquote>
+</blockquote>
+<p><strong>OPTIONAL ARGUMENTS:</strong></p>
+<blockquote>
+<p><code>--myown</code></p>
+<blockquote>
+<p>filter applies only if myown == True, otherwise the record passes through</p>
+</blockquote>
+<p><code>--notmyown</code></p>
+<blockquote>
+<p>filter applies only if myown == False or undefined, otherwise the record passes through</p>
+</blockquote>
+<p><code>-f, --failed</code></p>
+<blockquote>
+<p>output only the failed records,supress error message</p>
+</blockquote>
+<p><code>-m, --module MODULE</code></p>
+<blockquote>
+<p>python module to import</p>
+</blockquote>
+<p><code>-k, --keep-going</code></p>
+<blockquote>
+<p>do not stop when the eval(expr) throws an exception</p>
+</blockquote>
+</blockquote>

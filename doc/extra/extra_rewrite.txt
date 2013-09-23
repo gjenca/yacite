@@ -1,0 +1,15 @@
+**rewrite file format (YAML):**
+
+> a list of pairs of strings
+
+    - [*pattern_string_1*,*replace_string_1*]
+    - [*pattern_string_2*,*replace_string_2*]
+    - ...
+    - [*pattern_string_n*,*replace_string_n*]
+
+**example rewrite file**
+    
+    - ["Jenca","Jenča"]
+    - ["Kuhr","Kühr"]
+    - ["Kuehr","Kühr"]
+
