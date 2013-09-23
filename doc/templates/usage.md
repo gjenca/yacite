@@ -13,10 +13,7 @@
 {% if optargs %}
 
 **OPTIONAL ARGUMENTS:**
-{% for arg in optargs %}> `{{arg.args|join(", ")}}`
+{% for arg in optargs %}> `{{arg.args|join(", ")}} {{arg.parameter}}`
 >> {{arg.kwargs.help}}
 
 {% endfor %}{% endif %}
-
-* * *
-
