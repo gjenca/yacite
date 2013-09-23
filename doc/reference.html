@@ -12,88 +12,144 @@
 <h1>
 <tt>yacite</tt> command reference
 </h1>
-
-<hr />
-<h2>SOURCES</h2>
-<p><code>yacite read</code> <em>datadir</em></p>
-<p><strong>description:</strong></p>
+<p><strong>USAGE:</strong> <code>yacite append [-h] fieldname string [string ...]</code></p>
+<p><strong>DESCRIPTION:</strong></p>
+<p>appends all strings in the list to the value of a field</p>
+<p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
-<p>reads all records from <em>datadir</em>, outputs YAML</p>
+<p><code>fieldname</code></p>
+<blockquote>
+<p>Field name. Value must be a 'list of strings'.</p>
 </blockquote>
-<p><strong>positional arguments:</strong></p>
+<p><code>string</code></p>
 <blockquote>
-<p><em>datadir</em>          <br />
-</p>
-<blockquote>
-<p>directory containing individual files with YAML records</p>
+<p>these strings are appended to the value</p>
 </blockquote>
+</blockquote><hr />
+<p><strong>USAGE:</strong> <code>yacite delfields [-h] fieldname [fieldname ...]</code></p>
+<p><strong>DESCRIPTION:</strong></p>
+<p>reads YAML stream, deletes some fields, writes YAML stream</p>
+<p><strong>POSITIONAL ARGUMENTS:</strong></p>
+<blockquote>
+<p><code>fieldname</code></p>
+<blockquote>
+<p>fields to delete</p>
 </blockquote>
-<hr />
-<p><code>bib2yaml [-s] [-a] [-n] [</code> <em>bibfile</em> <code>]</code></p>
-<p><strong>description:</strong></p>
+</blockquote><hr />
+<p><strong>USAGE:</strong> <code>yacite exec [-h] [-n | -f] [-k] [-m MODULE] statement</code></p>
+<p><strong>DESCRIPTION:</strong></p>
+<p>execute a python statement on every record</p>
+<p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
-<p>reads BibTeX from <em>bibfile</em> or from standard input, outputs YAML</p>
-</blockquote>
-<p><strong>optional arguments:</strong></p>
+<p><code>statement</code></p>
 <blockquote>
-<p><code>-s, --scopus</code></p>
-<blockquote>
-<p>Correct broken BibTeX produced by SCOPUS.</p>
-</blockquote>
-<p><code>-a, --keep-abstract</code><br />
-</p>
-<blockquote>
-<p>Keep abstract.</p>
-</blockquote>
-<p><code>-n, --no-titlecase</code> <br />
-</p>
-<blockquote>
-<p>By default, if the value of journal, title, series or booktitle is in ALL
-CAPS it is converted to titlecase string. This option supresses this behaviour.</p>
+<p>python statement</p>
 </blockquote>
 </blockquote>
-<h2>SINKS</h2>
-<p><code>yacite merge [-h] [-u</code> <em>UNAME</em> <code>] [-s</code> <em>SNAME</em> <code>] [-d</code> <em>DNAME</em> <code>] [-v] [-q]</code> <em>datadir</em></p>
-<p><strong>description:</strong> </p>
+<p><strong>OPTIONAL ARGUMENTS:</strong></p>
 <blockquote>
-<p>reads YAML from stdin, creates or updates records in <em>datadir</em></p>
+<p><code>-n, --no-output</code></p>
+<blockquote>
+<p>supress normal yaml output stream; any intended output must be preformed by statement itself</p>
 </blockquote>
-<p><strong>positional arguments:</strong></p>
+<p><code>-f, --failed</code></p>
 <blockquote>
-<p><em>datadir</em>           <br />
-</p>
+<p>output only the failed records,supress error messages</p>
+</blockquote>
+<p><code>-k, --keep-going</code></p>
 <blockquote>
-<p>directory containing individual files with YAML records</p>
+<p>do not stop when the statement throws an exception</p>
+</blockquote>
+<p><code>-m, --module MODULE</code></p>
+<blockquote>
+<p>python module to import; multiple -m options are possible</p>
+</blockquote>
+</blockquote><hr />
+<p><strong>USAGE:</strong> <code>yacite filter [-h] [--myown] [--notmyown] [-f] [-m MODULE] [-k] expr</code></p>
+<p><strong>DESCRIPTION:</strong></p>
+<p>evaluates a python expression in the context of the each record,
+    outputs records for which expression returns True</p>
+<p><strong>POSITIONAL ARGUMENTS:</strong></p>
+<blockquote>
+<p><code>expr</code></p>
+<blockquote>
+<p>python expression</p>
 </blockquote>
 </blockquote>
-<p><strong>optional arguments:</strong></p>
+<p><strong>OPTIONAL ARGUMENTS:</strong></p>
 <blockquote>
-<p><code>-h,</code> <code>--help</code> </p>
+<p><code>--myown</code></p>
 <blockquote>
-<p>show this help message and exit</p>
+<p>filter applies only if myown == True, otherwise the record passes through</p>
 </blockquote>
-<p><code>-u</code> <em>UNAME</em>, <code>--union</code> <em>UNAME</em></p>
+<p><code>--notmyown</code></p>
+<blockquote>
+<p>filter applies only if myown == False or undefined, otherwise the record passes through</p>
+</blockquote>
+<p><code>-f, --failed</code></p>
+<blockquote>
+<p>output only the failed records,supress error message</p>
+</blockquote>
+<p><code>-m, --module MODULE</code></p>
+<blockquote>
+<p>python module to import</p>
+</blockquote>
+<p><code>-k, --keep-going</code></p>
+<blockquote>
+<p>do not stop when the eval(expr) throws an exception</p>
+</blockquote>
+</blockquote><hr />
+<p><strong>USAGE:</strong> <code>yacite checkdups [-h] fieldname [fieldname ...]</code></p>
+<p><strong>DESCRIPTION:</strong></p>
+<p>reads YAML stream, checks for duplicities, writes list of pairs of keys to stdout</p>
+<p><strong>POSITIONAL ARGUMENTS:</strong></p>
+<blockquote>
+<p><code>fieldname</code></p>
+<blockquote>
+<p>fields to check for similarities</p>
+</blockquote>
+</blockquote><hr />
+<p><strong>USAGE:</strong> <code>yacite merge [-h] [-u UNAME] [-s SNAME] [-d DNAME] [-v] [-b | -B] [-q]datadir</code></p>
+<p><strong>DESCRIPTION:</strong></p>
+<p>merge records with datadir - see the docs for merge rules</p>
+<p><strong>POSITIONAL ARGUMENTS:</strong></p>
+<blockquote>
+<p><code>datadir</code></p>
+<blockquote>
+<p>data directory</p>
+</blockquote>
+</blockquote>
+<p><strong>OPTIONAL ARGUMENTS:</strong></p>
+<blockquote>
+<p><code>-u, --union UNAME</code></p>
 <blockquote>
 <p>take union of lists - original and new</p>
 </blockquote>
-<p><code>-s</code> <em>SNAME</em>, <code>--set</code> <em>SNAME</em></p>
+<p><code>-s, --set SNAME</code></p>
 <blockquote>
 <p>replace orginal values by new value</p>
 </blockquote>
-<p><code>-d</code> <em>DNAME</em>, <code>--delete-field</code> <em>DNAME</em></p>
+<p><code>-d, --delete DNAME</code></p>
 <blockquote>
-<p>delete field</p>
+<p>delete these fields</p>
 </blockquote>
-<p><code>-v,</code> <code>--verbose</code> </p>
+<p><code>-v, --verbose</code></p>
 <blockquote>
 <p>be verbose</p>
 </blockquote>
-<p><code>-q,</code> <code>--quiet</code> </p>
+<p><code>-b, --bounced</code></p>
+<blockquote>
+<p>write bounced fields to a mergeable YAML stream</p>
+</blockquote>
+<p><code>-B, --strongly-bounced</code></p>
+<blockquote>
+<p>write strongly bounced fields to a mergeable YAML stream</p>
+</blockquote>
+<p><code>-q, --quiet</code></p>
 <blockquote>
 <p>be quiet</p>
 </blockquote>
-</blockquote>
-<p><strong>how does the merge command work:</strong></p>
+</blockquote><p><strong>HOW DOES THE MERGE COMMAND WORK:</strong></p>
 <blockquote>
 <p>merge means this:</p>
 </blockquote>
@@ -153,33 +209,42 @@ CAPS it is converted to titlecase string. This option supresses this behaviour.<
 </li>
 </ul>
 </li>
-</ul>
-<hr />
-<p><code>yacite render [-e EXTRA_YAML] [-k SORT_KEY] template</code></p>
-<p><strong>description:</strong></p>
+</ul><hr />
+<p><strong>USAGE:</strong> <code>yacite read [-h] datadir</code></p>
+<p><strong>DESCRIPTION:</strong></p>
+<p>reads records from datadir, outputs them</p>
+<p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
-<p>reads YAML from stdin, renders to stdout using the jinja2 <em>template</em></p>
+<p><code>datadir</code></p>
+<blockquote>
+<p>data directory</p>
 </blockquote>
-<p><strong>positional arguments:</strong></p>
+</blockquote><hr />
+<p><strong>USAGE:</strong> <code>yacite render [-h] [-e EXTRA_YAML] [-k SORT_KEY] [-t TEMPLATE_DIR]template</code></p>
+<p><strong>DESCRIPTION:</strong></p>
+<p>renders records using a jinja2 template</p>
+<p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
-<p>template              template file</p>
+<p><code>template</code></p>
+<blockquote>
+<p>template file</p>
 </blockquote>
-<p><strong>optional arguments:</strong></p>
-<blockquote>
-<p>-e EXTRA_YAML, --extra-yaml EXTRA_YAML</p>
-<blockquote>
-<p>additional yaml to pass to template; the data is available as <code>extra</code></p>
 </blockquote>
-<p>-k SORT_KEY, --sort-key SORT_KEY</p>
+<p><strong>OPTIONAL ARGUMENTS:</strong></p>
+<blockquote>
+<p><code>-e, --extra-yaml EXTRA_YAML</code></p>
+<blockquote>
+<p>additional yaml to pass to template; the data is available as <code>extra</code> </p>
+</blockquote>
+<p><code>-k, --sort-key SORT_KEY</code></p>
 <blockquote>
 <p>either fieldname of ~fieldname (for citedby sorting)</p>
 </blockquote>
-<p>-t TEMPLATE_DIR, --template-dir TEMPLATE_DIR</p>
+<p><code>-t, --template-dir TEMPLATE_DIR</code></p>
 <blockquote>
-<p>directory with templates; default: <code>./templates</code></p>
+<p>directory with templates; default: ./templates</p>
 </blockquote>
-</blockquote>
-<p><strong>implementation:</strong></p>
+</blockquote><p><strong>implementation:</strong></p>
 <blockquote>
 <p>The render subcommand  produces the final result: the list of
 citations. The data is passed to the jinja2 python library, which uses a
@@ -230,163 +295,21 @@ for details.</p>
 </blockquote>
 <p><strong> example usage in a template:</strong></p>
 <pre><code>{{ rec.authors|authorsformat("{f. }{vv}{ll{ }}{, jj}")|join(", ") }}
-</code></pre>
-<h2>FILTERS</h2>
-<p><code>yacite filter [-h] [--myown] [--notmyown] [-f] [-m MODULE] [-k] *expr*</code></p>
-<p><strong>positional arguments:</strong></p>
+</code></pre><hr />
+<p><strong>USAGE:</strong> <code>yacite rewrite [-h] fieldname rewrite_file</code></p>
+<p><strong>DESCRIPTION:</strong></p>
+<p>rewrites values of a given field using a file with rewrite rules</p>
+<p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
-<p><em>expr</em></p>
-<blockquote>
-<p>python expression</p>
-</blockquote>
-</blockquote>
-<p><strong>optional arguments:</strong></p>
-<blockquote>
-<p>-h, --help          <br />
-</p>
-<blockquote>
-<p>show this help message and exit</p>
-</blockquote>
-<p>--myown             <br />
-</p>
-<blockquote>
-<p>filter applies only if myown == True, otherwise the record passes through</p>
-</blockquote>
-<p>--notmyown          <br />
-</p>
-<blockquote>
-<p>filter applies only if myown == False or undefined, otherwise the record passes through</p>
-</blockquote>
-<p>-f, --failed        <br />
-</p>
-<blockquote>
-<p>output only the failed records,supress error message</p>
-</blockquote>
-<p>-m MODULE, --module MODULE</p>
-<blockquote>
-<p>python module to import</p>
-</blockquote>
-<p>-k, --keep-going</p>
-<blockquote>
-<p>do not stop when the eval(expr) throws an exception</p>
-</blockquote>
-</blockquote>
-<p><strong>description:</strong></p>
-<blockquote>
-<p>reads YAML from stdin outputs YAML, but only the bibitems that are evaluated as TRUE.</p>
-</blockquote>
-<hr />
-<p><code>yacite exec [-h] [-n] [-k] [-f] [-m MODULE] *statement*</code></p>
-<p><strong>positional arguments:</strong></p>
-<blockquote>
-<p>statement           <br />
-</p>
-<blockquote>
-<p>python statement</p>
-</blockquote>
-</blockquote>
-<p><strong>optional arguments:</strong></p>
-<blockquote>
-<p>-h, --help          <br />
-</p>
-<blockquote>
-<p>show this help message and exit</p>
-</blockquote>
-<p>-n, --no-output     <br />
-</p>
-<blockquote>
-<p>supress normal yaml ouy[ut stream; any intended output must be preformed by statement itself</p>
-</blockquote>
-<p>-k, --keep-going    <br />
-</p>
-<blockquote>
-<p>do not stop when the statement throws an exception</p>
-</blockquote>
-<p>-f, --failed        <br />
-</p>
-<blockquote>
-<p>output only the failed records,supress error messages</p>
-</blockquote>
-<p>-m MODULE, --module MODULE</p>
-<blockquote>
-<p>python module to import; multiple -m options are possible</p>
-</blockquote>
-</blockquote>
-<p><strong>description:</strong></p>
-<blockquote>
-<p>reads YAML from stdin, executes statement on every record</p>
-</blockquote>
-<hr />
-<p><code>yacite append [-h] fieldname string [string ...]</code></p>
-<p><strong>positional arguments:</strong></p>
-<blockquote>
-<p>fieldname </p>
-<blockquote>
-<p>Field name. Value must be a 'list of strings'.</p>
-</blockquote>
-<p>string    <br />
-</p>
-<blockquote>
-<p>these strings are appended to the value</p>
-</blockquote>
-</blockquote>
-<p><strong>optional arguments:</strong></p>
-<blockquote>
-<p>-h, --help<br />
-</p>
-<blockquote>
-<p>show this help message and exit</p>
-</blockquote>
-</blockquote>
-<p><strong>description:</strong></p>
-<blockquote>
-<p>appends all strings in the list to the value of a field</p>
-</blockquote>
-<hr />
-<p><code>yacite unappend [-h] fieldname string [string ...]</code></p>
-<p><strong>positional arguments:</strong></p>
-<blockquote>
-<p>fieldname </p>
-<blockquote>
-<p>Value of the field must be 'list of strings'.</p>
-</blockquote>
-<p>string </p>
-<blockquote>
-<p>these strings are removed from the value, if present</p>
-</blockquote>
-</blockquote>
-<p><strong>optional arguments:</strong></p>
-<blockquote>
-<p>-h, --help  show this help message and exit</p>
-</blockquote>
-<hr />
-<p><code>yacite rewrite [-h] fieldname rewrite_file</code></p>
-<p><strong> positional arguments:</strong></p>
-<blockquote>
-<p>fieldname </p>
+<p><code>fieldname</code></p>
 <blockquote>
 <p>field name</p>
 </blockquote>
-<p>rewrite_file </p>
+<p><code>rewrite_file</code></p>
 <blockquote>
 <p>file with rewrite rules - see the docs for format</p>
 </blockquote>
-</blockquote>
-<p><strong>optional arguments:</strong></p>
-<blockquote>
-<p>-h, --help  <br />
-</p>
-<blockquote>
-<p>show this help message and exit</p>
-</blockquote>
-</blockquote>
-<p><strong>description:</strong></p>
-<blockquote>
-<p>rewrites values of a given field using a file with
-rewrite rules. The original purpose of this command was to add diacritics to author's
-names.</p>
-</blockquote>
-<p><strong>rewrite file format (YAML):</strong></p>
+</blockquote><p><strong>rewrite file format (YAML):</strong></p>
 <blockquote>
 <p>a list of pairs of strings</p>
 </blockquote>
@@ -399,6 +322,30 @@ names.</p>
 <pre><code>- ["Jenca","Jenča"]
 - ["Kuhr","Kühr"]
 - ["Kuehr","Kühr"]
-</code></pre>
-<p></body>
-</html></p>
+</code></pre><hr />
+<p><strong>USAGE:</strong> <code>yacite sort [-h] [-k SORT_KEY]</code></p>
+<p><strong>DESCRIPTION:</strong></p>
+<p>sorts the records in input stream according to given fields</p>
+<p><strong>OPTIONAL ARGUMENTS:</strong></p>
+<blockquote>
+<p><code>-k, --sort-key SORT_KEY</code></p>
+<blockquote>
+<p>either fieldname of ~fieldname</p>
+</blockquote>
+</blockquote><hr />
+<p><strong>USAGE:</strong> <code>yacite unappend [-h] fieldname string [string ...]</code></p>
+<p><strong>DESCRIPTION:</strong></p>
+<p>deletes each string in the list from the list of strings in the value of a field</p>
+<p><strong>POSITIONAL ARGUMENTS:</strong></p>
+<blockquote>
+<p><code>fieldname</code></p>
+<blockquote>
+<p>Value of the field must be 'list of strings'.</p>
+</blockquote>
+<p><code>string</code></p>
+<blockquote>
+<p>these strings are removed from the value, if present</p>
+</blockquote>
+</blockquote><hr />
+</body>
+</html>

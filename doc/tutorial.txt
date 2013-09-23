@@ -1,7 +1,8 @@
 <!---
 vim:ft=markdown
 -->
-<h1><tt>yacite</tt> tutorial</h1>
+`yacite` tutorial
+=================
 
 Motto
 -----
@@ -14,11 +15,18 @@ Motto
 >Time-Sharing System Forward”. *The Bell System Technical Journal* 1978.
 >**57** (6, part 2). p. 1902.
 
-What is <tt>yacite</tt>
------------------------
+What is `yacite`
+----------------
 
-What is <tt>yacite</tt> not
----------------------------
+`yacite` is a system commandline UNIX utilities to solve the following tasks:
+
+1.	Keeping track of scientific papers written by a single author or a small
+	group.
+1.	Keeping track of citations of one's papers.
+1.	Simple filtering, automatic manipulation, tagging etc. of
+	bibliographic records.
+1.	Rendering subsets of bibliographic data in HTML or other text-based form.
+
 
 Lesson 1: Creating HTML list of your publications
 --------------------------------------------------
@@ -496,9 +504,96 @@ Lesson 10: Rendering citation lists
 -----------------------------------
 
 1.	We already know how to represent citations. How do we get the
-	information in a presentable form? 
+	information in a presentable form? Using a jinja2 template, of course.
+	This is a snippet of the HTML template I use, I call it
+	`pubcitlist.html`. Recall that default location of templates is the `template`
+	subdirectory.
 
-Rewriting 
----------
+		<html>
+		<body>
+		# for rec in records:
+		# if rec.myown
+		  # if rec.citedby:
+		  <h3>Paper:</h3>
+		  <p>
+		  {{  rec.authors|join(", ") }}:
+		  <em>{{rec.title}}</em>,
+		  {{rec.journal}},
+		  <strong>{{rec.volume}}</strong>
+		  ({{rec.year}})
+		  {{rec.startpage}}-{{rec.endpage}}
+		  </p>
+		  <h3>
+		  Cited in:
+		  </h3>
+		  <ol>
+		  # for rec_cited in rec.citedby:
+		    <li>
+		    {{  rec_cited.authors|join(", ") }}:
+		    <em>{{rec_cited.title}}</em>,
+		    # if rec_cited.journal:
+			{{rec_cited.journal}},
+		    # endif
+		    # if rec_cited.series:
+			{{rec_cited.series}},
+		    # endif
+		    <strong>{{rec_cited.volume}}</strong>
+		    ({{rec_cited.year}})
+		    {{rec_cited.startpage}}-{{rec_cited.endpage}}
+		    # if "as-preprint" in rec_cited.tags:
+			(cited as preprint)
+		    # endif
+		    </li>
+		  # endfor
+		  </ol>
+		  <hr>
+		  #endif
+		# endif
+		# endfor
+		</body>
+		</html>
+	There are two cycles in the template: the outer cycle runs through all
+	records, but it considers only those that have `myown = true` and are
+	cited at least once. For each such record `rec`, the inner cycle runs
+	through all records in `rec.citedby`; this is a list of records that
+	is *dynamically generated* by the `yacite render` command.
+
+1.	To render a subset of the citations, all you have to do is
+	to use a `yacite filter`.
+	A couple of examples follow.
+	
+	Render all citations of all my papers in the database:
+
+		yacite read pubcit | yacite render pubcitlist.html > out.html
+
+	Render all citations of my papers from 2012 in the database
+		
+		yacite read pubcit | yacite filter --myown 'year==2012' |
+		yacite render pubcitlist.html
+
+	Render all citations from 2012 of all my papers in the database
+
+		yacite read pubcit | yacite filter --notmyown 'year==2012' |
+		yacite render pubcitlist.html
+
+	So `--myown` restricts the filtering expression only to records with
+	`myown = true`, the others (with `myown = false` of without `myown`)
+	pass through the `yacite filter` unconditionally. Similarly for
+	`--notmyown`.
+
+
+Lesson 11: What now?
+--------------------
+1.	Well, you should read the reference, there is a couple of commands and
+	a lot of options that were not described in this tutorial. Figure out
+	the workflow that suits you best.
+1.	You should read the template documentation in the jinja2 home page: [http://jinja.pocoo.org/docs/] .
+
+	Jinja2 can do a *lot* for you.
+1.	Maybe you need a little bit of Python -- to write the more elaborated
+	filters and execs. Python docs are at
+	[http://docs.python.org/2/].
+
+	
 
 

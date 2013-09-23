@@ -1,0 +1,27 @@
+#!/bin/bash
+cat << THE_END
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+  <title>
+   yacite command reference
+  </title>
+ </head>
+<body>
+
+<h1>
+<tt>yacite</tt> command reference
+</h1>
+THE_END
+for F in usage_*.html; do
+	cat "$F"
+	echo '<hr />'
+done
+cat << THE_END
+</body>
+</html>
+THE_END
+
+
