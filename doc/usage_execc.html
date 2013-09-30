@@ -1,6 +1,6 @@
 <p><strong>USAGE:</strong> <code>yacite exec [-h] [-n | -f] [-k] [-m MODULE] statement</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>execute a python statement on every record</p>
+<p>reads YAML stream, executes a python statement on every record, outputs YAML stream</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>statement</code></p>
@@ -26,4 +26,7 @@
 <blockquote>
 <p>python module to import; multiple -m options are possible</p>
 </blockquote>
-</blockquote>
+</blockquote><p><strong> EXAMPLES: </strong></p>
+<pre><code>yacite exec 'myown=True'
+yacite exec 'tags.sort()'
+</code></pre>

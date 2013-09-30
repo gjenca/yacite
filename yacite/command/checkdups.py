@@ -27,7 +27,7 @@ def strongly_similar(rec1,rec2,field_name):
         
 
 class CheckDups(YaciteCommand):
-    "reads YAML stream, checks for duplicities, writes list of pairs of keys to stdout"
+    "reads YAML stream, checks for similar values in some fields, outputs list of pairs of keys with similar values"
 
     arguments=(Argument("fieldname",nargs="+",help="fields to check for similarities"),
             )

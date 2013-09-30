@@ -1,4 +1,4 @@
-**rewrite file format (YAML):**
+**REWRITE FILE FORMAT (yaml):**
 
 > a list of pairs of strings
 
@@ -7,7 +7,7 @@
     - ...
     - [*pattern_string_n*,*replace_string_n*]
 
-**example rewrite file**
+**EXAMPLE REWRITE FILE**
     
     - ["Jenca","Jenča"]
     - ["Kuhr","Kühr"]

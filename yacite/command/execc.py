@@ -6,7 +6,7 @@ import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.misc import describe_record, Argument, MexGroup
 
 class Exec(YaciteCommand):
-    """execute a python statement on every record
+    """reads YAML stream, executes a python statement on every record, outputs YAML stream
 """
 
     name="exec"

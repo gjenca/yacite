@@ -8,7 +8,7 @@ import re
 from yacite.command.command import YaciteCommand
 
 class Rewrite(YaciteCommand):
-    """rewrites values of a given field using a file with rewrite rules
+    """reads YAML stream, rewrites values of a given field using a file with rewrite rules,outputs YAML stream
 """
 
     name="rewrite"

@@ -1,0 +1,2 @@
+** EXAMPLE: **
+	yacite checkdups title year

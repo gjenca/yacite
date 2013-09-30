@@ -1,0 +1,9 @@
+** EXAMPLES: **
+
+	yacite filter '"scopus" in tags'
+	yacite filter 'year>2010'
+	yacite filter 'year<2000 and "Hilbert space" in title'
+	yacite filter '"grants" in dir()'
+	yacite filter '"NSF" in grants'
+
+

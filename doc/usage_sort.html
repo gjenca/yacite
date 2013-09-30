@@ -1,10 +1,14 @@
 <p><strong>USAGE:</strong> <code>yacite sort [-h] [-k SORT_KEY]</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>sorts the records in input stream according to given fields</p>
+<p>reads YAML stream, sorts the records in input stream according to given fields, outputs YAML stream</p>
 <p><strong>OPTIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>-k, --sort-key SORT_KEY</code></p>
 <blockquote>
-<p>either fieldname of ~fieldname</p>
+<p>either fieldname or ~fieldname</p>
 </blockquote>
-</blockquote>
+</blockquote><p><strong>EXAMPLE:</strong></p>
+<pre><code>yacite sort year
+yacite sort ~year
+yacite sort year title
+</code></pre>

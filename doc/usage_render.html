@@ -1,6 +1,6 @@
 <p><strong>USAGE:</strong> <code>yacite render [-h] [-e EXTRA_YAML] [-k SORT_KEY] [-t TEMPLATE_DIR]template</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>renders records using a jinja2 template</p>
+<p>reads YAML stream, renders records using a jinja2 template, outputs YAML stream</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>template</code></p>
@@ -22,7 +22,7 @@
 <blockquote>
 <p>directory with templates; default: ./templates</p>
 </blockquote>
-</blockquote><p><strong>implementation:</strong></p>
+</blockquote><p><strong>IMPLEMENTATION:</strong></p>
 <blockquote>
 <p>The render subcommand  produces the final result: the list of
 citations. The data is passed to the jinja2 python library, which uses a
@@ -49,7 +49,7 @@ stream. Additionally, the following data are computed/altered:</p>
 <p>Some python data from the argument of the -e option.</p>
 </blockquote>
 </blockquote>
-<p><strong>example template:</strong></p>
+<p><strong>EXAMPLE TEMPLATE:</strong></p>
 <pre><code># for bibrec in records
 # if bibrec.myown
 {{ bibrec.authors|join(", ") }}:{{bibrec.title}} {{bibrec.year}}
@@ -62,7 +62,7 @@ Was cited by:
 # endif
 # endfor
 </code></pre>
-<p><strong> custom filters:</strong></p>
+<p><strong> CUSTOM FILTERS:</strong></p>
 <blockquote>
 <p><code>authorsformat(*bst-name-format*)</code></p>
 <blockquote>
@@ -71,6 +71,6 @@ name format string. See http://www.tug.org/TUGboat/tb27-2/tb87hufflen.pdf
 for details.</p>
 </blockquote>
 </blockquote>
-<p><strong> example usage in a template:</strong></p>
+<p><strong> EXAMPLE USAGE IN A TEMPLATE:</strong></p>
 <pre><code>{{ rec.authors|authorsformat("{f. }{vv}{ll{ }}{, jj}")|join(", ") }}
 </code></pre>

@@ -1,4 +1,4 @@
-**implementation:**
+**IMPLEMENTATION:**
 
 > The render subcommand  produces the final result: the list of
 > citations. The data is passed to the jinja2 python library, which uses a
@@ -23,7 +23,7 @@
 > `extra`
 >> Some python data from the argument of the -e option.
 
-**example template:**
+**EXAMPLE TEMPLATE:**
 
     # for bibrec in records
     # if bibrec.myown
@@ -37,14 +37,14 @@
     # endif
     # endfor 
 
-** custom filters:**
+** CUSTOM FILTERS:**
 
 > `authorsformat(*bst-name-format*)`
 >> expects list of authors, rewrites them according to given BibTeX style
 >> name format string. See http://www.tug.org/TUGboat/tb27-2/tb87hufflen.pdf
 >> for details.
 
-** example usage in a template:**
+** EXAMPLE USAGE IN A TEMPLATE:**
 
     {{ rec.authors|authorsformat("{f. }{vv}{ll{ }}{, jj}")|join(", ") }}
 

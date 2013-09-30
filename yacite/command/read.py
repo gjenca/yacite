@@ -9,7 +9,7 @@ import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.misc import Argument, MexGroup
 
 class Read(YaciteCommand):
-    """reads records from datadir, outputs them
+    """reads records from datadir, outputs them as a YAML stream
 """
 
     name="read"

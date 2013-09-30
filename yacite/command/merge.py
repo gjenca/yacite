@@ -28,7 +28,7 @@ def check_strongly_bounced(rec,match,key):
         
 
 class Merge(YaciteCommand):
-    """merge records with datadir - see the docs for merge rules
+    """reads YAML stream, merges records with datadir - see the docs for merge rules
 """
    
     name="merge"

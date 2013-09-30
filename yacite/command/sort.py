@@ -8,13 +8,13 @@ from yacite.utils.compare import keys_to_cmp
 from yacite.utils.misc import Argument
 
 class Sort(YaciteCommand):
-    """sorts the records in input stream according to given fields
+    """reads YAML stream, sorts the records in input stream according to given fields, outputs YAML stream
 """
 
     name="sort"
     
     arguments=(
-        Argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname"),
+        Argument("-k","--sort-key",action="append",help="either fieldname or ~fieldname"),
     )
 
     def __init__(self,ns):

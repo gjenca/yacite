@@ -292,8 +292,7 @@ sequence of filtering and marking: </p>
 <pre><code>yacite read pubcit | yacite filter 'year&lt;2005' | yacite append tags old
 </code></pre>
 <p>This works as expected, the resulting YAML stream contains either '[scopus,old]'
-or '[scopus]' as the value of 'tags', depending of the value of year. However,<br />
-</p>
+or '[scopus]' as the value of 'tags', depending of the value of year. However,  </p>
 <pre><code>yacite read pubcit | yacite filter 'year&lt;2005' | yacite append tags old | yacite merge pubcit
 </code></pre>
 <p>produces a message about "bounced" fields. To see what
@@ -319,8 +318,7 @@ be updated to the value obtained from the YAML stream.</p>
 </code></pre>
 <p>shows a YAML stream without any <code>old</code> tag among <code>tags</code>. The rest of
 the task of deleting the <code>old</code> tag is left as an exercise to the
-esteemed reader.<br />
-</p>
+esteemed reader.  </p>
 </li>
 </ol>
 <h2>Lesson 7: Merging data from different sources</h2>

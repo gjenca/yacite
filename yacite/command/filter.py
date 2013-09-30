@@ -7,8 +7,8 @@ import yacite.utils.sane_yaml as sane_yaml
 from yacite.utils.misc import describe_record,Argument
 
 class Filter(YaciteCommand):
-    """evaluates a python expression in the context of the each record,
-    outputs records for which expression returns True"""
+    """reads YAML stream, evaluates a python expression in the context of the each record,
+    outputs YAML stream with records for which expression returns True"""
     
     name="filter"
 

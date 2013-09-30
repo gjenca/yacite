@@ -1,0 +1,5 @@
+**EXAMPLE:**
+
+	yacite sort year
+	yacite sort ~year
+	yacite sort year title

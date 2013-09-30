@@ -1,0 +1,4 @@
+** EXAMPLE: **
+
+	yacite read pubcit
+

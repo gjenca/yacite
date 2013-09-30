@@ -1,0 +1,4 @@
+**EXAMPLE:**
+
+	yacite unappend tags scopus sci
+	yacite unappend keywords mathematics

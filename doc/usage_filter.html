@@ -1,7 +1,7 @@
 <p><strong>USAGE:</strong> <code>yacite filter [-h] [--myown] [--notmyown] [-f] [-m MODULE] [-k] expr</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>evaluates a python expression in the context of the each record,
-    outputs records for which expression returns True</p>
+<p>reads YAML stream, evaluates a python expression in the context of the each record,
+    outputs YAML stream with records for which expression returns True</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>expr</code></p>
@@ -31,4 +31,10 @@
 <blockquote>
 <p>do not stop when the eval(expr) throws an exception</p>
 </blockquote>
-</blockquote>
+</blockquote><p><strong> EXAMPLES: </strong></p>
+<pre><code>yacite filter '"scopus" in tags'
+yacite filter 'year&gt;2010'
+yacite filter 'year&lt;2000 and "Hilbert space" in title'
+yacite filter '"grants" in dir()'
+yacite filter '"NSF" in grants'
+</code></pre>

@@ -7,7 +7,7 @@ from yacite.exception import *
 from yacite.utils.misc import describe_record, Argument
 
 class Unappend(YaciteCommand):
-    """deletes each string in the list from the list of strings in the value of a field
+    """reads YAML stream, deletes each string in the list from the list of strings in the value of a field, outputs YAML stream
 """
     
     name="unappend"

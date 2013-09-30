@@ -1,6 +1,6 @@
 <p><strong>USAGE:</strong> <code>yacite merge [-h] [-u UNAME] [-s SNAME] [-d DNAME] [-v] [-b | -B] [-q]datadir</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>merge records with datadir - see the docs for merge rules</p>
+<p>reads YAML stream, merges records with datadir - see the docs for merge rules</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>datadir</code></p>
@@ -62,8 +62,7 @@
 <li><em>datadir</em>/<em>year</em>/<em>key</em><code>.yaml</code>, if the boolean-valued 
   field <em>newrecord</em>[myown] is not true or not present</li>
 <li><em>datadir</em>/myown/<em>year/</em>key<em><code>.yaml</code> if
-<br />
-</em>newrecord*<code>[myown]</code> is true.</li>
+  </em>newrecord*<code>[myown]</code> is true.</li>
 </ul>
 </li>
 </ul>

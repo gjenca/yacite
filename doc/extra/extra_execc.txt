@@ -1,0 +1,5 @@
+** EXAMPLES: **
+
+	yacite exec 'myown=True'
+	yacite exec 'tags.sort()'
+

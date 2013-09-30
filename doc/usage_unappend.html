@@ -1,6 +1,6 @@
 <p><strong>USAGE:</strong> <code>yacite unappend [-h] fieldname string [string ...]</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>deletes each string in the list from the list of strings in the value of a field</p>
+<p>reads YAML stream, deletes each string in the list from the list of strings in the value of a field, outputs YAML stream</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>fieldname</code></p>
@@ -11,4 +11,7 @@
 <blockquote>
 <p>these strings are removed from the value, if present</p>
 </blockquote>
-</blockquote>
+</blockquote><p><strong>EXAMPLE:</strong></p>
+<pre><code>yacite unappend tags scopus sci
+yacite unappend keywords mathematics
+</code></pre>

@@ -23,7 +23,7 @@ def merge(dest,src):
                 dest[k]=list(set(dest[k]))
 
 class Render(YaciteCommand):
-    """renders records using a jinja2 template
+    """reads YAML stream, renders records using a jinja2 template, outputs YAML stream
 """
 
     name="render"

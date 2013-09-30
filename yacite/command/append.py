@@ -7,13 +7,13 @@ from yacite.utils.misc import describe_record, Argument
 from yacite.exception import *
 
 class Append(YaciteCommand):
-    """appends all strings in the list to the value of a field
+    """reads YAML stream, appends all strings in the list to the value of a field, outputs YAML stream
 """
 
     name="append"
 
     arguments=(
-        Argument("fieldname",help="Field name. Value must be a 'list of strings'."),
+        Argument("fieldname",help="Field name. Value must be a 'list of strings', if it does exist. If it does not, it is created."),
         Argument("string",nargs="+",help="these strings are appended to the value"),
     )
 

@@ -14,18 +14,22 @@
 </h1>
 <p><strong>USAGE:</strong> <code>yacite append [-h] fieldname string [string ...]</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>appends all strings in the list to the value of a field</p>
+<p>reads YAML stream, appends all strings in the list to the value of a field, outputs YAML stream</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>fieldname</code></p>
 <blockquote>
-<p>Field name. Value must be a 'list of strings'.</p>
+<p>Field name. Value must be a 'list of strings', if it does exist. If it does not, it is created.</p>
 </blockquote>
 <p><code>string</code></p>
 <blockquote>
 <p>these strings are appended to the value</p>
 </blockquote>
-</blockquote><hr />
+</blockquote><p><strong> EXAMPLES: </strong></p>
+<pre><code>yacite append tags scopus foreign
+yacite append grants my_grant_number
+yacite append keywords "vector spaces"
+</code></pre><hr />
 <p><strong>USAGE:</strong> <code>yacite delfields [-h] fieldname [fieldname ...]</code></p>
 <p><strong>DESCRIPTION:</strong></p>
 <p>reads YAML stream, deletes some fields, writes YAML stream</p>
@@ -35,10 +39,12 @@
 <blockquote>
 <p>fields to delete</p>
 </blockquote>
-</blockquote><hr />
+</blockquote><p><strong> EXAMPLE: </strong></p>
+<pre><code>yacite delfields abstract
+</code></pre><hr />
 <p><strong>USAGE:</strong> <code>yacite exec [-h] [-n | -f] [-k] [-m MODULE] statement</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>execute a python statement on every record</p>
+<p>reads YAML stream, executes a python statement on every record, outputs YAML stream</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>statement</code></p>
@@ -64,11 +70,14 @@
 <blockquote>
 <p>python module to import; multiple -m options are possible</p>
 </blockquote>
-</blockquote><hr />
+</blockquote><p><strong> EXAMPLES: </strong></p>
+<pre><code>yacite exec 'myown=True'
+yacite exec 'tags.sort()'
+</code></pre><hr />
 <p><strong>USAGE:</strong> <code>yacite filter [-h] [--myown] [--notmyown] [-f] [-m MODULE] [-k] expr</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>evaluates a python expression in the context of the each record,
-    outputs records for which expression returns True</p>
+<p>reads YAML stream, evaluates a python expression in the context of the each record,
+    outputs YAML stream with records for which expression returns True</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>expr</code></p>
@@ -98,20 +107,27 @@
 <blockquote>
 <p>do not stop when the eval(expr) throws an exception</p>
 </blockquote>
-</blockquote><hr />
+</blockquote><p><strong> EXAMPLES: </strong></p>
+<pre><code>yacite filter '"scopus" in tags'
+yacite filter 'year&gt;2010'
+yacite filter 'year&lt;2000 and "Hilbert space" in title'
+yacite filter '"grants" in dir()'
+yacite filter '"NSF" in grants'
+</code></pre><hr />
 <p><strong>USAGE:</strong> <code>yacite checkdups [-h] fieldname [fieldname ...]</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>reads YAML stream, checks for duplicities, writes list of pairs of keys to stdout</p>
+<p>reads YAML stream, checks for similar values in some fields, outputs list of pairs of keys with similar values</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>fieldname</code></p>
 <blockquote>
 <p>fields to check for similarities</p>
 </blockquote>
-</blockquote><hr />
+</blockquote><p><strong> EXAMPLE: </strong>
+    yacite checkdups title year</p><hr />
 <p><strong>USAGE:</strong> <code>yacite merge [-h] [-u UNAME] [-s SNAME] [-d DNAME] [-v] [-b | -B] [-q]datadir</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>merge records with datadir - see the docs for merge rules</p>
+<p>reads YAML stream, merges records with datadir - see the docs for merge rules</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>datadir</code></p>
@@ -173,8 +189,7 @@
 <li><em>datadir</em>/<em>year</em>/<em>key</em><code>.yaml</code>, if the boolean-valued 
   field <em>newrecord</em>[myown] is not true or not present</li>
 <li><em>datadir</em>/myown/<em>year/</em>key<em><code>.yaml</code> if
-<br />
-</em>newrecord*<code>[myown]</code> is true.</li>
+  </em>newrecord*<code>[myown]</code> is true.</li>
 </ul>
 </li>
 </ul>
@@ -212,17 +227,19 @@
 </ul><hr />
 <p><strong>USAGE:</strong> <code>yacite read [-h] datadir</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>reads records from datadir, outputs them</p>
+<p>reads records from datadir, outputs them as a YAML stream</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>datadir</code></p>
 <blockquote>
 <p>data directory</p>
 </blockquote>
-</blockquote><hr />
+</blockquote><p><strong> EXAMPLE: </strong></p>
+<pre><code>yacite read pubcit
+</code></pre><hr />
 <p><strong>USAGE:</strong> <code>yacite render [-h] [-e EXTRA_YAML] [-k SORT_KEY] [-t TEMPLATE_DIR]template</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>renders records using a jinja2 template</p>
+<p>reads YAML stream, renders records using a jinja2 template, outputs YAML stream</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>template</code></p>
@@ -244,7 +261,7 @@
 <blockquote>
 <p>directory with templates; default: ./templates</p>
 </blockquote>
-</blockquote><p><strong>implementation:</strong></p>
+</blockquote><p><strong>IMPLEMENTATION:</strong></p>
 <blockquote>
 <p>The render subcommand  produces the final result: the list of
 citations. The data is passed to the jinja2 python library, which uses a
@@ -271,7 +288,7 @@ stream. Additionally, the following data are computed/altered:</p>
 <p>Some python data from the argument of the -e option.</p>
 </blockquote>
 </blockquote>
-<p><strong>example template:</strong></p>
+<p><strong>EXAMPLE TEMPLATE:</strong></p>
 <pre><code># for bibrec in records
 # if bibrec.myown
 {{ bibrec.authors|join(", ") }}:{{bibrec.title}} {{bibrec.year}}
@@ -284,7 +301,7 @@ Was cited by:
 # endif
 # endfor
 </code></pre>
-<p><strong> custom filters:</strong></p>
+<p><strong> CUSTOM FILTERS:</strong></p>
 <blockquote>
 <p><code>authorsformat(*bst-name-format*)</code></p>
 <blockquote>
@@ -293,12 +310,12 @@ name format string. See http://www.tug.org/TUGboat/tb27-2/tb87hufflen.pdf
 for details.</p>
 </blockquote>
 </blockquote>
-<p><strong> example usage in a template:</strong></p>
+<p><strong> EXAMPLE USAGE IN A TEMPLATE:</strong></p>
 <pre><code>{{ rec.authors|authorsformat("{f. }{vv}{ll{ }}{, jj}")|join(", ") }}
 </code></pre><hr />
 <p><strong>USAGE:</strong> <code>yacite rewrite [-h] fieldname rewrite_file</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>rewrites values of a given field using a file with rewrite rules</p>
+<p>reads YAML stream, rewrites values of a given field using a file with rewrite rules,outputs YAML stream</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>fieldname</code></p>
@@ -309,7 +326,7 @@ for details.</p>
 <blockquote>
 <p>file with rewrite rules - see the docs for format</p>
 </blockquote>
-</blockquote><p><strong>rewrite file format (YAML):</strong></p>
+</blockquote><p><strong>REWRITE FILE FORMAT (yaml):</strong></p>
 <blockquote>
 <p>a list of pairs of strings</p>
 </blockquote>
@@ -318,24 +335,28 @@ for details.</p>
 - ...
 - [*pattern_string_n*,*replace_string_n*]
 </code></pre>
-<p><strong>example rewrite file</strong></p>
+<p><strong>EXAMPLE REWRITE FILE</strong></p>
 <pre><code>- ["Jenca","Jenča"]
 - ["Kuhr","Kühr"]
 - ["Kuehr","Kühr"]
 </code></pre><hr />
 <p><strong>USAGE:</strong> <code>yacite sort [-h] [-k SORT_KEY]</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>sorts the records in input stream according to given fields</p>
+<p>reads YAML stream, sorts the records in input stream according to given fields, outputs YAML stream</p>
 <p><strong>OPTIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>-k, --sort-key SORT_KEY</code></p>
 <blockquote>
-<p>either fieldname of ~fieldname</p>
+<p>either fieldname or ~fieldname</p>
 </blockquote>
-</blockquote><hr />
+</blockquote><p><strong>EXAMPLE:</strong></p>
+<pre><code>yacite sort year
+yacite sort ~year
+yacite sort year title
+</code></pre><hr />
 <p><strong>USAGE:</strong> <code>yacite unappend [-h] fieldname string [string ...]</code></p>
 <p><strong>DESCRIPTION:</strong></p>
-<p>deletes each string in the list from the list of strings in the value of a field</p>
+<p>reads YAML stream, deletes each string in the list from the list of strings in the value of a field, outputs YAML stream</p>
 <p><strong>POSITIONAL ARGUMENTS:</strong></p>
 <blockquote>
 <p><code>fieldname</code></p>
@@ -346,6 +367,9 @@ for details.</p>
 <blockquote>
 <p>these strings are removed from the value, if present</p>
 </blockquote>
-</blockquote><hr />
+</blockquote><p><strong>EXAMPLE:</strong></p>
+<pre><code>yacite unappend tags scopus sci
+yacite unappend keywords mathematics
+</code></pre><hr />
 </body>
 </html>
