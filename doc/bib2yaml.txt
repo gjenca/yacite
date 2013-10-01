@@ -1,0 +1,22 @@
+`usage: bib2yaml [-h] [-s] [-a] [-n] [bibfile [bibfile ...]]`
+
+**DESCRIPTION:**
+
+Convert BibTeX to a YAML stream for `yacite`.
+
+**POSITIONAL ARGUMENTS:**
+
+> `bibfile`              
+>> BibTeX file to read; reads standard input if omitted
+
+**OPTIONAL ARGUMENTS:**
+
+> `-h, --help`
+>> show this help message and exit
+> `-s, --scopus`
+>> correct broken BibTeX produced by SCOPUS
+> `-a, --keep-abstract`
+>> keep abstract
+> `-n, --no-titlecase`
+>> do not titlecase ALL CAPS strings
+

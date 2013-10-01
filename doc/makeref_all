@@ -15,7 +15,7 @@ cat << THE_END
 <tt>yacite</tt> command reference
 </h1>
 THE_END
-for F in usage_*.html; do
+for F in bib2yaml.html usage_*.html; do
 	cat "$F"
 	echo '<hr />'
 done

@@ -7,8 +7,11 @@ usage_%.html: templates/usage.md makeref.py ../yacite/command/%.py extra/extra_%
 	test ! -f extra/extra_$(*F).txt || cat extra/extra_$(*F).txt | markdown_py >> $@
 
 tutorial.html: tutorial.txt
-	markdown_py tutorial.txt > tutorial.html
+	markdown_py tutorial.txt > $@
 
-reference.html: usage_append.html usage_delfields.html usage_execc.html usage_filter.html usage_checkdups.html usage_merge.html usage_read.html usage_render.html usage_rewrite.html usage_sort.html usage_unappend.html 
-	bash makeref_all > reference.html
+bib2yaml.html: bib2yaml.txt
+	markdown_py bib2yaml.txt > $@
+
+reference.html: bib2yaml.html usage_append.html usage_delfields.html usage_execc.html usage_filter.html usage_checkdups.html usage_merge.html usage_read.html usage_render.html usage_rewrite.html usage_sort.html usage_unappend.html 
+	bash makeref_all > $@
 
