@@ -1,4 +1,4 @@
-** EXAMPLES: **
+**EXAMPLES:**
 
 	yacite append tags scopus foreign
 	yacite append grants my_grant_number

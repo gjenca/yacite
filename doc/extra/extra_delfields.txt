@@ -1,3 +1,3 @@
-** EXAMPLE: **
+**EXAMPLE:**
 	
 	yacite delfields abstract

@@ -2,18 +2,13 @@
 
 > merge means this:
 
-- for each *newrecord* in *stdin*
+- for each *newrecord* in *YAML stream*
 	- determine how many records in *datadir* are "very similar"
-	  to *newrecord*, that means
-	  one of the following:
-		- same key
-		- same year,title,authors
-		- same journal name,volume,startpage 
-		- same article-id
+	  to *newrecord* (sometimes, this fails because of an error in data)
 	- if there is more than one record in datadir very similar to
 	  *newrecord*, then fail with an error.
 	- if there is no record in datadir very similar to *newrecord*, then
-	  CREATE a new file as follows:
+	  **CREATE** a new file as follows:
 		- generate a new key field in *newrecord* (if not present)
 		- create a new file in datadir. The filename of the new file is 
 			- *datadir*/*year*/*key*`.yaml`, if the boolean-valued 
@@ -21,7 +16,7 @@
 			- *datadir*/myown/*year/*key*`.yaml` if
 			  *newrecord*`[myown]` is true.
 	- if there is exacly one record in datadir very similar to
-	  *newrecord*, then UPDATE the matching record (called *match* from
+	  *newrecord*, then **UPDATE** the matching record (called *match* from
 	  now on) in *datadir* with values from
 	  *newrecord* according to the following rules
 	  - for each *fieldname* in *newrecord*
@@ -42,6 +37,17 @@
 			  - if *fieldname* is one of the *DNAME*s, then the
 			    corresponding field in *match* is deleted.
 			  - if *fieldname* is not present in any of *UNAME* *SNAME*
-			    *DNAME*, then a warning is issued with level according to
-			    '-v' and '-q' options.
+			    *DNAME*, then the (*record",*fieldname*) pair
+			    bounced. A warning is issued with level according to
+			    '-v' and '-q' options. In addition, if there is a
+			    '-b' or '-B' option a mergeable yaml stream is
+			    written to the standard output containing records
+			    with the bounced pairs. Whay you probably want to
+			    do is to save the stream to a file, examine and
+			    edit the file and then merge it again.
 
+**EXAMPLES:**
+
+	yacite merge -s title -u tags
+	yacite merge -s cites
+	yacite merge -d remark

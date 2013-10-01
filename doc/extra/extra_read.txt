@@ -1,4 +1,4 @@
-** EXAMPLE: **
+**EXAMPLE:**
 
 	yacite read pubcit
 

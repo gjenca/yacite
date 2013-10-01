@@ -1,4 +1,4 @@
-** EXAMPLES: **
+**EXAMPLES:**
 
 	yacite filter '"scopus" in tags'
 	yacite filter 'year>2010'
