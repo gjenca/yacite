@@ -185,7 +185,7 @@ Lesson 2: Filtering the YAML stream
 	The last command is equivalent to much more
 	readable
 		
-		... yacite filter '"Effect" not in keywords' ...
+		... yacite filter '"semigroup" not in keywords' ...
 
 	We refer to Python tutorial for more information about Python
 	expressions.
