@@ -13,6 +13,12 @@ import difflib
 def isjunk(s):
     return s.isspace()
 
+def check_bounced(rec,match,key):
+
+    if key!="authors" and (type(rec[key]) is list) and (type(match[key]) is list):
+        return set(rec[key])!=set(match[key])
+    return rec[key]!=match[key]
+
 
 def check_strongly_bounced(rec,match,key):
 
@@ -84,7 +90,7 @@ class Merge(YaciteCommand):
                 bounced_fields=[]
                 strongly_bounced_fields=[]
                 for field_name in rec:
-                    if field_name in match and match[field_name]!=rec[field_name] and field_name not in \
+                    if field_name in match and check_bounced(rec,match,field_name) and field_name not in \
                         self.fields_to_change:
                             bounced_fields_num+=1
                             record_bounced=True
