@@ -134,7 +134,7 @@ class Merge(YaciteCommand):
                         match[field_name]=rec[field_name]
                 # 2.4. set
                 for field_name in self.ns.sname:
-                    if field_name in rec and field_name in match and match[field_name]!=rec[field_name]:
+                    if field_name in rec and field_name in match and check_bounced(match,rec,field_name):
                         if not self.ns.quiet:
                             print >>sys.stderr,"merge: SET %s[%s] to %s" \
                                 %(match["key"],field_name,rec[field_name])
