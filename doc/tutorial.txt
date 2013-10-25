@@ -76,6 +76,7 @@ Lesson 1: Creating HTML list of your publications
    	read and write YAML data. Unlike other serialization formats (like
 	XML), the YAML format was designed to be both human-readable and
 	human-editable. It can be edited using any text editor.
+
 1. 	What we want to do now is to convert a YAML stream into a HTML document.
    	This is accomplished using a *template*. A HTML template is a HTML file
    	containing special non-HTML control sequences 
@@ -91,6 +92,9 @@ Lesson 1: Creating HTML list of your publications
    	favorite text editor and type in the following jinja2 code.
 
 		<html>
+		<head>
+  		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+		</head>
 		<body>
 		<h1>List of publications</h1>
 		<ol>
@@ -114,8 +118,10 @@ Lesson 1: Creating HTML list of your publications
 		{{  rec.authors|join(", ") }}
 	
 	means that the authors should be separated by a comma and a space.
+
 1. 	Save the template under some name, let us say `publist.html` in the
    	`templates` directory.
+
 1. 	Type in the following command on the shell prompt.
    
 		bib2yaml mypubs.bib | yacite render publist.html
@@ -130,16 +136,19 @@ Lesson 1: Creating HTML list of your publications
 	
 	There are more things that `yacite render` does (like dealing with
 	citations) but, for the moment, we do not care.
+
 1. 	Save the resulting HTML into a file using the redirect sign `>` :
 
 		bib2yaml mypubs.bib | yacite render publist.html > mypubs.html
    	
 	and open the `mypubs.html` in you favourite browser. Enjoy the result. 
+
 1.	Try to alter the
 	template; for example, change the `<ol>` and `</ol>` tags to `<ul>`
 	and `</ul>`, respectively, and observe the results in `mypubs.html`. 
 	Note that you need to click the reload button in your browser to see the 
 	updates in a HTML document.
+
 1.	If you need to create a MS Word document, there are some ways how to convert a
 	simple HTML document to a `.doc` file. For example, you can try the
 	excellent `pandoc` document conversion utility. In addition, as I was
@@ -202,6 +211,7 @@ Lesson 3: Persistence: saving the data into database directory
 		mkdir pubcit
 
 	The name of the datadir does not matter at all.
+
 1.	The command `yacite merge` reads the YAML stream from its input
 	and saves the individual records in the datadir.
 
@@ -222,10 +232,12 @@ Lesson 3: Persistence: saving the data into database directory
 	file a new field `key` was created. The value of `key` is
 	`${AUTHOR}${YEAR}${TITLEWORD}`. It is easy to infer the value of `key`
 	from the basic bibliographic data of the paper.
+
 1.	Sometimes, there are multiple records with the same first author, year
 	and the first word of the title. Whenever this happens, a suffix `-1` (or
 	more) is appended to `key` and to the corresponding part of the
 	filename.
+
 1.	Try again the command 
 		
 		bib2yaml mypubs.bib | yacite merge pubcit
@@ -332,7 +344,7 @@ Lesson 6: Tagging the records in the database directory
 	versions of the records in the database and that the value of `tags`
 	is different. `yacite merge` is careful, it does not change existing
 	data in the database unless explicily said to do so.
-	And did not say what to do with the changed value of `tags`. What
+	And we did not say what to do with the changed value of `tags`. What
 	we want to do is to set `tags` to the new value. This command
 	does the trick:
 
@@ -415,6 +427,7 @@ Lesson 8: Dealing with bounced fields
 
 	The `yacite merge` command detects that the fields are different, but it
 	does not do anything about it without an user intervention.
+
 1.	Try the following command:
 		
 		bib2yaml wos.bib | yacite append tags wos | yacite exec 'myown=True' | yacite merge -b -u tags pubcit > diff.yaml
@@ -457,6 +470,7 @@ Lesson 8: Dealing with bounced fields
 			yacite merge -b -s authors pubcit < diff.yaml > diff2.yaml
 
 		The `-s authors` means: SET `authors` to the new value.
+
 	1.	Look at the message: the value of `authors` was updated in the
 		database. The `diff2.yaml` file contains remaining bounced
 		fields.
@@ -492,8 +506,8 @@ Lesson 9: Adding citations -- per citing article
 	`newcites_scopus.bib`.
 1.	Convert the file to yaml:
 
-		bib2yaml newcites_scopus.bib | yacite append tags scopus |
-		yacite exec 'cites=[]' > newcites_scopus.yaml
+		bib2yaml newcites_scopus.bib | yacite append tags scopus | yacite exec 'cites=[]' > newcites_scopus.yaml
+
 1.	Edit the `newcites_scopus.yaml` file. Fill the value of the cites
 	field with corresponding keys of your articles. Then, merge the
 	edited file:
@@ -510,6 +524,9 @@ Lesson 10: Rendering citation lists
 	subdirectory.
 
 		<html>
+		<head>
+  		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+		</head>
 		<body>
 		# for rec in records:
 		# if rec.myown
@@ -587,12 +604,12 @@ Lesson 11: What now?
 1.	Well, you should read the reference, there is a couple of commands and
 	a lot of options that were not described in this tutorial. Figure out
 	the workflow that suits you best.
-1.	You should read the template documentation in the jinja2 home page: [http://jinja.pocoo.org/docs/] .
+1.	You should read the template documentation in the [jinja2 home page](http://jinja.pocoo.org/docs/) .
 
 	Jinja2 can do a *lot* for you.
+
 1.	Maybe you need a little bit of Python -- to write the more elaborated
-	filters and execs. Python docs are at
-	[http://docs.python.org/2/].
+	filters and execs. Python docs are [here](http://docs.python.org/2/).
 
 	
 
