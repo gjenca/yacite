@@ -164,8 +164,9 @@ class Merge(YaciteCommand):
                         del match[field_name]
                         if not self.ns.quiet:
                             print >>sys.stderr,"merge: DELETE %s[%s]" % (match["key"],field_name)
-                # 3. save changes
-                match.save()
+                # 3. save changes, provided there is not a --new switch
+                if not self.ns.new:
+                    match.save()
             if record_bounced:
                 bounced_records_num+=1
         if bounced_fields_num and not self.ns.quiet:
