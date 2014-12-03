@@ -30,6 +30,7 @@ def readpubs(f):
             for fname,value in entry.fields.iteritems():
                 # TODO: sanitize fname properly
                 fname=fname.replace("-","_") # - is forbidden in yaml map keys
+                fname=fname.lower()
                 pub[fname]=value.strip('{}')
                 if not ns.no_titlecase and \
                         fname in ("journal","title","series","booktitle") and \

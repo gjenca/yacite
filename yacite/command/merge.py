@@ -49,6 +49,7 @@ class Merge(YaciteCommand):
             dest="dname",action="append",default=[]),
         Argument("-v","--verbose",action="store_true",help="be verbose"),
         MexGroup(
+            Argument("-n","--new",action="store_true",help="write only new records to a mergeable YAML stream; do not actually write anything"),
             Argument("-b","--bounced",action="store_true",help="write bounced fields to a mergeable YAML stream"),
             Argument("-B","--strongly-bounced",action="store_true",help="write strongly bounced fields to a mergeable YAML stream")
         ),
@@ -78,12 +79,16 @@ class Merge(YaciteCommand):
             record_bounced=False
             if not matches:
                 # 2.1 new record
-                newrecord=BibRecord(rec,datadir=self.datadir)
-                newrecord.dirty=True
-                newrecord.save()
-                self.datadir.append(newrecord)
-                if not self.ns.quiet:
-                    print >>sys.stderr,"merge: Created new record: %s" % newrecord.path
+                if self.ns.new:
+                    print "---"
+                    sys.stdout.write(sane_yaml.dump(rec))
+                else:
+                    newrecord=BibRecord(rec,datadir=self.datadir)
+                    newrecord.dirty=True
+                    newrecord.save()
+                    self.datadir.append(newrecord)
+                    if not self.ns.quiet:
+                        print >>sys.stderr,"merge: Created new record: %s" % newrecord.path
             else:
                 match=matches[0]
                 # 2.2. count bounced fields

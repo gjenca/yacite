@@ -1,0 +1,35 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+import sys
+from pybtex.database.input import bibtex
+import yacite.utils.sane_yaml as sane_yaml
+from yacite.utils.titlecase import titlecase 
+import re
+import tempfile
+import unicodedata
+import argparse
+
+def patch_and_convert(fin):
+    
+    for bibdict in sane_yaml.load_all(fin):
+        if 'type' not in bibdict:
+            bibdict['type']="article"
+        print "@%s{%s," % (bibdict['type'].title(),bibdict["key"])
+        del bibdict["key"]
+        print '    author ="',
+        print " and ".join("%s" % author.encode("utf-8") for author in bibdict["authors"])+'",'
+        del bibdict["authors"]
+        print ",\n".join('    %s = "%s"' % (key,bibdict[key]) for key in bibdict)
+        print "}"
+        print
+
+parser=argparse.ArgumentParser()
+parser.add_argument("yamlfile",nargs="*",help="YAML file to read; reads standard input if omitted")
+ns=parser.parse_args()
+
+if not ns.yamlfile:
+    patch_and_convert(sys.stdin)
+else:
+    for fnm in ns.bibfile:
+        patch_and_convert(file(fnm))
+

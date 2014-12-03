@@ -4,7 +4,7 @@
 from distutils.core import setup
 
 setup (name="yacite",
-       version="alpha",
+       version="0.1-alpha",
        description="Managing your citations the UNIX way",
        author="Gejza Jenča",
        author_email="gejza.jenca@stuba.sk",
