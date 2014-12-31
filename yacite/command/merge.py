@@ -43,9 +43,9 @@ class Merge(YaciteCommand):
         Argument("datadir",help="data directory"),
         Argument("-u","--union",help="take union of lists - original and new",
             dest="uname",action="append",default=[]),
-        Argument("-s","--set",help="replace orginal values by new value",
+        Argument("-s","--set",help="replace orginal value by new value",
             dest="sname",action="append",default=[]),
-        Argument("-d","--delete",help="delete these fields",
+        Argument("-d","--delete",help="delete this field",
             dest="dname",action="append",default=[]),
         Argument("-v","--verbose",action="store_true",help="be verbose"),
         MexGroup(
