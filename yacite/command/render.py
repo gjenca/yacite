@@ -26,7 +26,7 @@ class Render(YaciteCommand):
     """reads YAML stream, renders records using a jinja2 template, outputs YAML stream
 """
 
-    does_write = True
+    does_output = True
 
     name="render"
     
@@ -48,8 +48,8 @@ class Render(YaciteCommand):
         else:
             self.cmp_keys=None
 
-    def execute(self):
-        records=list(sane_yaml.load_all(sys.stdin))
+    def execute(self,iter_in):
+        records=list(iter_in)
         key_dict={}
         records_new=[]
         for rec in records:

@@ -20,15 +20,13 @@ class Unappend(YaciteCommand):
 
     def execute(self):
         ustrings=set(s.decode('utf-8') for s in self.ns.string)
-        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
+        for i,rec in enumerate(iter_in):
             if self.ns.fieldname in rec:
                 if type(rec[self.ns.fieldname]) is not list:
                     raise DataError("unappend: expecting list under fieldname %s in %s, got %s instead" %
                         (self.ns.fieldname,describe_record(i,rec),type(rec[self.ns.fieldname])))
                 rec[self.ns.fieldname]=list(set(rec[self.ns.fieldname])-ustrings)
-            print "---"
-            sys.stdout.write(sane_yaml.dump(rec))
-
+            yield rec
                 
         
         
