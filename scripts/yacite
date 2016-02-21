@@ -60,10 +60,10 @@ for i,command in enumerate(subcommands):
     if i==0:
         if command.does_input:
             iterator=command.execute()
+            continue
         else:
             iterator=iter_stdin()
-    else:
-        iterator=command.execute(iterator)
+    iterator=command.execute(iterator)
 
 if not subcommands[-1].does_output:
     for rec in iterator:
