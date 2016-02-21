@@ -26,6 +26,8 @@ class Render(YaciteCommand):
     """reads YAML stream, renders records using a jinja2 template, outputs YAML stream
 """
 
+    does_write = True
+
     name="render"
     
     arguments=(

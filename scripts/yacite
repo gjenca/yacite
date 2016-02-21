@@ -35,9 +35,19 @@ for cmd in c_map:
     cmd_class=c_map[cmd]
     subpar=subparsers.add_parser(cmd,help=cmd_class.__doc__)
     cmd_class.add_arguments(subpar)
-ns=parse.parse_args()
-command=c_map[ns.command](ns)
-command.execute()
+subcommands=[]
+sc=[]
+for arg in sys.argv[1:]:
+    if arg=='!':
+        subcommands.append(sc)
+        sc=[]
+    else:
+        sc.append(arg)
+subcommands.append(sc)
+for sc in subcommands:
+    ns=parse.parse_args(sc)
+    command=c_map[ns.command](ns)
+    command.execute()
 
 
 
