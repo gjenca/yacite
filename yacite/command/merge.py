@@ -48,6 +48,7 @@ class Merge(YaciteCommand):
         Argument("-d","--delete",help="delete this field",
             dest="dname",action="append",default=[]),
         Argument("-v","--verbose",action="store_true",help="be verbose"),
+        Argument("-N","--nocreate",action="store_true",help="do not create new records, just update existing"),
         MexGroup(
             Argument("-n","--new",action="store_true",help="write only new records to a mergeable YAML stream; do not actually write anything"),
             Argument("-b","--bounced",action="store_true",help="write bounced fields to a mergeable YAML stream"),
@@ -83,6 +84,8 @@ class Merge(YaciteCommand):
                     print "---"
                     sys.stdout.write(sane_yaml.dump(rec))
                 else:
+                    if self.ns.nocreate:
+                        print >>sys.stderr,"merge: Did not create a new record"
                     newrecord=BibRecord(rec,datadir=self.datadir)
                     newrecord.dirty=True
                     newrecord.save()
