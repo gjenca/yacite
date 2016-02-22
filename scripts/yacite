@@ -31,10 +31,6 @@ c_map={
     "checkdups":yacite.command.checkdups.CheckDups,
 }
 
-
-def iter_stdin():
-    return sane_yaml.load_all(sys.stdin)
-
 parse=argparse.ArgumentParser()
 subparsers=parse.add_subparsers(dest="command",help="The yacite subcommand you want to run")
 for cmd in c_map:
@@ -62,7 +58,7 @@ for i,command in enumerate(subcommands):
             iterator=command.execute()
             continue
         else:
-            iterator=iter_stdin()
+            iterator=sane_yaml.load_all(sys.stdin)
     iterator=command.execute(iterator)
 
 if not subcommands[-1].does_output:
