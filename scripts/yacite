@@ -15,6 +15,8 @@ import yacite.command.sort
 import yacite.command.delfields
 import yacite.command.checkdups
 
+import yacite.utils.sane_yaml as sane_yaml
+
 c_map={
     "read":yacite.command.read.Read,
     "merge":yacite.command.merge.Merge,
@@ -29,15 +31,45 @@ c_map={
     "checkdups":yacite.command.checkdups.CheckDups,
 }
 
+
+def iter_stdin():
+    return sane_yaml.load_all(sys.stdin)
+
 parse=argparse.ArgumentParser()
 subparsers=parse.add_subparsers(dest="command",help="The yacite subcommand you want to run")
 for cmd in c_map:
     cmd_class=c_map[cmd]
     subpar=subparsers.add_parser(cmd,help=cmd_class.__doc__)
     cmd_class.add_arguments(subpar)
-ns=parse.parse_args()
-command=c_map[ns.command](ns)
-command.execute()
+subcommands_args=[]
+sc_args=[]
+for arg in sys.argv[1:]:
+    if arg=='!':
+        subcommands_args.append(sc_args)
+        sc_args=[]
+    else:
+        sc_args.append(arg)
+subcommands_args.append(sc_args)
+subcommands=[]
+for sc_args in subcommands_args:
+    ns=parse.parse_args(sc_args)
+    command=c_map[ns.command](ns)
+    subcommands.append(command)
+
+for i,command in enumerate(subcommands):
+    if i==0:
+        if command.does_input:
+            iterator=command.execute()
+            continue
+        else:
+            iterator=iter_stdin()
+    iterator=command.execute(iterator)
+
+if not subcommands[-1].does_output:
+    for rec in iterator:
+        print '---'
+        sys.stdout.write(sane_yaml.dump(rec))
+        
 
 
 
