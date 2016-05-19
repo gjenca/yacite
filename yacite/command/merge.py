@@ -39,6 +39,8 @@ class Merge(YaciteCommand):
    
     name="merge"
 
+    does_output=True
+
     arguments=(
         Argument("datadir",help="data directory"),
         Argument("-u","--union",help="take union of lists - original and new",
@@ -64,14 +66,14 @@ class Merge(YaciteCommand):
             raise DataError("merge: duplicite fieldnames in options")
         self.datadir=Datadir(self.ns.datadir)
 
-    def execute(self):
+    def execute(self,iter_in):
 
         # 1. statistics
         bounced_fields_num=0
         bounced_records_num=0
         glob_bounced_fields=[]
         # 2. new_record, new_field, set, union, delete
-        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
+        for i,rec in enumerate(iter_in):
             # 2.0. prepare:
             matches=self.datadir.list_matching(rec)
             if len(matches)>1:
@@ -81,8 +83,7 @@ class Merge(YaciteCommand):
             if not matches:
                 # 2.1 new record
                 if self.ns.new:
-                    print "---"
-                    sys.stdout.write(sane_yaml.dump(rec))
+                    yield rec
                 else:
                     if self.ns.nocreate:
                         print >>sys.stderr,"merge: Did not create a new record"

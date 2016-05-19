@@ -15,13 +15,12 @@ class DelFields(YaciteCommand):
         Argument("fieldname",nargs="+",help="fields to delete"),
     )
 
-    def execute(self):
-        for rec in sane_yaml.load_all(sys.stdin):
+    def execute(self,iter_in):
+        for rec in iter_in:
             for fn in self.ns.fieldname:
                 if fn in rec:
                     del rec[fn]
-            print "---"
-            sys.stdout.write(sane_yaml.dump(rec))
+            yield rec 
 
                 
         

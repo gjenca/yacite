@@ -18,10 +18,10 @@ class Read(YaciteCommand):
         Argument("datadir",help="data directory"),
     )
 
+    does_input=True
 
-    def execute(self):
+    def execute(self,iter_in=None):
         dd=Datadir(self.ns.datadir)
         for rec in dd:
-            print "---"
-            sys.stdout.write(sane_yaml.dump(dict(rec)))
+            yield dict(rec)
         
