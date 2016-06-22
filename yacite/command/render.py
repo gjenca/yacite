@@ -3,14 +3,20 @@
 import sys
 import yacite.utils.sane_yaml as sane_yaml
 from jinja2 import Template,FileSystemLoader,Environment
-import pybtex.bibtex.names
+# pybtex API changed in version 0.20
+try:
+    from pybtex.bibtex.names import format as format_name
+except ImportError:
+    from pybtex.bibtex.names import format_name
 from yacite.command.command import YaciteCommand
 from yacite.utils.compare import keys_to_cmp
 from yacite.utils.misc import Argument
 
+
+
 def authors_format(authors,bst_format):
 
-    return [pybtex.bibtex.names.format(auth,bst_format) for auth in authors]
+    return [format_name(auth,bst_format) for auth in authors]
 
 def merge(dest,src):
 
