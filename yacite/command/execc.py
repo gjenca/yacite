@@ -28,14 +28,15 @@ class Exec(YaciteCommand):
             self.mods[m]=__import__(m)
 
 
-    def execute(self,iter_in):
+    def execute(self):
         exceptions=0
-        for i,rec in enumerate(iter_in):
+        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             try:
                 exec self.ns.statement in self.mods,rec
             except:
                 if self.ns.failed:
-                    yield rec
+                    print "---"
+                    sys.stdout.write(sane_yaml.dump(rec))
                 elif self.ns.keep_going:
                     exceptions+=1
                     print >> sys.stderr, "exec: Warning: failed on %s" % describe_record(i,rec)
@@ -43,7 +44,8 @@ class Exec(YaciteCommand):
                 else:
                     raise
             if not self.ns.no_output and not self.ns.failed:
-                yield rec
+                print "---"
+                sys.stdout.write(sane_yaml.dump(rec))
         if exceptions and not self.ns.failed:
             print >> sys.stderr, "exec: Warning: there were %d exceptions" % exceptions
             

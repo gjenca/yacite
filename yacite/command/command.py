@@ -13,9 +13,6 @@ def _add_arguments(something_with_arguments,subparser):
 
 class YaciteCommand(object):
 
-    does_input = False
-    does_output = False
-
     def __init__(self,ns):
         self.ns=ns
     

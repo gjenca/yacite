@@ -32,16 +32,18 @@ class Filter(YaciteCommand):
         for m in self.ns.module:
             self.mods[m]=__import__(m)
 
-    def execute(self,iter_in):
+    def execute(self):
         exceptions=0
-        for i,rec in enumerate(iter_in):
+        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             if self.ns.myown:
                 if (not u"myown" in rec) or rec[u"myown"]==False:
-                    yield rec
+                    print "---"
+                    sys.stdout.write(sane_yaml.dump(rec))
                     continue
             if self.ns.notmyown:
                 if "myown" in rec and rec[u"myown"]:
-                    yield rec
+                    print "---"
+                    sys.stdout.write(sane_yaml.dump(rec))
                     continue
             try:
                 d=dict(rec)
@@ -51,7 +53,8 @@ class Filter(YaciteCommand):
                 if self.ns.failed:
                     if '__builtins__' in rec:    
                         del rec['__builtins__']
-                    yield rec
+                    print "---"
+                    sys.stdout.write(sane_yaml.dump(rec))
                 elif self.ns.keep_going:
                     exceptions+=1
                     print >> sys.stderr, "filter: Warning: failed on %s" % describe_record(i,rec)
@@ -60,7 +63,8 @@ class Filter(YaciteCommand):
                     raise
             else:
                 if not self.ns.failed and tf:
-                    yield rec
+                    print "---"
+                    sys.stdout.write(sane_yaml.dump(rec))
 
         if exceptions and not self.ns.failed:
             print >> sys.stderr, "exec: Warning: there were %d exceptions" % exceptions

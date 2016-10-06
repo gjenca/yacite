@@ -17,8 +17,8 @@ class Append(YaciteCommand):
         Argument("string",nargs="+",help="these strings are appended to the value"),
     )
 
-    def execute(self,iter_in):
-        for i,rec in enumerate(iter_in):
+    def execute(self):
+        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             if self.ns.fieldname in rec:
                 value=rec[self.ns.fieldname]
                 if type(value) is not list:
@@ -29,7 +29,9 @@ class Append(YaciteCommand):
                 rec[self.ns.fieldname]=value
             else:
                 rec[self.ns.fieldname]=[s.decode('utf-8') for s in self.ns.string]
-            yield rec
+            print "---"
+            sys.stdout.write(sane_yaml.dump(rec))
+
                 
         
         

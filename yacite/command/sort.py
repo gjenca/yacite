@@ -25,12 +25,14 @@ class Sort(YaciteCommand):
 
         self.cmp_keys=keys_to_cmp(self.ns.sort_key)
 
-    def execute(self,iter_in):
+    def execute(self):
 
-        l=list(iter_in)
+        l=list(sane_yaml.load_all(sys.stdin))
         l.sort(cmp=self.cmp_keys)
         for d in l:
-            yield d
+            print "---"
+            sys.stdout.write(sane_yaml.dump(d))
+
                 
         
         

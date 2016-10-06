@@ -39,8 +39,6 @@ class Merge(YaciteCommand):
    
     name="merge"
 
-    does_output=True
-
     arguments=(
         Argument("datadir",help="data directory"),
         Argument("-u","--union",help="take union of lists - original and new",
@@ -50,7 +48,6 @@ class Merge(YaciteCommand):
         Argument("-d","--delete",help="delete this field",
             dest="dname",action="append",default=[]),
         Argument("-v","--verbose",action="store_true",help="be verbose"),
-        Argument("-N","--nocreate",action="store_true",help="do not create new records, just update existing"),
         MexGroup(
             Argument("-n","--new",action="store_true",help="write only new records to a mergeable YAML stream; do not actually write anything"),
             Argument("-b","--bounced",action="store_true",help="write bounced fields to a mergeable YAML stream"),
@@ -66,14 +63,14 @@ class Merge(YaciteCommand):
             raise DataError("merge: duplicite fieldnames in options")
         self.datadir=Datadir(self.ns.datadir)
 
-    def execute(self,iter_in):
+    def execute(self):
 
         # 1. statistics
         bounced_fields_num=0
         bounced_records_num=0
         glob_bounced_fields=[]
         # 2. new_record, new_field, set, union, delete
-        for i,rec in enumerate(iter_in):
+        for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             # 2.0. prepare:
             matches=self.datadir.list_matching(rec)
             if len(matches)>1:
@@ -83,10 +80,9 @@ class Merge(YaciteCommand):
             if not matches:
                 # 2.1 new record
                 if self.ns.new:
-                    yield rec
+                    print "---"
+                    sys.stdout.write(sane_yaml.dump(rec))
                 else:
-                    if self.ns.nocreate:
-                        print >>sys.stderr,"merge: Did not create a new record"
                     newrecord=BibRecord(rec,datadir=self.datadir)
                     newrecord.dirty=True
                     newrecord.save()
