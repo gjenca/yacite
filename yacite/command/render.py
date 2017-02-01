@@ -16,7 +16,7 @@ from yacite.utils.misc import Argument
 
 def authors_format(authors,bst_format):
 
-    return [format_name(auth,bst_format) for auth in authors]
+    return [format_name(auth,bst_format).replace('~','') for auth in authors]
 
 def merge(dest,src):
 
