@@ -55,19 +55,10 @@ class Render(YaciteCommand):
     def execute(self):
         records=list(sane_yaml.load_all(sys.stdin))
         key_dict={}
+        edge_tags={}
         records_new=[]
         for rec in records:
             if "key" in rec:
-                if "@" in rec["key"]:
-                    key_main=rec["key"][:rec["key"].find("@")]
-                    if key_main in key_dict:
-                        # Twin records are merged
-                        rec["key"]=key_main
-                        merge(key_dict[key_main],rec)
-                        # the other twin is not appended
-                        continue
-                    else:
-                        rec["key"]=key_main
                 key_dict[rec["key"]]=rec
             records_new.append(rec)
         records=records_new
@@ -78,7 +69,16 @@ class Render(YaciteCommand):
                 rec["citedby"]=[]
             if not "cites" in rec:
                 rec["cites"]=[]
-            rec["cites"]=[key_dict[key] for key in rec["cites"] if key in key_dict]
+            cites_objects=[]
+            for key in rec["cites"]:
+                if ';' in key:
+                    key,tags_s=key.split(';')
+                    tags=tags_s.split(' ')
+                    edge_tags[(rec["key"],key)]=tags
+                if key not in key_dict:
+                    continue
+                cites_objects.append(key_dict[key])
+            rec["cites"]=cites_objects
             rec["cited_times"]=0
         for rec in records:
             if rec["myown"]:
@@ -93,7 +93,7 @@ class Render(YaciteCommand):
             line_statement_prefix="#")
         env.filters['authorsformat']=authors_format
         t=env.get_template(self.ns.template)
-        sys.stdout.write(t.render(records=records,extra=self.extra).encode('utf-8'))
+        sys.stdout.write(t.render(citation_tags=edge_tags,records=records,extra=self.extra).encode('utf-8'))
 
                 
         
