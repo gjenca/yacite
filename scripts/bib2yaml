@@ -10,13 +10,14 @@ import tempfile
 import unicodedata
 import argparse
 from io import StringIO
+from yacite.utils.misc import strip_accents
 
 
 def readpubs(f):
 
     parser = bibtex.Parser(encoding='utf-8')
     memfile=f.read()
-    uni=memfile.decode("utf-8")
+    uni=memfile.decode("utf-8","ignore")
     bib_data = parser.parse_stream(StringIO(uni))
     ret=[]
     for entry in bib_data.entries.itervalues():
@@ -65,15 +66,27 @@ def readpubs(f):
     return ret
 
 def patch_and_convert(fin):
-    
+
+    keys_d={}
+    start_suffix=ord('a')
     if ns.scopus:
         f=tempfile.TemporaryFile()
         for line in fin:
             # Scopus generates invalid key for auhors
             # with multiword surnames
-            if re.match(r"^ *@.*{",line):
+            # As of 2017, Scopus generates keys with accents (WRONG)
+            m=re.match(r"^( *@.*{ *)([^ ,]*)(.*)$",line)
+            if m:
                 line="".join(line.split())
-            # For years, Scopus produces invalid list of authors
+                line=strip_accents(line.decode('utf-8')).encode('utf-8')
+                key=m.group(2)
+                keys_d[key]=keys_d.get(key,0)+1
+                if keys_d[key]==1:
+                    key_suffix=''
+                else:
+                    key_suffix=chr(start_suffix-1+keys_d[key])
+                line=m.group(1)+m.group(2)+key_suffix+m.group(3)
+            # For years, Scopus produces an invalid list of authors
             if re.match("^ *author *=.*$",line):
                 key,val=line.split("=",1)
                 val=re.sub(r", *(\w\w)",r" and \1",val)
