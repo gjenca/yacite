@@ -18,27 +18,27 @@ def makekey(bib_rec,datadir):
 
     if any(name not in bib_rec for name in ("title","year","authors")):
         raise IncompleteDataError("Cannot create key without title, year and authors")
-    author=u"".join(bib_rec["authors"][0].split(u",")[0].lower().split())
-    title=u""
+    author="".join(bib_rec["authors"][0].split(",")[0].lower().split())
+    title=""
     for w in bib_rec["title"].split():
         w=just_alnum(w)
         title=title+w.lower()
         if len(title)>=4:
             break
-    year=u"%s" % bib_rec["year"]
-    keyprefix=u"%s%s%s" % (author,year,title)
+    year="%s" % bib_rec["year"]
+    keyprefix="%s%s%s" % (author,year,title)
     keyprefix=strip_accents(keyprefix)
     if datadir is None:
         return keyprefix
     if keyprefix in datadir.keys:
         for i in range(1,10):
-            key=u"%s-%d" % (keyprefix,i)
+            key="%s-%d" % (keyprefix,i)
             if key not in datadir.keys:
                 break
     else:
         key=keyprefix
     return(key)
-                
+
 
 def mkdir_p(path):
     try:
@@ -50,9 +50,9 @@ def mkdir_p(path):
 
 def clean_string(x):
     try:
-        return just_alnum(unicode(x).lower())
+        return just_alnum(str(x).lower())
     except:
-        print type(x),x
+        print(type(x),x)
         raise
 
 def exists_and_is_almost_same(d1,d2,key):
@@ -95,20 +95,20 @@ class BibRecord(dict):
             self["key"]=makekey(self,self.datadir)
         if self.path is None:
             if self.datadir is None:
-                raise SaveError("Cannot save: no path and no datadir given") 
+                raise SaveError("Cannot save: no path and no datadir given")
             if ("myown" in self) and self["myown"]:
                 pathdir="%s/myown/%s/" % (self.datadir.dirname,self["year"])
             else:
                 pathdir="%s/%s/" % (self.datadir.dirname,self["year"])
             mkdir_p(pathdir)
             self.path=pathdir+("%s.yaml" % self["key"].encode("ascii"))
-        f=tempfile.NamedTemporaryFile(delete=False)
+        f=tempfile.NamedTemporaryFile(delete=False,mode="w")
         f.write(sane_yaml.dump(dict(self)))
         f.close()
         shutil.move(f.name,self.path)
 
     def _same_position(self,other):
-        
+
         for k1 in ("article-number","art_number","article_number"):
             for k2 in ("article-number","art_number","article_number"):
                 if k1 in self and k2 in other and self[k1]==other[k2] and \
@@ -121,18 +121,18 @@ class BibRecord(dict):
         if all(exists_and_is_almost_same(self,other,key) \
             for key in ("volume","startpage")):
                 return True
-        
+
         return False
 
     def _same_source(self,other):
-        
+
         return any(exists_and_is_almost_same(self,other,key) \
             for key in ("journal","series"))
 
     def same_authors(self,other,preprocess=lambda x: x):
 
         def _surname(author):
-            return u"".join(author.split(u",")[0].lower().split())
+            return "".join(author.split(",")[0].lower().split())
 
         if "authors" in self and "authors" in other:
             if len(self["authors"])!=len(other["authors"]):
@@ -150,7 +150,7 @@ class BibRecord(dict):
         if "key" in self and "key" in other:
             return self["key"]==other["key"]
 
-        # a distinct startpage, both greater than 1 
+        # a distinct startpage, both greater than 1
         # means no match
         if "startpage" in self and "startpage" in other and \
             min(self["startpage"],other["startpage"])>1 and \
@@ -165,11 +165,11 @@ class BibRecord(dict):
                 return False
         except:
             pass
-            
+
         if self.same_authors(other) and all(exists_and_is_almost_same(self,other,key) \
             for key in ("title","year")):
             return True
-        
+
         same_position=self._same_position(other)
 
         if same_position and exists_and_is_almost_same(self,other,"title"):
@@ -198,12 +198,12 @@ class Datadir(list):
                 for name in files:
                     if name.endswith(".yaml"):
                         path=os.path.join(root,name)
-                        data=sane_yaml.load(file(path))
+                        data=sane_yaml.load(open(path))
                         if type(data) is not dict:
                             raise DataError("File %s does not contain a dictionary" % path)
                         self.append(BibRecord(data,path=path,datadir=self))
         else:
-            raise NotDirectoryError("%s is not a directory" % dirname) 
+            raise NotDirectoryError("%s is not a directory" % dirname)
 
 
     def list_matching(self,pattern):

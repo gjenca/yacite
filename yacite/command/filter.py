@@ -36,13 +36,13 @@ class Filter(YaciteCommand):
         exceptions=0
         for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             if self.ns.myown:
-                if (not u"myown" in rec) or rec[u"myown"]==False:
-                    print "---"
+                if (not "myown" in rec) or rec["myown"]==False:
+                    print("---")
                     sys.stdout.write(sane_yaml.dump(rec))
                     continue
             if self.ns.notmyown:
-                if "myown" in rec and rec[u"myown"]:
-                    print "---"
+                if "myown" in rec and rec["myown"]:
+                    print("---")
                     sys.stdout.write(sane_yaml.dump(rec))
                     continue
             try:
@@ -53,21 +53,21 @@ class Filter(YaciteCommand):
                 if self.ns.failed:
                     if '__builtins__' in rec:    
                         del rec['__builtins__']
-                    print "---"
+                    print("---")
                     sys.stdout.write(sane_yaml.dump(rec))
                 elif self.ns.keep_going:
                     exceptions+=1
-                    print >> sys.stderr, "filter: Warning: failed on %s" % describe_record(i,rec)
-                    print >> sys.stderr, "filter: The exception was %s" % sys.exc_info()[0]
+                    print("filter: Warning: failed on %s" % describe_record(i,rec), file=sys.stderr)
+                    print("filter: The exception was %s" % sys.exc_info()[0], file=sys.stderr)
                 else:
                     raise
             else:
                 if not self.ns.failed and tf:
-                    print "---"
+                    print("---")
                     sys.stdout.write(sane_yaml.dump(rec))
 
         if exceptions and not self.ns.failed:
-            print >> sys.stderr, "exec: Warning: there were %d exceptions" % exceptions
+            print("exec: Warning: there were %d exceptions" % exceptions, file=sys.stderr)
             
         
         

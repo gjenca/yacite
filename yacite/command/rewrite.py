@@ -28,14 +28,14 @@ class Rewrite(YaciteCommand):
             if type(rule) is not list or len(rule)!=2:
                 raise DataError("rewrite: file %s should contain list of pairs of strings" % ns.rewrite_file)
             head,tail=rule
-            if type(head) not in (str,unicode) or type(tail) not in (str,unicode):
+            if type(head) not in (str,str) or type(tail) not in (str,str):
                 raise DataError("rewrite: file %s should contain list of pairs of strings" % ns.rewrite_file)
             self.rules.append((re.compile(head),tail))
 
     def execute(self):
         for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             if self.ns.fieldname in rec:
-                if type(rec[self.ns.fieldname]) in (str,unicode):
+                if type(rec[self.ns.fieldname]) in (str,str):
                     for pat,repl_with in self.rules: 
                         rec[self.ns.fieldname]=pat.sub(repl_with,rec[self.ns.fieldname])
                 elif type(rec[self.ns.fieldname]) is not list:
@@ -46,7 +46,7 @@ class Rewrite(YaciteCommand):
                     for s in rec[self.ns.fieldname]:
                         new.append(pat.sub(repl_with,s))
                     rec[self.ns.fieldname]=new
-            print "---"
+            print("---")
             sys.stdout.write(sane_yaml.dump(rec))
 
                 

@@ -24,7 +24,7 @@ def check_strongly_bounced(rec,match,key):
 
     if key == "authors":
         return not match.same_authors(rec,preprocess=strip_accents)
-    elif all(t in (unicode,str) for t in (type(rec[key]),type(match[key]))):
+    elif all(t in (str,str) for t in (type(rec[key]),type(match[key]))):
         ratio=difflib.SequenceMatcher(isjunk,rec[key].lower(),match[key].lower()).ratio()
         return ratio<0.50
     elif type(rec[key]) is list and type(match[key]) is list:
@@ -81,7 +81,7 @@ class Merge(YaciteCommand):
             if not matches:
                 # 2.1 new record
                 if self.ns.new:
-                    print "---"
+                    print("---")
                     sys.stdout.write(sane_yaml.dump(rec))
                 elif not self.ns.old:
                     newrecord=BibRecord(rec,datadir=self.datadir)
@@ -89,11 +89,11 @@ class Merge(YaciteCommand):
                     newrecord.save()
                     self.datadir.append(newrecord)
                     if not self.ns.quiet:
-                        print >>sys.stderr,"merge: Created new record: %s" % newrecord.path
+                        print("merge: Created new record: %s" % newrecord.path, file=sys.stderr)
             else:
                 match=matches[0]
                 if self.ns.old:
-                    print "---"
+                    print("---")
                     sys.stdout.write(sane_yaml.dump(rec))
                     continue
                 # 2.2. count bounced fields
@@ -112,7 +112,7 @@ class Merge(YaciteCommand):
                                 glob_bounced_fields.sort()
                 if (self.ns.bounced and bounced_fields) or \
                     (self.ns.strongly_bounced and strongly_bounced_fields):
-                    print "---"
+                    print("---")
                     d_rec={}
                     d_match={}
                     if self.ns.bounced:
@@ -124,30 +124,30 @@ class Merge(YaciteCommand):
                         d_match[bf]=match[bf]
                     d_rec["key"]=match["key"]
                     fs=None
-                    if all(type(x) in (int,unicode,str) for x in d_match.values()):
+                    if all(type(x) in (int,str,str) for x in list(d_match.values())):
                         fs=False
                     for line in sane_yaml.dump(d_match,default_flow_style=fs).split("\n"):
                         if line:
-                            print "#",line
-                    if all(type(x) in (int,unicode,str) for x in d_rec.values()):
+                            print("#",line)
+                    if all(type(x) in (int,str,str) for x in list(d_rec.values())):
                         fs=False
                     sys.stdout.write(sane_yaml.dump(d_rec,default_flow_style=fs))
                 if self.ns.verbose and bounced_fields:
-                    print >>sys.stderr,"merge: %s, file '%s':fields %s bounced" \
-                    % (describe_record(i,rec),match.path,",".join(bounced_fields))
+                    print("merge: %s, file '%s':fields %s bounced" \
+                    % (describe_record(i,rec),match.path,",".join(bounced_fields)), file=sys.stderr)
                 # 2.3. new_field
                 for field_name in rec:
                     if field_name not in match:
                         if not self.ns.quiet:
-                            print >>sys.stderr,"merge: SET %s[%s] to %s (new field)" \
-                            % (match["key"],field_name,rec[field_name])
+                            print("merge: SET %s[%s] to %s (new field)" \
+                            % (match["key"],field_name,rec[field_name]), file=sys.stderr)
                         match[field_name]=rec[field_name]
                 # 2.4. set
                 for field_name in self.ns.sname:
                     if field_name in rec and field_name in match and check_bounced(match,rec,field_name):
                         if not self.ns.quiet:
-                            print >>sys.stderr,"merge: SET %s[%s] to %s" \
-                                %(match["key"],field_name,rec[field_name])
+                            print("merge: SET %s[%s] to %s" \
+                                %(match["key"],field_name,rec[field_name]), file=sys.stderr)
                         match[field_name]=rec[field_name]
                 # 2.5. union
                 for field_name in self.ns.uname:
@@ -156,8 +156,8 @@ class Merge(YaciteCommand):
                             match[field_name].extend(rec[field_name])
                             match[field_name]=list(set(match[field_name]))
                             if not self.ns.quiet:
-                                print >>sys.stderr,"merge: SET %s[%s] to %s (union)" \
-                                    %(match["key"],field_name,match[field_name])
+                                print("merge: SET %s[%s] to %s (union)" \
+                                    %(match["key"],field_name,match[field_name]), file=sys.stderr)
                     else:
                         raise DataError(
                             "merge: union of non-lists requested: %s in stream, file='%s', name='%s"
@@ -168,14 +168,14 @@ class Merge(YaciteCommand):
                         match.dirty=True
                         del match[field_name]
                         if not self.ns.quiet:
-                            print >>sys.stderr,"merge: DELETE %s[%s]" % (match["key"],field_name)
+                            print("merge: DELETE %s[%s]" % (match["key"],field_name), file=sys.stderr)
                 # 3. save changes, provided there is not a --new switch
                 if not self.ns.new:
                     match.save()
             if record_bounced:
                 bounced_records_num+=1
         if bounced_fields_num and not self.ns.quiet:
-            print >>sys.stderr,"merge: %d fields in %d records bounced" % (bounced_fields_num,bounced_records_num)
-            print >>sys.stderr,(u"merge: the field names of the bounced fields are: %s" % u",".join(glob_bounced_fields)).encode("utf-8")
+            print("merge: %d fields in %d records bounced" % (bounced_fields_num,bounced_records_num), file=sys.stderr)
+            print(("merge: the field names of the bounced fields are: %s" % ",".join(glob_bounced_fields)).encode("utf-8"), file=sys.stderr)
             if not self.ns.verbose:
-                print >>sys.stderr,"merge: Use -v to see identify these fields, use -q to supress this message."
+                print("merge: Use -v to see identify these fields, use -q to supress this message.", file=sys.stderr)

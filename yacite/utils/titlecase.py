@@ -69,6 +69,6 @@ def titlecase(text):
 if __name__ == '__main__':
     if not sys.stdin.isatty():
         for line in sys.stdin:
-            print titlecase(line)
+            print(titlecase(line))
 
 
