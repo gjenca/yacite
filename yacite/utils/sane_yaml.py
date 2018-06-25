@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import yaml
+import functools
 
 def construct_yaml_str(self, node):
     return self.construct_scalar(node)
@@ -30,7 +31,7 @@ yaml_load=yaml.load
 
 #def dump(obj,**kwargs):
 #    return yaml.dump(obj,encoding="utf-8",allow_unicode=True,**kwargs)
-dump=yaml.dump
+dump=functools.partial(yaml.dump,allow_unicode=True)
 
 def load(f,**kwargs):
     return yaml.load(f,**kwargs)
