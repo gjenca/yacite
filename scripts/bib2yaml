@@ -16,8 +16,7 @@ from yacite.utils.misc import strip_accents
 def readpubs(f):
 
     parser = bibtex.Parser(encoding='utf-8')
-    memfile=f.read()
-    uni=memfile.decode("utf-8","ignore")
+    uni=f.read()
     bib_data = parser.parse_stream(StringIO(uni))
     ret=[]
     for entry in bib_data.entries.values():
@@ -112,5 +111,5 @@ if not ns.bibfile:
     patch_and_convert(sys.stdin)
 else:
     for fnm in ns.bibfile:
-        patch_and_convert(file(fnm))
+        patch_and_convert(open(fnm))
 
