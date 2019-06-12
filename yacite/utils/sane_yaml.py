@@ -17,7 +17,7 @@ def unicode_representer(dumper, uni):
 yaml.add_representer(unicode, unicode_representer)
 
 def load_all(f,**kwargs):
-    for d in yaml.load_all(f,**kwargs):
+    for d in yaml.safe_load_all(f,**kwargs):
         for key in d:
             if type(d[key]) is unicode:
                 try:
@@ -32,5 +32,5 @@ def dump(obj,**kwargs):
     return yaml.dump(obj,encoding="utf-8",allow_unicode=True,**kwargs)
 
 def load(f,**kwargs):
-    return yaml.load(f,**kwargs)
+    return yaml.safe_load(f,**kwargs)
 
