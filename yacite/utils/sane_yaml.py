@@ -29,7 +29,7 @@ def load_all(f,**kwargs):
 yaml_load=yaml.load
 
 def dump(obj,**kwargs):
-    return yaml.dump(obj,encoding="utf-8",allow_unicode=True,**kwargs)
+    return yaml.dump(obj,encoding="utf-8",allow_unicode=True,default_flow_style=None,**kwargs)
 
 def load(f,**kwargs):
     return yaml.safe_load(f,**kwargs)
