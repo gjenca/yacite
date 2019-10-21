@@ -28,8 +28,8 @@ class Append(YaciteCommand):
                 value=list(set(value))
                 rec[self.ns.fieldname]=value
             else:
-                rec[self.ns.fieldname]=[s.decode('utf-8') for s in self.ns.string]
-            print "---"
+                rec[self.ns.fieldname]=[s for s in self.ns.string]
+            print("---")
             sys.stdout.write(sane_yaml.dump(rec))
 
                 

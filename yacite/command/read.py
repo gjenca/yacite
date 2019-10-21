@@ -22,6 +22,6 @@ class Read(YaciteCommand):
     def execute(self):
         dd=Datadir(self.ns.datadir)
         for rec in dd:
-            print "---"
+            print("---")
             sys.stdout.write(sane_yaml.dump(dict(rec)))
         

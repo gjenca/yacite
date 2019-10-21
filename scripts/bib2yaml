@@ -1,10 +1,10 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import yaml
 import sys
 from pybtex.database.input import bibtex
 import yacite.utils.sane_yaml as sane_yaml
-from yacite.utils.titlecase import titlecase 
+from yacite.utils.titlecase import titlecase
 import re
 import tempfile
 import unicodedata
@@ -16,19 +16,18 @@ from yacite.utils.misc import strip_accents
 def readpubs(f):
 
     parser = bibtex.Parser(encoding='utf-8')
-    memfile=f.read()
-    uni=memfile.decode("utf-8","ignore")
+    uni=f.read()
     bib_data = parser.parse_stream(StringIO(uni))
     ret=[]
-    for entry in bib_data.entries.itervalues():
+    for entry in bib_data.entries.values():
         try:
             pub={}
             pub["type"]=entry.type.lower()
             if entry.persons:
-                pub["authors"]=map(unicode,entry.persons['author'])
+                pub["authors"]=list(map(str,entry.persons['author']))
             else:
-                pub["authors"]=[u"NOBODY, X."]
-            for fname,value in entry.fields.iteritems():
+                pub["authors"]=["NOBODY, X."]
+            for fname,value in entry.fields.items():
                 # TODO: sanitize fname properly
                 fname=fname.replace("-","_") # - is forbidden in yaml map keys
                 fname=fname.lower()
@@ -50,7 +49,7 @@ def readpubs(f):
                 del pub["pages"]
             for fname in pub:
                 try:
-                    if type(pub[fname]) in (str,unicode):
+                    if type(pub[fname]) in (str,str):
                         pub[fname]=int(pub[fname])
                 except ValueError:
                     pass
@@ -61,7 +60,7 @@ def readpubs(f):
                 del pub["art_number"]
             ret.append(pub)
         except:
-            print "error in",entry
+            print("error in",entry)
             raise
     return ret
 
@@ -98,7 +97,7 @@ def patch_and_convert(fin):
         f=fin
     pubs=readpubs(f)
     for pub in pubs:
-        print "---"
+        print("---")
         sys.stdout.write(sane_yaml.dump(pub))
 
 parser=argparse.ArgumentParser()
@@ -112,5 +111,5 @@ if not ns.bibfile:
     patch_and_convert(sys.stdin)
 else:
     for fnm in ns.bibfile:
-        patch_and_convert(file(fnm))
+        patch_and_convert(open(fnm))
 

@@ -32,22 +32,22 @@ class Exec(YaciteCommand):
         exceptions=0
         for i,rec in enumerate(sane_yaml.load_all(sys.stdin)):
             try:
-                exec self.ns.statement in self.mods,rec
+                exec(self.ns.statement, self.mods,rec)
             except:
                 if self.ns.failed:
-                    print "---"
+                    print("---")
                     sys.stdout.write(sane_yaml.dump(rec))
                 elif self.ns.keep_going:
                     exceptions+=1
-                    print >> sys.stderr, "exec: Warning: failed on %s" % describe_record(i,rec)
-                    print >> sys.stderr, "exec: The exception was %s" % sys.exc_info()[0]
+                    print("exec: Warning: failed on %s" % describe_record(i,rec), file=sys.stderr)
+                    print("exec: The exception was %s" % sys.exc_info()[0], file=sys.stderr)
                 else:
                     raise
             if not self.ns.no_output and not self.ns.failed:
-                print "---"
+                print("---")
                 sys.stdout.write(sane_yaml.dump(rec))
         if exceptions and not self.ns.failed:
-            print >> sys.stderr, "exec: Warning: there were %d exceptions" % exceptions
+            print("exec: Warning: there were %d exceptions" % exceptions, file=sys.stderr)
             
 
                 

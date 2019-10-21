@@ -20,7 +20,7 @@ class DelFields(YaciteCommand):
             for fn in self.ns.fieldname:
                 if fn in rec:
                     del rec[fn]
-            print "---"
+            print("---")
             sys.stdout.write(sane_yaml.dump(rec))
 
                 

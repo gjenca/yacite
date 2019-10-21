@@ -33,7 +33,7 @@ class Render(YaciteCommand):
 """
 
     name="render"
-    
+
     arguments=(
         Argument("-e","--extra-yaml",help="additional yaml to pass to template; the data is available as `extra` "),
         Argument("-k","--sort-key",action="append",help="either fieldname of ~fieldname (for citedby sorting)"),
@@ -93,8 +93,8 @@ class Render(YaciteCommand):
             line_statement_prefix="#")
         env.filters['authorsformat']=authors_format
         t=env.get_template(self.ns.template)
-        sys.stdout.write(t.render(citation_tags=edge_tags,records=records,extra=self.extra).encode('utf-8'))
+        sys.stdout.write(t.render(citation_tags=edge_tags,records=records,extra=self.extra))
 
-                
-        
-        
+
+
+

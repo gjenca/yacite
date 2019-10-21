@@ -17,7 +17,7 @@ def strongly_similar(rec1,rec2,field_name):
         return False
     if field_name == "authors":
         return rec2.same_authors(rec1,preprocess=strip_accents)
-    elif all(t in (unicode,str) for t in (type(rec1[field_name]),type(rec2[field_name]))):
+    elif all(t in (str,str) for t in (type(rec1[field_name]),type(rec2[field_name]))):
         ratio=difflib.SequenceMatcher(isjunk,rec1[field_name],rec2[field_name]).ratio()
         return ratio>0.85
     elif type(rec1[field_name]) is list and type(rec2[field_name]) is list:
@@ -37,7 +37,7 @@ class CheckDups(YaciteCommand):
     def execute(self):
         everything=[BibRecord(d) for d in sane_yaml.load_all(sys.stdin)]
         if any("key" not in rec for rec in everything):
-            print >>sys.stderr,"checkdups: All records MUST have a key field"
+            print("checkdups: All records MUST have a key field", file=sys.stderr)
         dupkeys=[]
         for rec1 in everything:
             for rec2 in everything:

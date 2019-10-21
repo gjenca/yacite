@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+def cmp(val1,val2):
+
+    if val1>val2:
+        return 1
+    elif val1<val2:
+        return -1
+    return 0
 
 def keys_to_cmp(sort_keys):
 
@@ -9,14 +16,14 @@ def keys_to_cmp(sort_keys):
             sgn_fieldnames.append((-1,k[1:]))
         else:
             sgn_fieldnames.append((1,k))
-    
+
     def cmp_keys(d1,d2):
-        
+
         for sgn,fieldname in sgn_fieldnames:
             c=cmp(d1[fieldname],d2[fieldname])*sgn
             if c:
                 return c
         return 0
-    
+
     return cmp_keys
 
