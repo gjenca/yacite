@@ -4,7 +4,7 @@
 from setuptools import setup
 
 setup (name="yacite",
-       version="1,0",
+       version="1.0",
        description="Managing your citations the UNIX way",
        author="Gejza Jenča",
        author_email="gejza.jenca@stuba.sk",
