@@ -1,10 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from setuptools import setup
 
 setup (name="yacite",
-       version="0.1-alpha",
+       version="1,0",
        description="Managing your citations the UNIX way",
        author="Gejza Jenča",
        author_email="gejza.jenca@stuba.sk",
