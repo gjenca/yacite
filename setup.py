@@ -10,6 +10,9 @@ setup (name="yacite",
        author_email="gejza.jenca@stuba.sk",
        url="http://bitbucket.org/gjenca/yacite",
        #packages=['yacite','yacite.utils','yacite.command'],
+       install_requires=[
+            "pyyaml","pybtex","jinja2"
+        ],
        packages=find_packages(),
        scripts=['scripts/yacite','scripts/bib2yaml']
       )
