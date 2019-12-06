@@ -153,7 +153,8 @@ class BibRecord(dict):
         # a distinct startpage, both greater than 1
         # means no match
         if "startpage" in self and "startpage" in other and \
-            min(self["startpage"],other["startpage"])>1 and \
+            (type(self["startpage"]) is not int or self["startpage"]>1) and \
+            (type(self["startpage"]) is not int or self["startpage"]>1) and \
             self["startpage"]!=other["startpage"]:
             return False
 
@@ -164,6 +165,7 @@ class BibRecord(dict):
             if self_l>2 and other_l>2 and self_l!=other_l:
                 return False
         except:
+            # non numeric page numbers
             pass
 
         if self.same_authors(other) and all(exists_and_is_almost_same(self,other,key) \
