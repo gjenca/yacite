@@ -5,3 +5,7 @@ syntax:glob
 *.pdf
 *.html
 build/*
+dist/*
+yacite.egg-info/*
+*.egg
+
