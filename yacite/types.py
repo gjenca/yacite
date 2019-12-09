@@ -101,7 +101,7 @@ class BibRecord(dict):
             else:
                 pathdir="%s/%s/" % (self.datadir.dirname,self["year"])
             mkdir_p(pathdir)
-            self.path=pathdir+("%s.yaml" % self["key"].encode("ascii"))
+            self.path=pathdir+("%s.yaml" % self["key"])
         f=tempfile.NamedTemporaryFile(delete=False,mode="w")
         f.write(sane_yaml.dump(dict(self)))
         f.close()

@@ -42,4 +42,4 @@ if type(mod).__name__=='module':
             usage="".join(usage_lines)
             usage=usage.replace("usage:","**USAGE:** `")
             usage=usage+'`'
-            sys.stdout.write(t.render(help=obj.__doc__,name=obj.name,posargs=posargs,optargs=optargs,usage=usage).encode('utf-8'))
+            sys.stdout.write(t.render(help=obj.__doc__,name=obj.name,posargs=posargs,optargs=optargs,usage=usage))
