@@ -43,6 +43,7 @@ yacite/command/merge.py
 yacite/command/read.py
 yacite/command/render.py
 yacite/command/rewrite.py
+yacite/command/set.py
 yacite/command/sort.py
 yacite/command/unappend.py
 yacite/utils/__init__.py

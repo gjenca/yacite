@@ -14,6 +14,7 @@ import yacite.command.rewrite
 import yacite.command.sort
 import yacite.command.delfields
 import yacite.command.checkdups
+import yacite.command.set
 
 c_map={
     "read":yacite.command.read.Read,
@@ -27,6 +28,7 @@ c_map={
     "sort":yacite.command.sort.Sort,
     "delfields":yacite.command.delfields.DelFields,
     "checkdups":yacite.command.checkdups.CheckDups,
+    "set":yacite.command.set.Set,
 }
 
 parse=argparse.ArgumentParser()
