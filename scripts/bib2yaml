@@ -11,6 +11,7 @@ import unicodedata
 import argparse
 from io import StringIO
 from yacite.utils.misc import strip_accents
+import logging
 
 
 def readpubs(f):
@@ -93,16 +94,30 @@ def patch_and_convert(fin):
             else:
                 f.write(line)
         f.seek(0)
+    elif ns.wos:
+        f=tempfile.TemporaryFile(mode='r+')
+        for line in fin:
+            m=re.match('^ *([^=]*)=(.*)$',line)
+            if m:
+                key=m.group(1).rstrip().replace(' ','_')
+                val=m.group(2)
+                f.write("%s=%s" % (key,val))
+            else:
+                f.write(line)
+        f.seek(0)
     else:
         f=fin
     pubs=readpubs(f)
     for pub in pubs:
         print("---")
         sys.stdout.write(sane_yaml.dump(pub))
+    if f is not fin:
+        fin.close()
 
 parser=argparse.ArgumentParser()
 parser.add_argument("bibfile",nargs="*",help="BibTeX file to read; reads standard input if omitted")
 parser.add_argument("-s","--scopus",action="store_true",help="correct broken BibTeX produced by SCOPUS")
+parser.add_argument("-w","--wos",action="store_true",help="correct broken BibTeX produced by WOS")
 parser.add_argument("-a","--keep-abstract",action="store_true",help="keep abstract")
 parser.add_argument("-n","--no-titlecase",action="store_true",help="do not titlecase ALL CAPS strings")
 ns=parser.parse_args()
@@ -111,5 +126,6 @@ if not ns.bibfile:
     patch_and_convert(sys.stdin)
 else:
     for fnm in ns.bibfile:
-        patch_and_convert(open(fnm))
+        with open(fnm) as fin:
+            patch_and_convert(fin)
 

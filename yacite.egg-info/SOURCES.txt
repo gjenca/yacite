@@ -28,7 +28,6 @@ yacite/__init__.py
 yacite/exception.py
 yacite/types.py
 yacite.egg-info/PKG-INFO
-yacite.egg-info/PKG-INFO.orig
 yacite.egg-info/SOURCES.txt
 yacite.egg-info/dependency_links.txt
 yacite.egg-info/requires.txt
