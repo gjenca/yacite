@@ -1,4 +1,4 @@
-Metadata-Version: 1.0
+Metadata-Version: 2.1
 Name: yacite
 Version: 1.0
 Summary: Managing your citations the UNIX way
@@ -6,5 +6,7 @@ Home-page: http://bitbucket.org/gjenca/yacite
 Author: Gejza Jenča
 Author-email: gejza.jenca@stuba.sk
 License: UNKNOWN
-Description: UNKNOWN
 Platform: UNKNOWN
+
+UNKNOWN
+

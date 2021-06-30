@@ -75,6 +75,8 @@ class Render(YaciteCommand):
                     key,tags_s=key.split(';')
                     tags=tags_s.split(' ')
                     edge_tags[(rec["key"],key)]=tags
+                else:
+                    edge_tags[(rec["key"],key)]=[]
                 if key not in key_dict:
                     continue
                 cites_objects.append(key_dict[key])
